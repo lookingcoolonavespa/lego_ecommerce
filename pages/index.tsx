@@ -2,7 +2,9 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import Nav from '../components/Nav';
+import Header from '../components/Header';
 import styles from '../styles/Home.module.scss';
+import Recommended from '../components/Recommended';
 
 const Home: NextPage = () => {
   return (
@@ -13,6 +15,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Nav />
+      <Header />
+      <Recommended />
     </div>
   );
 };
