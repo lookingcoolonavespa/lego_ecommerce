@@ -1,5 +1,7 @@
 :root {
+  --background: white;
   --border: lightgray;
+  --action-color: tomato;
 }
 
 html,
@@ -35,6 +37,14 @@ h6,
 p {
   padding: 0;
   margin: 0;
+}
+
+p,
+button,
+div,
+span,
+input {
+  font-size: 14px;
 }
 
 input,

@@ -1,0 +1,48 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 33%;
+  border: 1px solid var(--border);
+}
+
+$row_height: 180px;
+.image_row {
+  border-bottom: 1px solid var(--border);
+  height: $row_height;
+  padding: 2em 1em;
+}
+
+.img_wrapper {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.details_ctn {
+  height: $row_height;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: 2em;
+  padding: 1.5em;
+}
+
+.title_wrapper {
+}
+
+.bottom_row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.price_wrapper {
+  font-weight: 700;
+}
+
+.add_to_cart {
+  background-color: var(--action-color);
+  color: var(--background);
+  padding: 0.75em 1.5em;
+}

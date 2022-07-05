@@ -12,13 +12,18 @@ export default function ProductPreview({ product }: Props) {
     <div className={styles.main}>
       <div className={styles.image_row}>
         <a className={styles.img_wrapper}>
-          <Image src={product.imgSrc} alt={product.title} />
+          <Image
+            src={product.imgSrc}
+            alt={product.title}
+            layout="fill"
+            objectFit="contain"
+          />
         </a>
       </div>
       <div className={styles.details_ctn}>
         <a className={styles.title_wrapper}>{product.title}</a>
         <div className={styles.bottom_row}>
-          <div className={styles.price_wrapper}>{product.price}</div>
+          <div className={styles.price_wrapper}>{product.price} $</div>
           <button type="button" className={styles.add_to_cart}>
             Add to Cart
           </button>

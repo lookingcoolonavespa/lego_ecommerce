@@ -6,6 +6,6 @@ export interface SvgProps {
 export interface ProductInterface {
   imgSrc: string;
   title: string;
-  price: string | number;
-  id: string | number;
+  price: string;
+  rating: string | null;
 }
