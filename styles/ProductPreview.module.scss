@@ -1,15 +1,15 @@
 .main {
   display: flex;
   flex-direction: column;
-  width: 33%;
   border: 1px solid var(--border);
+  width: min(33%, 300px);
 }
 
 $row_height: 180px;
 .image_row {
   border-bottom: 1px solid var(--border);
   height: $row_height;
-  padding: 2em 1em;
+  padding: 2em 2.5em;
 }
 
 .img_wrapper {
@@ -20,15 +20,22 @@ $row_height: 180px;
 }
 
 .details_ctn {
-  height: $row_height;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  row-gap: 2em;
-  padding: 1.5em;
+  row-gap: 1em;
+  padding: 1.5em 2.5em;
+}
+
+.top_row {
+  width: 60%;
+  height: 50%;
+  line-height: 1.8em;
 }
 
 .title_wrapper {
+  font-size: 16px;
 }
 
 .bottom_row {
@@ -37,12 +44,13 @@ $row_height: 180px;
   align-items: center;
 }
 
-.price_wrapper {
-  font-weight: 700;
+.price_wrapper h5 {
+  font-weight: 600;
 }
 
 .add_to_cart {
   background-color: var(--action-color);
   color: var(--background);
-  padding: 0.75em 1.5em;
+  padding: 0.8em 0.8em;
+  border-radius: 50%;
 }

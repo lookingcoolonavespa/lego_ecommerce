@@ -1,0 +1,21 @@
+.main {
+  position: relative;
+  overflow: hidden;
+}
+
+.scroller {
+  width: max-content;
+  position: relative;
+  display: flex;
+  column-gap: 40px;
+}
+
+.Main_content {
+  display: flex;
+}
+
+.products_ctn {
+  position: relative;
+  display: flex;
+  column-gap: 40px;
+}

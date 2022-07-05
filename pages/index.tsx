@@ -49,7 +49,6 @@ interface Props {
   recommended: ProductInterface[];
 }
 const Home: NextPage<Props> = ({ recommended }) => {
-  console.log(recommended);
   return (
     <div className={styles.container}>
       <Head>
@@ -59,7 +58,9 @@ const Home: NextPage<Props> = ({ recommended }) => {
       </Head>
       <Nav />
       <Header />
-      <Recommended products={recommended} />
+      <main className={styles.main}>
+        <Recommended products={recommended} />
+      </main>
     </div>
   );
 };

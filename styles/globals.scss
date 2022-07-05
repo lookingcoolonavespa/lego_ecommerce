@@ -1,7 +1,7 @@
 :root {
   --background: white;
   --border: lightgray;
-  --action-color: tomato;
+  --action-color: #e3000b;
 }
 
 html,
@@ -17,6 +17,7 @@ body,
 #__next {
   height: 100%;
   width: 100%;
+  overflow: hidden visible;
 }
 
 a {
@@ -26,6 +27,7 @@ a {
 
 * {
   box-sizing: border-box;
+  font-family: 'Fira Sans', 'sans serif';
 }
 
 h1,
@@ -37,6 +39,10 @@ h6,
 p {
   padding: 0;
   margin: 0;
+}
+
+h5 {
+  font-size: 18px;
 }
 
 p,
