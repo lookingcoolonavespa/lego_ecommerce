@@ -11,21 +11,30 @@ interface Props {
 }
 
 export default function Recommended({ products }: Props) {
-  const prevPage = useRef(0);
+  const productsCtn = useRef<HTMLDivElement | null>(null);
+  const productsCtnWidth = useRef('100vw');
+
   const [page, setPage] = useState(1);
-  const [visible, setVisible] = useState(false);
-  const springRef = useSpringRef();
-  const transitions = useTransition(page, {
-    from: {
-      transform: 'translateX(100vw)',
-    },
-    enter: {
-      transform: 'translateX(0)',
-    },
-    leave: {
-      transform: 'translateX(-100vw)',
-    },
-  });
+  const transitions = useTransition(
+    products.filter((p, i) => {
+      const pageMin = (page - 1) * 3;
+      const pageMax = page * 3;
+
+      return i >= pageMin && i < pageMax;
+    }),
+    {
+      from: {
+        transform: `translateX(${productsCtnWidth.current})`,
+      },
+      enter: {
+        transform: 'translateX(0px)',
+      },
+      leave: {
+        transform: `translateX(-${productsCtnWidth.current})`,
+      },
+      exitBeforeEnter: true,
+    }
+  );
 
   function pageUp() {
     setPage((prev) => prev + 1);
@@ -34,6 +43,15 @@ export default function Recommended({ products }: Props) {
   function pageDown() {
     setPage((prev) => prev - 1);
   }
+
+  useLayoutEffect(() => {
+    if (!productsCtn.current) return;
+
+    productsCtnWidth.current = window.getComputedStyle(
+      productsCtn.current
+    ).width;
+    console.log(window.getComputedStyle(productsCtn.current).width);
+  }, [page]);
   return (
     <section className={styles.main}>
       <header>
@@ -43,20 +61,20 @@ export default function Recommended({ products }: Props) {
         <button type="button" onClick={pageDown}>
           <ArrowSvg dir="left" />
         </button>
-        {transitions((animation, page) => {
-          return (
-            <animated.div className={styles.products_ctn} style={animation}>
-              {products.map((p, i) => {
-                const prevPageMax = (page - 1) * 3;
-                const pageMax = page * 3;
-                if (i >= prevPageMax && i < pageMax)
-                  return <ProductPreview key={`${p.title}-${i}`} product={p} />;
-
-                return null;
-              })}
-            </animated.div>
-          );
-        })}
+        <div ref={productsCtn} className={styles.products_ctn}>
+          {transitions((animation, item) => {
+            return (
+              item && (
+                <animated.div
+                  className={styles.product_wrapper}
+                  style={animation}
+                >
+                  <ProductPreview product={item} />
+                </animated.div>
+              )
+            );
+          })}
+        </div>
         <button type="button" onClick={pageUp}>
           <ArrowSvg dir="right" />
         </button>
