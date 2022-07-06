@@ -10,21 +10,21 @@
   column-gap: 40px;
 }
 
-.Main_content {
-  display: flex;
-}
-
 $slide_width: 772px;
-.slide_frame {
-  width: 772px;
-  overflow: hidden;
-}
-
-.products_ctn {
-  position: relative;
+.main_content {
   display: flex;
-  column-gap: 40px;
-  width: max-content;
+
+  :global(.slide_frame) {
+    width: 772px;
+    overflow: hidden;
+  }
+
+  :global(.slides_ctn) {
+    position: relative;
+    display: flex;
+    column-gap: 40px;
+    width: max-content;
+  }
 }
 
 .product_slide {

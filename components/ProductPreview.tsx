@@ -37,7 +37,7 @@ export default function ProductPreview({ product }: Props) {
         </div>
         <div className={styles.bottom_row}>
           <div className={styles.price_wrapper}>
-            <h5 ref={priceNode}>{product.price} $</h5>
+            <p ref={priceNode}>{product.price} $</p>
           </div>
           <button type="button" className={styles.add_to_cart}>
             <CartSvg height={cartSize} width={cartSize} />
