@@ -62,18 +62,22 @@ export default function Recommended({ products }: Props) {
           <ArrowSvg dir="left" />
         </button>
         <div ref={productsCtn} className={styles.products_ctn}>
-          {transitions((animation, item) => {
-            return (
-              item && (
-                <animated.div
-                  className={styles.product_wrapper}
-                  style={animation}
-                >
-                  <ProductPreview product={item} />
-                </animated.div>
-              )
-            );
-          })}
+          {products
+            .reduce<JSX.Element[][]>(
+              (acc, curr, i) => {
+                if (acc[acc.length - 1].length < 3)
+                  acc[acc.length - 1].push(<ProductPreview product={curr} />);
+                else {
+                  acc.push([]);
+                  acc[acc.length - 1].push(<ProductPreview product={curr} />);
+                }
+                return acc;
+              },
+              [[]]
+            )
+            .map((productPreviews, i) => {
+              return <div key={i}>{productPreviews}</div>;
+            })}
         </div>
         <button type="button" onClick={pageUp}>
           <ArrowSvg dir="right" />
