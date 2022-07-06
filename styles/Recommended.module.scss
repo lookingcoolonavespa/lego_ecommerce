@@ -14,10 +14,25 @@
   display: flex;
 }
 
+$slide_width: 772px;
+.slide_frame {
+  width: 772px;
+  overflow: hidden;
+}
+
 .products_ctn {
   position: relative;
   display: flex;
   column-gap: 40px;
+  width: max-content;
+}
+
+.product_slide {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 40px;
+
   width: 772px;
 }
 
