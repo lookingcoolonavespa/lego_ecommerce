@@ -10,7 +10,7 @@ interface Props {
   products: ProductInterface[];
 }
 
-export default function Recommended({ products = RECOMMENDED }: Props) {
+export default function Recommended({ products }: Props) {
   const productsCtn = useRef<HTMLDivElement | null>(null);
   const productsCtnWidth = useRef('100vw');
 
@@ -21,7 +21,7 @@ export default function Recommended({ products = RECOMMENDED }: Props) {
       </header>
       <Slider
         className={styles.main_content}
-        lastPage={products.length / 3 + (products.length % 3) ? 0 : -1}
+        lastPage={products.length / 3 + (products.length % 3 ? 0 : -1)}
       >
         {products
           // split into sections of 3 products
@@ -49,12 +49,6 @@ export default function Recommended({ products = RECOMMENDED }: Props) {
             );
           })}
       </Slider>
-      {/* <div className={styles.scroller}>
-        {products &&
-          products.map((p, i) => {
-            return <ProductPreview key={`${p.title}-${i}`} product={p} />;
-          })}
-      </div> */}
     </section>
   );
 }

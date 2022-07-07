@@ -21,7 +21,8 @@ export default function Slider({ children, lastPage, className }: Props) {
 
   function pageUp() {
     setPage((prev) => {
-      if (lastPage) return prev;
+      console.log(prev, lastPage);
+      if (prev === lastPage) return prev;
       return prev + 1;
     });
   }
@@ -35,11 +36,12 @@ export default function Slider({ children, lastPage, className }: Props) {
 
   return (
     <div className={className}>
-      <button type="button" onClick={pageDown}>
+      <button type="button" onClick={pageDown} aria-label="left">
         <ArrowSvg dir="left" />
       </button>
       <div className="slide_frame">
         <animated.div
+          data-testid="slider"
           className="slides_ctn"
           style={{
             transform: slideProps.offset.to(
@@ -51,7 +53,7 @@ export default function Slider({ children, lastPage, className }: Props) {
           {children}
         </animated.div>
       </div>
-      <button type="button" onClick={pageUp}>
+      <button type="button" onClick={pageUp} aria-label="right">
         <ArrowSvg dir="right" />
       </button>
     </div>
