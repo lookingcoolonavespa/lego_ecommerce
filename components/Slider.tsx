@@ -90,9 +90,14 @@ export default function Slider({
         newTranslateVal %
         (Math.floor(slideFrameWidth / slideWidth) * slideWidth)
       ) {
-        newTranslateVal -=
-          newTranslateVal %
-          (Math.floor(slideFrameWidth / slideWidth) * slideWidth);
+        const currSlideNo =
+          Math.floor(
+            slidesCtnWidth.current /
+              (Math.floor(slideFrameWidth / slideWidth) * slideWidth)
+          ) - 1;
+
+        newTranslateVal =
+          currSlideNo * (Math.floor(slideFrameWidth / slideWidth) * slideWidth);
       }
 
       if (prev === 0) return prev;
