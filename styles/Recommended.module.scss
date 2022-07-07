@@ -1,42 +1,32 @@
 .main {
   position: relative;
   overflow: hidden;
+  width: 100%;
+  display: grid;
+  flex-direction: column;
+  align-items: center;
 }
 
-.scroller {
-  width: max-content;
-  position: relative;
-  display: flex;
-  column-gap: 40px;
-}
-
-$slide_width: 772px;
 .main_content {
   display: flex;
 
   :global(.slide_frame) {
-    width: 772px;
     overflow: hidden;
+    position: relative;
+    width: max(70%, 772px);
+    height: 357.2px;
   }
 
   :global(.slides_ctn) {
-    position: relative;
-    display: flex;
+    position: absolute;
+    display: grid;
+    grid-auto-flow: column;
     column-gap: 40px;
     width: max-content;
   }
 }
 
-.product_slide {
-  display: grid;
-  grid-auto-flow: column;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 40px;
-
-  width: 772px;
-}
-
 .product_wrapper {
   position: relative;
-  width: 33%;
+  width: 250px;
 }

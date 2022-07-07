@@ -11,9 +11,6 @@ interface Props {
 }
 
 export default function Recommended({ products }: Props) {
-  const productsCtn = useRef<HTMLDivElement | null>(null);
-  const productsCtnWidth = useRef('100vw');
-
   return (
     <section className={styles.main}>
       <header>
@@ -22,32 +19,17 @@ export default function Recommended({ products }: Props) {
       <Slider
         className={styles.main_content}
         lastPage={products.length / 3 + (products.length % 3 ? 0 : -1)}
+        slideWidth={290}
       >
-        {products
-          // split into sections of 3 products
-          .reduce<JSX.Element[][]>(
-            (acc, curr, i) => {
-              if (acc[acc.length - 1].length < 3)
-                acc[acc.length - 1].push(
-                  <ProductPreview key={i} product={curr} />
-                );
-              else {
-                acc.push([]);
-                acc[acc.length - 1].push(
-                  <ProductPreview key={i} product={curr} />
-                );
-              }
-              return acc;
-            },
-            [[]]
-          )
-          .map((productPreviews, i) => {
-            return (
-              <div key={'product_slide' + i} className={styles.product_slide}>
-                {productPreviews}
-              </div>
-            );
-          })}
+        {products.map((product, i) => {
+          return (
+            <ProductPreview
+              key={i}
+              product={product}
+              className={styles.product_wrapper}
+            />
+          );
+        })}
       </Slider>
     </section>
   );

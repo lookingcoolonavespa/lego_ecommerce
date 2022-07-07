@@ -6,9 +6,10 @@ import CartSvg from './svg/CartSvg';
 
 interface Props {
   product: ProductInterface;
+  className?: string;
 }
 
-export default function ProductPreview({ product }: Props) {
+export default function ProductPreview({ product, className }: Props) {
   const [cartSize, setCartSize] = useState('24px');
   const priceNode = useRef<HTMLHeadingElement | null>(null);
 
@@ -19,8 +20,10 @@ export default function ProductPreview({ product }: Props) {
     setCartSize(priceSize);
   }, []);
 
+  const rootClasses = [styles.main];
+  if (className) rootClasses.push(className);
   return (
-    <div className={styles.main}>
+    <div className={rootClasses.join(' ')}>
       <div className={styles.image_row}>
         <a className={styles.img_wrapper}>
           <Image
