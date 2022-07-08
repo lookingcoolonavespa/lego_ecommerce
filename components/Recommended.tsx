@@ -16,11 +16,7 @@ export default function Recommended({ products }: Props) {
       <header>
         <h3>Recommended for you</h3>
       </header>
-      <Slider
-        className={styles.main_content}
-        lastPage={products.length / 3 + (products.length % 3 ? 0 : -1)}
-        slideWidth={290}
-      >
+      <Slider className={styles.main_content} slideWidth={290}>
         {products.map((product, i) => {
           return (
             <ProductPreview

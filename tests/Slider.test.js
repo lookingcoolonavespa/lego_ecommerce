@@ -12,6 +12,10 @@ it('slides correctly', async () => {
 
   await act(async () => (wrapper = render(<Slider lastPage={1} />)));
 
+  const slideFrame = wrapper.getByTestId('slide_frame');
+  slideFrame.getBoundingClientRect = jest.fn(() => new DOMRect(0, 0, 120, 120));
+  console.log(slideFrame.width);
+
   const nextBtn = wrapper.getByRole('button', { name: 'right' });
   await act(async () => await user.click(nextBtn));
   await new Promise((resolve) => setTimeout(resolve, 800));
@@ -27,41 +31,41 @@ it('slides correctly', async () => {
   expect(slider).toHaveStyle('transform: translateX(0px)');
 });
 
-it('doesnt go past the last page', async () => {
-  const user = userEvent.setup();
-  let wrapper;
+// it('doesnt go past the last page', async () => {
+//   const user = userEvent.setup();
+//   let wrapper;
 
-  await act(async () => (wrapper = render(<Slider lastPage={1} />)));
+//   await act(async () => (wrapper = render(<Slider lastPage={1} />)));
 
-  const nextBtn = wrapper.getByRole('button', { name: 'right' });
-  console.log(nextBtn);
-  await act(async () => await user.click(nextBtn));
+//   const nextBtn = wrapper.getByRole('button', { name: 'right' });
+//   console.log(nextBtn);
+//   await act(async () => await user.click(nextBtn));
 
-  await act(async () => await user.click(nextBtn));
+//   await act(async () => await user.click(nextBtn));
 
-  await act(async () => await user.click(nextBtn));
-  await new Promise((resolve) => setTimeout(resolve, 800));
+//   await act(async () => await user.click(nextBtn));
+//   await new Promise((resolve) => setTimeout(resolve, 800));
 
-  const slider = wrapper.getByTestId('slider');
+//   const slider = wrapper.getByTestId('slider');
 
-  expect(slider).toHaveStyle('transform: translateX(-812px)');
-});
+//   expect(slider).toHaveStyle('transform: translateX(-812px)');
+// });
 
-it('doesnt go past the first page', async () => {
-  const user = userEvent.setup();
-  let wrapper;
+// it('doesnt go past the first page', async () => {
+//   const user = userEvent.setup();
+//   let wrapper;
 
-  await act(async () => (wrapper = render(<Slider lastPage={1} />)));
+//   await act(async () => (wrapper = render(<Slider lastPage={1} />)));
 
-  const prevBtn = wrapper.getByRole('button', { name: 'left' });
-  await act(async () => await user.click(prevBtn));
+//   const prevBtn = wrapper.getByRole('button', { name: 'left' });
+//   await act(async () => await user.click(prevBtn));
 
-  await act(async () => await user.click(prevBtn));
+//   await act(async () => await user.click(prevBtn));
 
-  await act(async () => await user.click(prevBtn));
-  await new Promise((resolve) => setTimeout(resolve, 800));
+//   await act(async () => await user.click(prevBtn));
+//   await new Promise((resolve) => setTimeout(resolve, 800));
 
-  const slider = wrapper.getByTestId('slider');
+//   const slider = wrapper.getByTestId('slider');
 
-  expect(slider).toHaveStyle('transform: translateX(0px)');
-});
+//   expect(slider).toHaveStyle('transform: translateX(0px)');
+// });

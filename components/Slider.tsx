@@ -10,17 +10,11 @@ import { animated, useSpring } from 'react-spring';
 
 interface Props {
   children: ReactNode;
-  lastPage: number;
   className?: string;
   slideWidth: number;
 }
 
-export default function Slider({
-  children,
-  lastPage,
-  className,
-  slideWidth,
-}: Props) {
+export default function Slider({ children, className, slideWidth }: Props) {
   const slidesCtn = useRef<HTMLDivElement | null>(null);
   const slidesCtnWidth = useRef(0);
   const slideFrame = useRef<HTMLDivElement | null>(null);
@@ -36,13 +30,35 @@ export default function Slider({
     slidePropsApi.update(() => ({ offset: 0 - translateVal })).start();
   }, [translateVal, slidePropsApi]);
 
+  useEffect(
+    function adjustSlideOnResize() {
+      setTranslateVal((prev) => {
+        if (
+          // slider is past end of last slide
+          prev + slideFrameWidth >
+          slidesCtnWidth.current
+        ) {
+          return slidesCtnWidth.current - slideFrameWidth;
+        }
+
+        if (
+          // first slide is not cut off
+          !(prev % (Math.floor(slideFrameWidth / slideWidth) * slideWidth))
+        )
+          return prev;
+
+        return slidesCtnWidth.current - slideFrameWidth;
+      });
+    },
+    [slideFrameWidth, slideWidth]
+  );
+
   useLayoutEffect(() => {
     function getWidth() {
       if (!slideFrame.current || !slidesCtn.current) return;
 
       const slidesWidth = window.getComputedStyle(slideFrame.current).width;
       setSlideFrameWidth(Number(slidesWidth.slice(0, -2)));
-
       slidesCtnWidth.current = Number(
         window.getComputedStyle(slidesCtn.current).width.slice(0, -2)
       );
@@ -56,13 +72,6 @@ export default function Slider({
       window.removeEventListener('resize', getWidth);
     };
   }, []);
-  // function pageUp() {
-  //   setPage((prev) => {
-  //     console.log(prev, lastPage);
-  //     if (prev === lastPage) return prev;
-  //     return prev + 1;
-  //   });
-  // }
 
   function pageUp() {
     setTranslateVal((prev) => {
@@ -105,19 +114,12 @@ export default function Slider({
     });
   }
 
-  // function pageDown() {
-  //   setPage((prev) => {
-  //     if (page === 0) return prev;
-  //     return prev - 1;
-  //   });
-  // }
-
   return (
     <div className={className}>
       <button type="button" onClick={pageDown} aria-label="left">
         <ArrowSvg dir="left" />
       </button>
-      <div ref={slideFrame} className="slide_frame">
+      <div ref={slideFrame} data-testid="slide_frame" className="slide_frame">
         <animated.div
           ref={slidesCtn}
           data-testid="slider"
