@@ -122,7 +122,6 @@ export default function Slider({ children, className, slideWidth }: Props) {
       <div ref={slideFrame} data-testid="slide_frame" className="slide_frame">
         <animated.div
           ref={slidesCtn}
-          data-testid="slider"
           className="slides_ctn"
           style={{
             transform: slideProps.offset.to(

@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 
 import styles from '../styles/Recommended.module.scss';
 import { ProductInterface } from '../types/interfaces';
-import { RECOMMENDED } from '../utils/constants';
 import ProductPreview from './ProductPreview';
 import Slider from './Slider';
 
