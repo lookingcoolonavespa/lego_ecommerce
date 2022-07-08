@@ -39,15 +39,7 @@ export default function Slider({ children, className, slideWidth }: Props) {
           slidesCtnWidth.current
         ) {
           return slidesCtnWidth.current - slideFrameWidth;
-        }
-
-        if (
-          // first slide is not cut off
-          !(prev % (Math.floor(slideFrameWidth / slideWidth) * slideWidth))
-        )
-          return prev;
-
-        return slidesCtnWidth.current - slideFrameWidth;
+        } else return prev;
       });
     },
     [slideFrameWidth, slideWidth]
@@ -94,6 +86,7 @@ export default function Slider({ children, className, slideWidth }: Props) {
       let newTranslateVal =
         prev - Math.floor(slideFrameWidth / slideWidth) * slideWidth;
 
+      if (newTranslateVal < 0) return 0;
       if (
         // first slide is cut off
         newTranslateVal %
@@ -108,6 +101,7 @@ export default function Slider({ children, className, slideWidth }: Props) {
         newTranslateVal =
           currSlideNo * (Math.floor(slideFrameWidth / slideWidth) * slideWidth);
       }
+      console.log(newTranslateVal);
 
       if (prev === 0) return prev;
       return newTranslateVal;

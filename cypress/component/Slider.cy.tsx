@@ -76,25 +76,23 @@ describe('Slider', () => {
     });
   });
 
-  it('doesnt go past last product even when resized', () => {
+  it('doesnt go past last slider item even when resized', () => {
     cy.mount(<Recommended products={RECOMMENDED} />);
+    const nextBtn = cy.get('[aria-label="right"]');
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+
+    cy.viewport('macbook-15');
+
     cy.document().then((doc) => {
-      const nextBtn = cy.get('[aria-label="right"]');
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-      nextBtn.click();
-
-      cy.viewport('macbook-15');
-
       const slideCtn = doc.querySelector('.slides_ctn') as Element;
       const slideCtnWidth = Number(
         window.getComputedStyle(slideCtn).width.slice(0, -2)
@@ -111,5 +109,41 @@ describe('Slider', () => {
         .should('have.attr', 'style')
         .should('contain', `transform: translateX(-${expectedTranslateVal}px)`);
     });
+  });
+
+  it('keeps the same translateX value on resize if the slider doesnt go past last slider item', () => {
+    cy.mount(<Recommended products={RECOMMENDED} />);
+
+    const nextBtn = cy.get('[aria-label="right"]');
+    nextBtn.click();
+    nextBtn.click();
+
+    cy.document().then((doc) => {
+      const slideCtn = doc.querySelector('.slides_ctn') as HTMLElement;
+      const slideCtnTranslate = slideCtn.style.transform;
+
+      cy.viewport('macbook-15');
+
+      cy.get('.slides_ctn')
+        .should('have.attr', 'style')
+        .should('contain', `transform: ${slideCtnTranslate}`);
+    });
+  });
+
+  it.only('buttons work after resize', () => {
+    cy.mount(<Recommended products={RECOMMENDED} />);
+
+    const nextBtn = cy.get('[aria-label="right"]');
+    nextBtn.click();
+    nextBtn.click();
+
+    cy.viewport('macbook-15');
+
+    const prevBtn = cy.get('[aria-label="left"]');
+    prevBtn.click();
+
+    cy.get('.slides_ctn')
+      .should('have.attr', 'style')
+      .should('contain', `transform: translateX(0px)`);
   });
 });
