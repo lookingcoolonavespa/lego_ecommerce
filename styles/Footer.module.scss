@@ -1,0 +1,52 @@
+.main {
+  background: var(--footer-bg);
+  display: flex;
+  justify-content: center;
+
+  :global(.col_one) {
+    margin-right: 200px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :global(.col_two) {
+    display: grid;
+    flex-wrap: wrap;
+    column-gap: 20px;
+    justify-content: center;
+    width: 100%;
+    row-gap: 70px;
+
+    :global(.links_ctn) {
+      flex: 1 1 180px;
+    }
+  }
+
+  :global(.link_wrapper) {
+    margin: 20px 0;
+  }
+}
+
+.content {
+  margin-top: 50px;
+}
+
+@media screen and (min-width: 1300px) {
+  .content {
+    width: 70%;
+  }
+
+  .main {
+    :global(.col_two) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}
+
+@media screen and (max-width: 1299px) {
+  .main {
+    :global(.col_two) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}

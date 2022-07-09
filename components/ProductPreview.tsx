@@ -1,4 +1,4 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import styles from '../styles/ProductPreview.module.scss';
 import { ProductInterface } from '../types/interfaces';
@@ -13,7 +13,7 @@ export default function ProductPreview({ product, className }: Props) {
   const [cartSize, setCartSize] = useState('24px');
   const priceNode = useRef<HTMLHeadingElement | null>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!priceNode.current) return;
 
     const priceSize = window.getComputedStyle(priceNode.current).fontSize;

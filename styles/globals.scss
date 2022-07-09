@@ -3,6 +3,7 @@
   --border: lightgray;
   --action-color: #e3000b;
   --main-text: black;
+  --footer-bg: #ffcf00;
 }
 
 html,
@@ -14,8 +15,7 @@ body {
 }
 
 html,
-body,
-#__next {
+body {
   height: 100%;
   width: 100%;
   overflow: hidden visible;
@@ -104,4 +104,14 @@ input[type='text'] {
   border: 1px solid var(--border);
   padding: 0.6em 0.8em;
   border-radius: 4px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.two_col_view {
+  display: flex;
 }

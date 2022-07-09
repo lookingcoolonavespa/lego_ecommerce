@@ -1,11 +1,11 @@
 import React from 'react';
 import Slider from '../../components/Slider';
-import Recommended from '../../components/ProductSlider';
+import ProductSlider from '../../components/ProductSlider';
 import { RECOMMENDED } from '../../utils/constants';
 
 describe('Slider', () => {
   it('slides correctly', async () => {
-    cy.mount(<Recommended products={RECOMMENDED} />);
+    cy.mount(<ProductSlider products={RECOMMENDED} />);
     cy.document().then((doc) => {
       const slideFrame = doc.querySelector('.slide_frame') as Element;
       const slideFrameWidth = window.getComputedStyle(slideFrame).width;
@@ -32,7 +32,7 @@ describe('Slider', () => {
   });
 
   it('doesnt go past first page', () => {
-    cy.mount(<Recommended products={RECOMMENDED} />);
+    cy.mount(<ProductSlider products={RECOMMENDED} />);
 
     const prevBtn = cy.get('[aria-label="left"]');
     prevBtn.click();
@@ -43,7 +43,7 @@ describe('Slider', () => {
   });
 
   it('doesnt go past last product', () => {
-    cy.mount(<Recommended products={RECOMMENDED} />);
+    cy.mount(<ProductSlider products={RECOMMENDED} />);
     cy.document().then((doc) => {
       const slideFrame = doc.querySelector('.slide_frame') as Element;
       const slideFrameWidth = Number(
@@ -77,7 +77,7 @@ describe('Slider', () => {
   });
 
   it('doesnt go past last slider item even when resized', () => {
-    cy.mount(<Recommended products={RECOMMENDED} />);
+    cy.mount(<ProductSlider products={RECOMMENDED} />);
     const nextBtn = cy.get('[aria-label="right"]');
     nextBtn.click();
     nextBtn.click();
@@ -111,7 +111,7 @@ describe('Slider', () => {
   });
 
   it('keeps the same translateX value on resize if the slider doesnt go past last slider item', () => {
-    cy.mount(<Recommended products={RECOMMENDED} />);
+    cy.mount(<ProductSlider products={RECOMMENDED} />);
 
     const nextBtn = cy.get('[aria-label="right"]');
     nextBtn.click();
@@ -130,7 +130,7 @@ describe('Slider', () => {
   });
 
   it.only('prev button works after resize', () => {
-    cy.mount(<Recommended products={RECOMMENDED} />);
+    cy.mount(<ProductSlider products={RECOMMENDED} />);
 
     const nextBtn = cy.get('[aria-label="right"]');
     nextBtn.click();
@@ -147,7 +147,7 @@ describe('Slider', () => {
   });
 
   it.only('on resize, places slider at the end if the last slider item was visible before resize', () => {
-    cy.mount(<Recommended products={RECOMMENDED} />);
+    cy.mount(<ProductSlider products={RECOMMENDED} />);
     cy.viewport('macbook-15');
     const nextBtn = cy.get('[aria-label="right"]');
     nextBtn.click();

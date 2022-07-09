@@ -9,6 +9,7 @@ import axios from 'axios';
 import { ProductInterface } from '../types/interfaces';
 import { RECOMMENDED } from '../utils/constants';
 import SignUpHero from '../components/SignUpHero';
+import Layout from '../components/Layout';
 
 export async function getStaticProps() {
   try {
@@ -59,11 +60,15 @@ const Home: NextPage<Props> = ({ recommended }) => {
       </Head>
       <Nav />
       <Header />
-      <main className={styles.main}>
+      <Layout className={styles.main}>
         <ProductSlider title="recommended for you" products={recommended} />
         <SignUpHero />
-        <ProductSlider title="featured sets" products={recommended} />
-      </main>
+        <ProductSlider
+          title="featured sets"
+          products={[...recommended].reverse()}
+        />
+      </Layout>
+      <main className={styles.main}></main>
     </div>
   );
 };

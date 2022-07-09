@@ -50,23 +50,32 @@ const footerLinks = [
   },
 ];
 
+const colOneLinks = [
+  { text: 'gift cards' },
+  { text: 'LEGO catalogs' },
+  { text: 'find a LEGO store' },
+];
+
 export default function Footer() {
   return (
     <footer className={styles.main}>
-      <div className="two_col_view">
-        <div className="col_one">
-          <LegoLego />
-        </div>
-        <div className="col_two">
-          {footerLinks.map((fl, i) => {
-            return (
-              <LinksCtn
-                key={`${fl.title}-${i}`}
-                title={fl.title}
-                links={fl.links}
-              />
-            );
-          })}
+      <div className={styles.content}>
+        <div className="two_col_view">
+          <div className="col_one">
+            <LegoLego width="80px" height="80px" />
+            <LinksCtn links={colOneLinks} />
+          </div>
+          <div className="col_two">
+            {footerLinks.map((fl, i) => {
+              return (
+                <LinksCtn
+                  key={`${fl.title}-${i}`}
+                  title={fl.title}
+                  links={fl.links}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     </footer>

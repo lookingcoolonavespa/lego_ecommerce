@@ -1,13 +1,13 @@
 import React from 'react';
 
-import styles from '../styles/Recommended.module.scss';
+import styles from '../styles/ProductSlider.module.scss';
 import { ProductInterface } from '../types/interfaces';
 import ProductPreview from './ProductPreview';
 import Slider from './Slider';
 
 interface Props {
   products: ProductInterface[];
-  title: string;
+  title?: string;
 }
 
 export default function ProductSlider({ products, title }: Props) {
