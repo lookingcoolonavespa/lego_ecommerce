@@ -10,6 +10,8 @@ import { ProductInterface } from '../types/interfaces';
 import { RECOMMENDED } from '../utils/constants';
 import SignUpHero from '../components/SignUpHero';
 import Layout from '../components/Layout';
+import TwitterSvg from '../components/svg/TwitterSvg';
+import FacebookSvg from '../components/svg/FacebookSvg';
 
 export async function getStaticProps() {
   try {

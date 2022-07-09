@@ -14,3 +14,9 @@ export interface LinkInterface {
   text: string;
   href?: string;
 }
+
+export interface InputDetailsInterface {
+  type: 'text';
+  placeholder?: string;
+  onChange?: () => void;
+}

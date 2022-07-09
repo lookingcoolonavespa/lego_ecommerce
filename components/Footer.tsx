@@ -1,6 +1,9 @@
 import React from 'react';
 import styles from '../styles/Footer.module.scss';
+import { capitalizeStr } from '../utils/misc';
+import InputWrapper from './InputWrapper';
 import LinksCtn from './LinksCtn';
+import SocialsCtn from './SocialsCtn';
 import LegoLego from './svg/LegoLogo';
 
 const footerLinks = [
@@ -60,9 +63,9 @@ export default function Footer() {
   return (
     <footer className={styles.main}>
       <div className={styles.content}>
-        <div className="two_col_view">
+        <div className={`${styles.row} two_col_view`}>
           <div className="col_one">
-            <LegoLego width="80px" height="80px" />
+            <LegoLego width="100px" height="100px" />
             <LinksCtn links={colOneLinks} />
           </div>
           <div className="col_two">
@@ -75,6 +78,20 @@ export default function Footer() {
                 />
               );
             })}
+          </div>
+        </div>
+        <div className={`${styles.row_two} ${styles.row}`}>
+          <div className={styles.subscribe_wrapper}>
+            <h5>subscribe to LEGO shop emails</h5>
+            <InputWrapper
+              inputDetails={{
+                type: 'text',
+              }}
+            />
+          </div>
+          <div className={styles.socials_ctn}>
+            <h5>follow us</h5>
+            <SocialsCtn iconSize="20px" />
           </div>
         </div>
       </div>
