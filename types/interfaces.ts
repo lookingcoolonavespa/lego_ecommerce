@@ -1,3 +1,5 @@
+import React, { ChangeEvent } from 'react';
+
 export interface SvgProps {
   height: string;
   width: string;
@@ -17,6 +19,13 @@ export interface LinkInterface {
 
 export interface InputDetailsInterface {
   type: 'text';
+  name?: string;
   placeholder?: string;
-  onChange?: () => void;
+  onChange?: (e: ChangeEvent<Element>) => void;
+  value: string;
+}
+
+export interface InputStatusInterface {
+  message: string;
+  type: 'error' | 'success' | undefined;
 }

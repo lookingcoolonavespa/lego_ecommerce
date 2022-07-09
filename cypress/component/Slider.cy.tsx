@@ -1,5 +1,4 @@
 import React from 'react';
-import Slider from '../../components/Slider';
 import ProductSlider from '../../components/ProductSlider';
 import { RECOMMENDED } from '../../utils/constants';
 

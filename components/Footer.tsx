@@ -6,6 +6,7 @@ import LinksCtn from './LinksCtn';
 import SocialsCtn from './SocialsCtn';
 import ArrowSvg from './svg/ArrowSvg';
 import LegoLego from './svg/LegoLogo';
+import useEmail from '../utils/useEmail';
 
 const footerLinks = [
   {
@@ -61,6 +62,7 @@ const colOneLinks = [
 ];
 
 export default function Footer() {
+  const { email, inputStatus, submit, handleChange } = useEmail();
   return (
     <footer className={styles.main}>
       <div className={styles.content}>
@@ -82,14 +84,17 @@ export default function Footer() {
           </div>
         </section>
         <section className={`${styles.row_two} ${styles.row}`}>
-          <form className={styles.subscribe_wrapper}>
+          <form className={styles.subscribe_wrapper} onSubmit={submit}>
             <h5>subscribe to LEGO shop emails</h5>
             <div className={styles.subscribe_input}>
               <InputWrapper
                 inputDetails={{
                   type: 'text',
                   placeholder: 'your email address',
+                  value: email,
+                  onChange: handleChange,
                 }}
+                inputStatus={inputStatus}
               />
               <button>
                 <ArrowSvg dir="right" />

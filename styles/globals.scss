@@ -131,3 +131,19 @@ ul {
     font-size: 0.9em;
   }
 }
+
+.input_wrapper {
+  position: relative;
+
+  .input_error {
+    color: tomato;
+    position: absolute;
+    bottom: 0;
+  }
+
+  .input_success {
+    position: absolute;
+    bottom: 0;
+    color: #198754;
+  }
+}

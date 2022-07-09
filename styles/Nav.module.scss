@@ -41,6 +41,12 @@
   border-left: 1px solid var(--border);
   display: grid;
   place-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+
+  &:hover {
+    background-color: #eef5fa;
+  }
 }
 
 .nav_item:last-child {
