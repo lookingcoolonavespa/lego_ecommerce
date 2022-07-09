@@ -2,6 +2,7 @@
   --background: white;
   --border: lightgray;
   --action-color: #e3000b;
+  --main-text: black;
 }
 
 html,
@@ -88,4 +89,19 @@ button {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+}
+
+main > section {
+  margin: 50px 0;
+}
+
+input[type='text'] {
+  background: var(--background);
+  border: 1px solid var(--border);
+  padding: 0.6em 0.8em;
+  border-radius: 4px;
 }

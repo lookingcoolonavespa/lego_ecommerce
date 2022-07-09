@@ -9,3 +9,8 @@ export interface ProductInterface {
   price: string;
   rating: string | null;
 }
+
+export interface LinkInterface {
+  text: string;
+  href?: string;
+}

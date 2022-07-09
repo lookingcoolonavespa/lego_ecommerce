@@ -1,6 +1,6 @@
 import React from 'react';
 import Slider from '../../components/Slider';
-import Recommended from '../../components/Recommended';
+import Recommended from '../../components/ProductSlider';
 import { RECOMMENDED } from '../../utils/constants';
 
 describe('Slider', () => {

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Nav from '../components/Nav';
 import Header from '../components/Header';
 import styles from '../styles/Home.module.scss';
-import Recommended from '../components/Recommended';
+import ProductSlider from '../components/ProductSlider';
 import axios from 'axios';
 import { ProductInterface } from '../types/interfaces';
 import { RECOMMENDED } from '../utils/constants';
@@ -60,8 +60,9 @@ const Home: NextPage<Props> = ({ recommended }) => {
       <Nav />
       <Header />
       <main className={styles.main}>
-        <Recommended products={recommended} />
+        <ProductSlider title="recommended for you" products={recommended} />
         <SignUpHero />
+        <ProductSlider title="featured sets" products={recommended} />
       </main>
     </div>
   );

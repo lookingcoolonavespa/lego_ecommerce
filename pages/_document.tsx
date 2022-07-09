@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Html, Head, Main, NextScript } from 'next/document';
+import Footer from '../components/Footer';
 
 export default function MyDocument() {
   return (
@@ -16,6 +17,7 @@ export default function MyDocument() {
         <Main />
         <NextScript />
       </body>
+      <Footer />
     </Html>
   );
 }
