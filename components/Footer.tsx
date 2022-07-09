@@ -4,6 +4,7 @@ import { capitalizeStr } from '../utils/misc';
 import InputWrapper from './InputWrapper';
 import LinksCtn from './LinksCtn';
 import SocialsCtn from './SocialsCtn';
+import ArrowSvg from './svg/ArrowSvg';
 import LegoLego from './svg/LegoLogo';
 
 const footerLinks = [
@@ -63,7 +64,7 @@ export default function Footer() {
   return (
     <footer className={styles.main}>
       <div className={styles.content}>
-        <div className={`${styles.row} two_col_view`}>
+        <section className={`${styles.row} two_col_view`}>
           <div className="col_one">
             <LegoLego width="100px" height="100px" />
             <LinksCtn links={colOneLinks} />
@@ -79,21 +80,38 @@ export default function Footer() {
               );
             })}
           </div>
-        </div>
-        <div className={`${styles.row_two} ${styles.row}`}>
-          <div className={styles.subscribe_wrapper}>
+        </section>
+        <section className={`${styles.row_two} ${styles.row}`}>
+          <form className={styles.subscribe_wrapper}>
             <h5>subscribe to LEGO shop emails</h5>
-            <InputWrapper
-              inputDetails={{
-                type: 'text',
-              }}
-            />
-          </div>
-          <div className={styles.socials_ctn}>
+            <div className={styles.subscribe_input}>
+              <InputWrapper
+                inputDetails={{
+                  type: 'text',
+                  placeholder: 'your email address',
+                }}
+              />
+              <button>
+                <ArrowSvg dir="right" />
+              </button>
+            </div>
+          </form>
+          <div className={styles.follow_us}>
             <h5>follow us</h5>
             <SocialsCtn iconSize="20px" />
           </div>
-        </div>
+        </section>
+
+        <section className={`${styles.row_three} ${styles.row} small_text`}>
+          <p>
+            LEGO System A/S, DK-7190 Billund, Denmark. Must be 18 years or older
+            to purchase online. LEGO, the LEGO logo, the Minifigure, DUPLO,
+            LEGENDS OF CHIMA, NINJAGO, BIONICLE, MINDSTORMS and MIXELS are
+            trademarks and copyrights of the LEGO Group. ©2022 The LEGO Group.
+            All rights reserved. Use of this site signifies your agreement to
+            the terms of use.
+          </p>
+        </section>
       </div>
     </footer>
   );

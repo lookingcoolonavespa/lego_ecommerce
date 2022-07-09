@@ -15,7 +15,9 @@ export default function LinksCtn({ title, links }: Props) {
         {links.map((link, i) => {
           return (
             <li key={`${link.text}-${i}`} className="link_wrapper">
-              <a href={link.href || ''}>{capitalizeEachWord(link.text)}</a>
+              <a href={link.href || 'javascript:;'}>
+                {capitalizeEachWord(link.text)}
+              </a>
             </li>
           );
         })}
