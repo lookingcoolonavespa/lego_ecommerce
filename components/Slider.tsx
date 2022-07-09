@@ -12,9 +12,15 @@ interface Props {
   children: ReactNode;
   className?: string;
   slideWidth: number;
+  title?: string;
 }
 
-export default function Slider({ children, className, slideWidth }: Props) {
+export default function Slider({
+  children,
+  className,
+  slideWidth,
+  title,
+}: Props) {
   const slidesCtn = useRef<HTMLDivElement | null>(null);
   const slidesCtnWidth = useRef(0);
   const slideFrame = useRef<HTMLDivElement | null>(null);
@@ -45,7 +51,7 @@ export default function Slider({ children, className, slideWidth }: Props) {
     [slideFrameWidth, slideWidth]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     function getWidth() {
       if (!slideFrame.current || !slidesCtn.current) return;
 
@@ -101,7 +107,6 @@ export default function Slider({ children, className, slideWidth }: Props) {
         newTranslateVal =
           currSlideNo * (Math.floor(slideFrameWidth / slideWidth) * slideWidth);
       }
-      console.log(newTranslateVal);
 
       if (prev === 0) return prev;
       return newTranslateVal;
@@ -111,24 +116,31 @@ export default function Slider({ children, className, slideWidth }: Props) {
   return (
     <div className={className}>
       <button type="button" onClick={pageDown} aria-label="left">
-        <ArrowSvg dir="left" />
+        <ArrowSvg dir="left" size="60" />
       </button>
-      <div ref={slideFrame} data-testid="slide_frame" className="slide_frame">
-        <animated.div
-          ref={slidesCtn}
-          className="slides_ctn"
-          style={{
-            transform: slideProps.offset.to(
-              (offsetX) => `translateX(${offsetX}px)`
-            ),
-            willChange: 'transform',
-          }}
-        >
-          {children}
-        </animated.div>
+      <div className="content">
+        {title && (
+          <header>
+            <h3>{title}</h3>
+          </header>
+        )}
+        <div ref={slideFrame} data-testid="slide_frame" className="slide_frame">
+          <animated.div
+            ref={slidesCtn}
+            className="slides_ctn"
+            style={{
+              transform: slideProps.offset.to(
+                (offsetX) => `translateX(${offsetX}px)`
+              ),
+              willChange: 'transform',
+            }}
+          >
+            {children}
+          </animated.div>
+        </div>
       </div>
       <button type="button" onClick={pageUp} aria-label="right">
-        <ArrowSvg dir="right" />
+        <ArrowSvg dir="right" size="60" />
       </button>
     </div>
   );

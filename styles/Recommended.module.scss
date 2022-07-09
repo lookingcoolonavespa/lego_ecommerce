@@ -2,18 +2,27 @@
   position: relative;
   overflow: hidden;
   width: 100%;
-  display: grid;
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .main_content {
   display: flex;
+  justify-content: center;
+  width: 100%;
+
+  header {
+    margin-bottom: 2em;
+  }
+
+  :global(.content) {
+    width: max(70%, 772px);
+  }
 
   :global(.slide_frame) {
     overflow: hidden;
     position: relative;
-    width: max(70%, 772px);
     height: 357.2px;
   }
 

@@ -101,7 +101,6 @@ describe('Slider', () => {
       const slideFrameWidth = Number(
         window.getComputedStyle(slideFrame).width.slice(0, -2)
       );
-      cy.log(`${slideFrameWidth}`);
 
       const expectedTranslateVal = slideCtnWidth - slideFrameWidth;
 
@@ -130,7 +129,7 @@ describe('Slider', () => {
     });
   });
 
-  it.only('buttons work after resize', () => {
+  it.only('prev button works after resize', () => {
     cy.mount(<Recommended products={RECOMMENDED} />);
 
     const nextBtn = cy.get('[aria-label="right"]');
@@ -145,5 +144,33 @@ describe('Slider', () => {
     cy.get('.slides_ctn')
       .should('have.attr', 'style')
       .should('contain', `transform: translateX(0px)`);
+  });
+
+  it.only('on resize, places slider at the end if the last slider item was visible before resize', () => {
+    cy.mount(<Recommended products={RECOMMENDED} />);
+    cy.viewport('macbook-15');
+    const nextBtn = cy.get('[aria-label="right"]');
+    nextBtn.click();
+    nextBtn.click();
+    nextBtn.click();
+
+    cy.viewport(772, 500);
+
+    cy.document().then((doc) => {
+      const slideCtn = doc.querySelector('.slides_ctn') as Element;
+      const slideCtnWidth = Number(
+        window.getComputedStyle(slideCtn).width.slice(0, -2)
+      );
+      const slideFrame = doc.querySelector('.slide_frame') as Element;
+      const slideFrameWidth = Number(
+        window.getComputedStyle(slideFrame).width.slice(0, -2)
+      );
+
+      const expectedTranslateVal = slideCtnWidth - slideFrameWidth;
+
+      cy.get('.slides_ctn')
+        .should('have.attr', 'style')
+        .should('contain', `transform: translateX(-${expectedTranslateVal}px)`);
+    });
   });
 });

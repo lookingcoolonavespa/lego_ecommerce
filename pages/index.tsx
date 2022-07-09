@@ -8,6 +8,7 @@ import Recommended from '../components/Recommended';
 import axios from 'axios';
 import { ProductInterface } from '../types/interfaces';
 import { RECOMMENDED } from '../utils/constants';
+import SignUpHero from '../components/SignUpHero';
 
 export async function getStaticProps() {
   try {
@@ -60,6 +61,7 @@ const Home: NextPage<Props> = ({ recommended }) => {
       <Header />
       <main className={styles.main}>
         <Recommended products={recommended} />
+        <SignUpHero />
       </main>
     </div>
   );

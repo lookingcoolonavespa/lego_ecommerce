@@ -12,10 +12,11 @@ interface Props {
 export default function Recommended({ products }: Props) {
   return (
     <section className={styles.main}>
-      <header>
-        <h3>Recommended for you</h3>
-      </header>
-      <Slider className={styles.main_content} slideWidth={290}>
+      <Slider
+        className={styles.main_content}
+        slideWidth={290}
+        title={'recommended for you'}
+      >
         {products.map((product, i) => {
           return (
             <ProductPreview
