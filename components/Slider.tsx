@@ -39,11 +39,10 @@ export default function Slider({
   useEffect(
     function adjustSlideOnResize() {
       setTranslateVal((prev) => {
-        if (
-          // slider is past end of last slide
-          prev + slideFrameWidth >
-          slidesCtnWidth.current
-        ) {
+        const firstSlideIsCutOff = prev % slideWidth;
+        const sliderIsPastLastSlide =
+          prev + slideFrameWidth > slidesCtnWidth.current;
+        if (sliderIsPastLastSlide || firstSlideIsCutOff) {
           return slidesCtnWidth.current - slideFrameWidth;
         } else return prev;
       });

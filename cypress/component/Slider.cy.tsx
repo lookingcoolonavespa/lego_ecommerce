@@ -75,8 +75,9 @@ describe('Slider', () => {
     });
   });
 
-  it('doesnt go past last slider item even when resized', () => {
+  it.only('doesnt go past last slider item even when resized', () => {
     cy.mount(<ProductSlider products={RECOMMENDED} />);
+
     const nextBtn = cy.get('[aria-label="right"]');
     nextBtn.click();
     nextBtn.click();
@@ -89,7 +90,7 @@ describe('Slider', () => {
     nextBtn.click();
     nextBtn.click();
 
-    cy.viewport('macbook-15');
+    cy.viewport('macbook-16');
 
     cy.document().then((doc) => {
       const slideCtn = doc.querySelector('.slides_ctn') as Element;
