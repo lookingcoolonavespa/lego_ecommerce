@@ -1,13 +1,13 @@
 import React from 'react';
 import { SvgProps } from '../../types/interfaces';
 
-export default function CartSvg({ width = '24', height = '24' }: SvgProps) {
+export default function CartSvg({ size = '24' }) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      width={width}
-      height={height}
+      width={size}
+      height={size}
     >
       <path fill="none" d="M0 0h24v24H0z" />
       <path
@@ -19,6 +19,5 @@ export default function CartSvg({ width = '24', height = '24' }: SvgProps) {
 }
 
 CartSvg.defaultProps = {
-  height: '24',
-  width: '24',
+  size: '24',
 };
