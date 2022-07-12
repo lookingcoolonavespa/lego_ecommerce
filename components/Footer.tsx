@@ -61,9 +61,14 @@ const colOneLinks = [
   { text: 'find a LEGO store' },
 ];
 
-export default function Footer() {
+interface Props {
+  mobile: boolean;
+}
+
+export default function Footer({ mobile }: Props) {
   const { email, inputStatus, submit, handleChange } = useEmail();
-  return (
+
+  const desktopView = (
     <footer className={styles.main}>
       <div className={styles.content}>
         <section className={`${styles.row} two_col_view`}>
@@ -120,4 +125,6 @@ export default function Footer() {
       </div>
     </footer>
   );
+
+  return <>{desktopView}</>;
 }

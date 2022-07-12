@@ -6,11 +6,7 @@ import styles from '../styles/SignUpHero.module.scss';
 import useEmail from '../utils/useEmail';
 import InputWrapper from './InputWrapper';
 
-interface Props {
-  mobile: boolean;
-}
-
-export default function SignUpHero({ mobile }: Props) {
+export default function SignUpHero() {
   const { email, inputStatus, submit, handleChange } = useEmail();
 
   const spring = useSpring({

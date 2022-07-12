@@ -62,7 +62,7 @@ const Home: NextPage<Props> = ({ recommended }) => {
       </Head>
       <Nav mobile={mobileCheck.current} />
       <Header />
-      <Layout className={styles.main}>
+      <Layout className={styles.main} mobile={mobileCheck.current}>
         <ProductSlider title="recommended for you" products={recommended} />
         <SignUpHero />
         <ProductSlider
