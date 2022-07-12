@@ -25,3 +25,17 @@
     padding: 12px 32px;
   }
 }
+
+@media screen and (max-width: 569px) {
+  .main {
+    background-size: cover;
+  }
+
+  .text_block {
+    h2 {
+      p {
+        font-size: 30px !important;
+      }
+    }
+  }
+}

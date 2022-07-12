@@ -105,6 +105,7 @@ input[type='text'] {
   border: 1px solid var(--border);
   padding: 0.6em 0.8em;
   border-radius: 4px;
+  width: 100%;
 }
 
 ul {
@@ -145,5 +146,23 @@ ul {
     position: absolute;
     bottom: 0;
     color: #198754;
+  }
+}
+
+@media screen and (max-width: 569px) {
+  h2 {
+    font-size: 30px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  h5 {
+    font-size: 16px;
+  }
+
+  p {
+    font-size: 13px;
   }
 }
