@@ -10,7 +10,7 @@ interface Props {
 export default function LinksCtn({ title, links }: Props) {
   return (
     <div className="links_ctn">
-      {title && <h5>{title}</h5>}{' '}
+      {title && <h5>{title}</h5>}
       <ul>
         {links.map((link, i) => {
           return (

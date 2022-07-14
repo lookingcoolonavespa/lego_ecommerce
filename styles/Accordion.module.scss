@@ -1,0 +1,16 @@
+.main {
+  overflow: hidden;
+}
+.title_row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background-color: var(--footer-bg);
+  z-index: 99;
+  border-bottom: 1px solid var(--main-text);
+}
+.content {
+  overflow: hidden;
+}
