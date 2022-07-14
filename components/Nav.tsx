@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTransition, animated } from 'react-spring';
 import styles from '../styles/Nav.module.scss';
 import Icon from './Icon';
 
@@ -14,6 +15,12 @@ interface Props {
 
 export default function Nav({ mobile }: Props) {
   const [visible, setVisible] = useState(false);
+  const transition = useTransition(visible, {
+    from: { transform: 'translateY(-100%' },
+    enter: { transform: 'translateY(0%' },
+    leave: { transform: 'translateY(-100%' },
+  });
+
   const desktopView = (
     <nav className={`${styles.main} ${styles.desktop}`}>
       <section className={styles.left}>
@@ -49,7 +56,10 @@ export default function Nav({ mobile }: Props) {
             {<LegoLego width="30" height="auto" />}
           </div>
         </div>
-        <button aria-label="hamburger menu">
+        <button
+          aria-label="hamburger menu"
+          onClick={() => setVisible((prev) => !prev)}
+        >
           <MenuSvg />
         </button>
       </section>
@@ -66,5 +76,20 @@ export default function Nav({ mobile }: Props) {
       </section>
     </nav>
   );
-  return <>{mobile ? mobileView : desktopView}</>;
+  return (
+    <>
+      {mobile ? mobileView : desktopView}
+      {mobile &&
+        transition(
+          (style, item) =>
+            item && (
+              <animated.div style={style} className={styles.pullout_menu}>
+                <div className={styles.nav_item}>Shop</div>
+                <div className={styles.nav_item}>Discover</div>
+                <div className={styles.nav_item}>Help</div>
+              </animated.div>
+            )
+        )}
+    </>
+  );
 }

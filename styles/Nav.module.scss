@@ -1,7 +1,10 @@
 .main {
+  position: relative;
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid var(--border);
+  z-index: 3;
+  background-color: var(--background);
 }
 
 .desktop {
@@ -66,4 +69,11 @@
   .logo_wrapper {
     margin: 0 20px;
   }
+}
+
+.pullout_menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background-color: var(--background);
 }
