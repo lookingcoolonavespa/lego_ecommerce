@@ -39,10 +39,7 @@
   margin-top: 50px;
 }
 
-.row_two {
-  display: flex;
-  justify-content: space-between;
-
+.row {
   :global(.input_wrapper) label {
     font-weight: 700;
     font-size: 1.25em;
@@ -66,6 +63,11 @@
   }
 }
 
+.row_two {
+  display: flex;
+  justify-content: space-between;
+}
+
 .follow_us {
   flex-basis: 17em;
 }
@@ -83,6 +85,12 @@
     padding: 0 1em;
     border-radius: 0 4px 4px 0;
     color: white;
+  }
+}
+
+.accordion {
+  :global(.accordion_title_row) {
+    padding: 6px 3px;
   }
 }
 

@@ -147,7 +147,7 @@ export default function Footer({ mobile }: Props) {
           })}
         </section>
 
-        <section className={`${styles.row_two} ${styles.row}`}>
+        <section className={`${styles.row}`}>
           <form className={styles.subscribe_wrapper} onSubmit={submit}>
             <h5>subscribe to LEGO shop emails</h5>
             <div className={styles.subscribe_input}>
@@ -165,6 +165,8 @@ export default function Footer({ mobile }: Props) {
               </button>
             </div>
           </form>
+        </section>
+        <section className={styles.row}>
           <div className={styles.follow_us}>
             <h5>follow us</h5>
             <SocialsCtn iconSize="20px" />
