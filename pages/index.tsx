@@ -11,6 +11,7 @@ import { RECOMMENDED } from '../utils/constants';
 import SignUpHero from '../components/SignUpHero';
 import Layout from '../components/Layout';
 import useMobile from '../utils/useMobile';
+import { useEffect } from 'react';
 
 export async function getStaticProps() {
   try {
@@ -53,6 +54,7 @@ interface Props {
 }
 const Home: NextPage<Props> = ({ recommended }) => {
   const { mobileCheck } = useMobile();
+
   return (
     <div className={styles.container}>
       <Head>

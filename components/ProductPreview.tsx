@@ -43,7 +43,7 @@ export default function ProductPreview({ product, className }: Props) {
             <p ref={priceNode}>{product.price} $</p>
           </div>
           <button type="button" className={styles.add_to_cart}>
-            <CartSvg height={cartSize} width={cartSize} />
+            <CartSvg size={cartSize} />
           </button>
         </div>
       </div>

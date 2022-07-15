@@ -70,6 +70,13 @@ export default function Slider({
     };
   }, []);
 
+  useEffect(function getHeight() {
+    if (!slideFrame.current || !slidesCtn.current) return;
+
+    const slidesHeight = window.getComputedStyle(slidesCtn.current).height;
+    slideFrame.current.style.height = slidesHeight;
+  }, []);
+
   function pageUp() {
     setTranslateVal((prev) => {
       let newTranslateVal =
