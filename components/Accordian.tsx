@@ -22,7 +22,6 @@ export default function Accordion({ className, title, insides }: Props) {
 
   useEffect(() => {
     if (!contentNode.current) return;
-    console.log(window.getComputedStyle(contentNode.current).height);
     setContentNodeHeight(window.getComputedStyle(contentNode.current).height);
   }, []);
 

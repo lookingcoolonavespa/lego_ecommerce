@@ -22,7 +22,6 @@ export async function getStaticProps() {
     }
 
     const products = await res.data;
-
     return {
       props: {
         recommended: products,
@@ -54,7 +53,6 @@ interface Props {
 }
 const Home: NextPage<Props> = ({ recommended }) => {
   const { mobileCheck } = useMobile();
-
   return (
     <div className={styles.container}>
       <Head>
@@ -64,15 +62,16 @@ const Home: NextPage<Props> = ({ recommended }) => {
       </Head>
       <Nav mobile={mobileCheck.current} />
       <Header />
-      <Layout className={styles.main} mobile={mobileCheck.current}>
-        <ProductSlider title="recommended for you" products={recommended} />
-        <SignUpHero />
-        <ProductSlider
-          title="featured sets"
-          products={[...recommended].reverse()}
-        />
+      <Layout mobile={mobileCheck.current}>
+        <main className={styles.main}>
+          <ProductSlider title="recommended for you" products={recommended} />
+          <SignUpHero />
+          <ProductSlider
+            title="featured sets"
+            products={[...recommended].reverse()}
+          />
+        </main>
       </Layout>
-      <main className={styles.main}></main>
     </div>
   );
 };

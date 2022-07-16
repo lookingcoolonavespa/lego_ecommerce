@@ -63,7 +63,9 @@ input,
 textarea,
 button,
 input[type='submit'],
-input[type='reset'] {
+input[type='reset'],
+select,
+option {
   background: none;
   color: inherit;
   border: none;
@@ -101,6 +103,7 @@ main > section {
   margin: 50px 0;
 }
 
+select,
 input[type='text'] {
   background: var(--background);
   border: 1px solid var(--border);
@@ -155,6 +158,43 @@ ul {
   width: 6.5em;
   height: 2.2em;
   border-radius: 3px;
+}
+
+.search_bar,
+.sort_by {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+
+  .svg_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--border);
+    padding: 0 0.8em;
+    border-right: 1px solid var(--border);
+  }
+
+  select,
+  input {
+    border: none;
+  }
+}
+
+.sort_by {
+  padding-right: 0.8em;
+  select {
+    padding-right: 0;
+  }
+}
+
+.scroller {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  overflow: auto;
 }
 
 @media screen and (max-width: 569px) {

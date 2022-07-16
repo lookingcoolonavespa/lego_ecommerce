@@ -5,6 +5,10 @@ import { BEST_SELLERS } from '../utils/constants';
 import { ProductInterface } from '../types/interfaces';
 import Sidebar from '../components/Catalog/Sidebar';
 import CatalogNav from '../components/Catalog/CatalogNav';
+import SortBy from '../components/Catalog/SortBy';
+import SearchBar from '../components/Catalog/SearchBar';
+import ProductPreview from '../components/ProductPreview';
+import Layout from '../components/Layout';
 
 export async function getStaticProps() {
   try {
@@ -15,7 +19,6 @@ export async function getStaticProps() {
     }
 
     const products = await res.data;
-
     return {
       props: {
         bestSellers: products
@@ -43,7 +46,7 @@ export async function getStaticProps() {
 
     return {
       props: {
-        recommended: BEST_SELLERS,
+        bestSellers: BEST_SELLERS,
       },
     };
   }
@@ -56,10 +59,35 @@ interface Props {
 export default function Catalog({ bestSellers }: Props) {
   const [priceFilters, setPriceFilters] = useState({ min: 0, max: 0 });
   return (
-    <>
-      <CatalogNav />
-      <main className={styles.main}></main>
-      <Sidebar priceFilters={priceFilters} className={styles.sidebar} />
-    </>
+    <Layout mobile={false}>
+      <div className={styles.container}>
+        <CatalogNav />
+        <div className={styles.content}>
+          <Sidebar priceFilters={priceFilters} className={styles.sidebar} />
+          <main className={styles.main}>
+            <header>
+              <h2>Catalog</h2>
+            </header>
+            <div className={styles.subheader}>
+              <SearchBar />
+              <SortBy />
+            </div>
+            <div className={styles.grid_container}>
+              <div className="scroller">
+                {bestSellers.map((product, i) => {
+                  return (
+                    <ProductPreview
+                      key={i}
+                      product={product}
+                      className={styles.product_wrapper}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    </Layout>
   );
 }
