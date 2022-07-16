@@ -1,0 +1,48 @@
+.main {
+  height: 100vh;
+  width: 300px;
+  border-right: 1px solid var(--faded-text);
+  padding: 1.5em 0;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5em;
+
+  > * {
+    padding: 0 3em;
+    padding-bottom: 1.5em;
+    border-bottom: 1px solid var(--faded-text);
+  }
+
+  > :last-child {
+    border-bottom: none;
+  }
+
+  :global(.accordion_title_row) {
+    background-color: var(--background);
+  }
+}
+
+.btn_ctn {
+  display: flex;
+  justify-content: center;
+  column-gap: 2em;
+}
+
+.apply_filters {
+  width: 8.5em;
+  height: 3em;
+  background-color: var(--action-color);
+}
+
+.remove_filters {
+  border-radius: 50%;
+  height: 3em;
+  width: 3em;
+  border: 1px solid var(--faded-text);
+  color: var(--main-text);
+
+  &:hover {
+    background-color: var(--faded-text);
+    transition: 0.2s ease-in;
+  }
+}

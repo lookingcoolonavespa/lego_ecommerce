@@ -1,13 +1,13 @@
 import React from 'react';
 import styles from '../styles/Footer.module.scss';
 import { capitalizeStr } from '../utils/misc';
-import InputWrapper from './InputWrapper';
 import LinksCtn from './LinksCtn';
 import SocialsCtn from './SocialsCtn';
 import ArrowSvg from './svg/ArrowSvg';
 import LegoLego from './svg/LegoLogo';
 import useEmail from '../utils/useEmail';
 import Accordion from './Accordian';
+import InputWrapperWithError from './InputWrapperWithError';
 
 const footerLinks = [
   {
@@ -93,7 +93,7 @@ export default function Footer({ mobile }: Props) {
           <form className={styles.subscribe_wrapper} onSubmit={submit}>
             <h5>subscribe to LEGO shop emails</h5>
             <div className={styles.subscribe_input}>
-              <InputWrapper
+              <InputWrapperWithError
                 inputDetails={{
                   type: 'text',
                   placeholder: 'your email address',
@@ -151,7 +151,7 @@ export default function Footer({ mobile }: Props) {
           <form className={styles.subscribe_wrapper} onSubmit={submit}>
             <h5>subscribe to LEGO shop emails</h5>
             <div className={styles.subscribe_input}>
-              <InputWrapper
+              <InputWrapperWithError
                 inputDetails={{
                   type: 'text',
                   placeholder: 'your email address',

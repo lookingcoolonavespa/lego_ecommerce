@@ -3,6 +3,7 @@
   --border: lightgray;
   --action-color: #e3000b;
   --main-text: black;
+  --faded-text: rgb(214, 214, 214);
   --footer-bg: #ffcf00;
 }
 
@@ -147,6 +148,13 @@ ul {
     bottom: 0;
     color: #198754;
   }
+}
+
+.flat_btn {
+  color: var(--background);
+  width: 6.5em;
+  height: 2.2em;
+  border-radius: 3px;
 }
 
 @media screen and (max-width: 569px) {

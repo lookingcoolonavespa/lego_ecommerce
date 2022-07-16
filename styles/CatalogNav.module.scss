@@ -1,0 +1,35 @@
+.main {
+  border-bottom: 1px solid var(--faded-text);
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: 300px 1fr 1fr 1fr 1fr 1fr 1fr;
+
+  & > * {
+    border-right: 1px solid var(--faded-text);
+    padding: 1.5em 0;
+  }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  column-gap: 1em;
+  letter-spacing: 0.2em;
+  width: 300px;
+  padding-left: 3em;
+
+  h3 {
+    font-weight: 400;
+  }
+}
+
+.nav_item {
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease-out;
+
+  &:hover {
+    background-color: #eef5fa;
+  }
+}

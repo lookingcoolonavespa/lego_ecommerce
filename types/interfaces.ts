@@ -18,11 +18,11 @@ export interface LinkInterface {
 }
 
 export interface InputDetailsInterface {
-  type: 'text';
+  type: 'text' | 'number';
   name?: string;
   placeholder?: string;
   onChange?: (e: ChangeEvent<Element>) => void;
-  value: string;
+  value: string | number;
 }
 
 export interface InputStatusInterface {

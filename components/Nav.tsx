@@ -8,6 +8,7 @@ import MenuSvg from './svg/MenuSvg';
 import LanguageSvg from './svg/LanguageSvg';
 import AccountSvg from './svg/AccountSvg';
 import CartSvg from './svg/CartSvg';
+import Link from 'next/link';
 
 interface Props {
   mobile: boolean;
@@ -25,11 +26,11 @@ export default function Nav({ mobile }: Props) {
     <nav className={`${styles.main} ${styles.desktop}`}>
       <section className={styles.left}>
         <div className={`centered`}>
-          <div className={styles.logo_wrapper}>
-            {<LegoLego width="70" height="auto" />}
-          </div>
+          <div className={styles.logo_wrapper}>{<LegoLego size="70" />}</div>
         </div>
-        <div className={styles.nav_item}>Shop</div>
+        <Link href="/shop">
+          <a className={styles.nav_item}>Shop</a>
+        </Link>
         <div className={styles.nav_item}>Discover</div>
         <div className={styles.nav_item}>Help</div>
       </section>
@@ -52,9 +53,7 @@ export default function Nav({ mobile }: Props) {
     <nav className={`${styles.main} ${styles.mobile}`}>
       <section className={styles.left}>
         <div className={`centered`}>
-          <div className={styles.logo_wrapper}>
-            {<LegoLego width="30" height="auto" />}
-          </div>
+          <div className={styles.logo_wrapper}>{<LegoLego size="30" />}</div>
         </div>
         <button
           aria-label="hamburger menu"

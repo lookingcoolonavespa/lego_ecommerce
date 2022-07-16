@@ -7,10 +7,15 @@
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  background-color: var(--footer-bg);
+  background-color: inherit;
   z-index: 99;
   border-bottom: 1px solid var(--main-text);
 }
 .content {
   overflow: hidden;
+}
+
+.hidden {
+  position: absolute;
+  visibility: hidden;
 }

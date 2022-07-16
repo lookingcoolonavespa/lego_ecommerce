@@ -1,12 +1,12 @@
 import React from 'react';
 import { SvgProps } from '../../types/interfaces';
 
-export default function LegoLego({ width = '500', height = '500' }: SvgProps) {
+export default function LegoLego({ size = '50' }) {
   return (
     <svg
       className="l-logo__img"
-      width={width}
-      height={height}
+      width={size}
+      height={size}
       viewBox="0 0 500 500"
       version="1.1"
       id="svg14"
@@ -41,8 +41,3 @@ export default function LegoLego({ width = '500', height = '500' }: SvgProps) {
     </svg>
   );
 }
-
-LegoLego.defaultProps = {
-  width: '500',
-  height: '500',
-};

@@ -1,0 +1,32 @@
+.title {
+  font-size: 700;
+  padding-bottom: 1em;
+}
+
+.controls {
+  display: flex;
+  column-gap: 1em;
+
+  :global(.input_wrapper) {
+    background-color: var(--faded-text);
+    padding: 0.5em 1em;
+    display: flex;
+    flex: 0 0 auto;
+    column-gap: 0.2em;
+    color: gray;
+    border-radius: 3px;
+  }
+
+  input[type='number'] {
+    width: 1em;
+    -moz-appearance: textfield;
+    color: var(--main-text);
+    text-align: center;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

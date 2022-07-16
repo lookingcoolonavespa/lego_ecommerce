@@ -91,6 +91,7 @@
 .accordion {
   :global(.accordion_title_row) {
     padding: 6px 3px;
+    background-color: var(--footer-bg);
   }
 }
 

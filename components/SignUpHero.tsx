@@ -4,7 +4,7 @@ import Image from 'next/image';
 import HeroImg from '../public/images/favpng_lego-minifigures-online-toy.png';
 import styles from '../styles/SignUpHero.module.scss';
 import useEmail from '../utils/useEmail';
-import InputWrapper from './InputWrapper';
+import InputWrapper from './InputWrapperWithError';
 
 export default function SignUpHero() {
   const { email, inputStatus, submit, handleChange } = useEmail();
@@ -32,7 +32,9 @@ export default function SignUpHero() {
           inputStatus={inputStatus}
         />
 
-        <animated.button style={spring}>Sign up</animated.button>
+        <animated.button className="flat_btn" style={spring}>
+          Sign up
+        </animated.button>
       </form>
     </section>
   );

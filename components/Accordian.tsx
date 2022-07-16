@@ -11,19 +11,20 @@ interface Props {
 
 export default function Accordion({ className, title, insides }: Props) {
   const [visible, setVisible] = useState(false);
-  const transition = useTransition(visible, {
-    from: { maxHeight: '0px', transform: 'translateY(0%)' },
-    enter: {
-      maxHeight: `${300}px`,
-      transform: 'translateY(0%)',
-    },
-    leave: {
-      maxHeight: '0px',
-      transform: `translateY(-100%)`,
-    },
+  const [contentNodeHeight, setContentNodeHeight] = useState('0px');
+
+  const spring = useSpring({
+    maxHeight: visible ? contentNodeHeight : '0px',
+    transform: visible ? 'translateY(0%)' : 'translateY(-100%)',
   });
 
   const contentNode = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!contentNode.current) return;
+    console.log(window.getComputedStyle(contentNode.current).height);
+    setContentNodeHeight(window.getComputedStyle(contentNode.current).height);
+  }, []);
 
   const rootClasses = [styles.main];
   if (className) rootClasses.push(className);
@@ -38,18 +39,12 @@ export default function Accordion({ className, title, insides }: Props) {
           <ArrowSvg dir={visible ? 'up' : 'down'} />
         </div>
       </div>
-      {transition(
-        (style, item) =>
-          item && (
-            <animated.div
-              ref={contentNode}
-              className={styles.content}
-              style={style}
-            >
-              {insides}
-            </animated.div>
-          )
-      )}
+      <animated.div className={styles.content} style={spring}>
+        {insides}
+      </animated.div>
+      <div className={styles.hidden} ref={contentNode}>
+        {insides}
+      </div>
     </div>
   );
 }

@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../styles/Catalog.module.scss';
 import axios from 'axios';
 import { BEST_SELLERS } from '../utils/constants';
 import { ProductInterface } from '../types/interfaces';
+import Sidebar from '../components/Catalog/Sidebar';
+import CatalogNav from '../components/Catalog/CatalogNav';
 
 export async function getStaticProps() {
   try {
@@ -52,18 +54,12 @@ interface Props {
 }
 
 export default function Catalog({ bestSellers }: Props) {
+  const [priceFilters, setPriceFilters] = useState({ min: 0, max: 0 });
   return (
-    <main className={styles.main}>
-      <section className={styles.left_sidebar}>
-        {
-          //logo
-          // breadcrumbs
-          // price
-          // theme
-          // age
-          // characters
-        }
-      </section>
-    </main>
+    <>
+      <CatalogNav />
+      <main className={styles.main}></main>
+      <Sidebar priceFilters={priceFilters} className={styles.sidebar} />
+    </>
   );
 }
