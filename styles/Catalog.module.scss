@@ -1,7 +1,17 @@
+.layout {
+  footer {
+    margin-top: 100vh;
+  }
+}
+
 .container {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
 }
 
 .content {
@@ -50,6 +60,7 @@
     flex-wrap: wrap;
     column-gap: 3em;
     row-gap: 3em;
+    overflow: hidden;
   }
 }
 

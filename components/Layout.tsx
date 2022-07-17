@@ -10,8 +10,10 @@ interface Props {
 export default function Layout({ children, className, mobile }: Props) {
   return (
     <>
-      {children}
-      <Footer mobile={mobile} />
+      <div className={className || ''}>
+        {children}
+        <Footer mobile={mobile} />
+      </div>
     </>
   );
 }

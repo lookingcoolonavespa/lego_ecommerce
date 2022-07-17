@@ -80,7 +80,7 @@ export default function Catalog({ bestSellers }: Props) {
   };
 
   return (
-    <Layout mobile={false}>
+    <Layout mobile={false} className={styles.layout}>
       <div className={styles.container}>
         <CatalogNav />
         <div className={styles.content}>
