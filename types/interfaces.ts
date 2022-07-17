@@ -29,3 +29,8 @@ export interface InputStatusInterface {
   message: string;
   type: 'error' | 'success' | undefined;
 }
+
+export interface PriceFilterInterface {
+  min: number;
+  max: number;
+}

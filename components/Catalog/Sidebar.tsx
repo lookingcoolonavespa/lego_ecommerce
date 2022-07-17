@@ -3,23 +3,27 @@ import styles from '../../styles/Sidebar.module.scss';
 import LegoLego from '../svg/LegoLogo';
 import TrashSvg from '../svg/TrashSvg';
 import OptionsFilter from './OptionsFilter';
+import { PriceFilterInterface } from '../../types/interfaces';
 import PriceFilter from './PriceFilter';
 
 interface Props {
   className: string;
-  priceFilters: {
-    min: number;
-    max: number;
-  };
+  priceFilters: PriceFilterInterface;
+  setPriceFilters: React.Dispatch<React.SetStateAction<PriceFilterInterface>>;
 }
 
-export default function Sidebar({ className, priceFilters }: Props) {
+export default function Sidebar({
+  className,
+  priceFilters,
+  setPriceFilters,
+}: Props) {
   return (
     <aside className={`${styles.main} ${className}`}>
       <PriceFilter
         className={styles.price_filter}
         min={priceFilters.min}
         max={priceFilters.max}
+        setPriceFilters={setPriceFilters}
       />
       <OptionsFilter
         title="Theme"

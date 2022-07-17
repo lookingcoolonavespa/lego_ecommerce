@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from '../styles/Catalog.module.scss';
 import axios from 'axios';
 import { BEST_SELLERS } from '../utils/constants';
@@ -9,6 +9,7 @@ import SortBy from '../components/Catalog/SortBy';
 import SearchBar from '../components/Catalog/SearchBar';
 import ProductPreview from '../components/ProductPreview';
 import Layout from '../components/Layout';
+import Pagination from '../components/Pagination';
 
 export async function getStaticProps() {
   try {
@@ -56,35 +57,67 @@ interface Props {
   bestSellers: ProductInterface[];
 }
 
+const PRODUCTS_ON_PAGE = 10;
+
 export default function Catalog({ bestSellers }: Props) {
   const [priceFilters, setPriceFilters] = useState({ min: 0, max: 0 });
+  const [page, setPage] = useState(1);
+
+  const currentPaginationData = bestSellers.slice(
+    (page - 1) * PRODUCTS_ON_PAGE,
+    page * PRODUCTS_ON_PAGE
+  );
+
+  const maxPage = Math.ceil(bestSellers.length / PRODUCTS_ON_PAGE);
+
+  const updatePage = (num: number) => {
+    if (num < 1 || num > maxPage) {
+      console.log('not a valid page');
+      return;
+    }
+
+    setPage(num);
+  };
+
   return (
     <Layout mobile={false}>
       <div className={styles.container}>
         <CatalogNav />
         <div className={styles.content}>
-          <Sidebar priceFilters={priceFilters} className={styles.sidebar} />
-          <main className={styles.main}>
-            <header>
-              <h2>Catalog</h2>
-            </header>
-            <div className={styles.subheader}>
-              <SearchBar />
-              <SortBy />
-            </div>
-            <div className={styles.grid_container}>
-              <div className="scroller">
-                {bestSellers.map((product, i) => {
-                  return (
-                    <ProductPreview
-                      key={i}
-                      product={product}
-                      className={styles.product_wrapper}
-                    />
-                  );
-                })}
+          <Sidebar
+            priceFilters={priceFilters}
+            className={styles.sidebar}
+            setPriceFilters={setPriceFilters}
+          />
+          <main>
+            <div className={styles.main}>
+              <header>
+                <h2>Catalog</h2>
+              </header>
+              <div className={styles.subheader}>
+                <SearchBar />
+                <SortBy />
+              </div>
+              <div className={styles.grid_container}>
+                <ul className="scroller" aria-label="product list">
+                  {currentPaginationData.map((product, i) => {
+                    return (
+                      <li key={i}>
+                        <ProductPreview
+                          product={product}
+                          className={styles.product_wrapper}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             </div>
+            <Pagination
+              currentPage={page}
+              maxPage={maxPage}
+              onPageChange={updatePage}
+            />
           </main>
         </div>
       </div>

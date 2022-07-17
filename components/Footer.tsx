@@ -70,11 +70,11 @@ export default function Footer({ mobile }: Props) {
   const { email, inputStatus, submit, handleChange } = useEmail();
 
   const desktopView = (
-    <footer className={styles.main}>
+    <footer className={styles.main} role="contentinfo">
       <div className={styles.content}>
         <section className={`${styles.row} two_col_view`}>
           <div className="col_one">
-            <LegoLego width="100px" height="100px" />
+            <LegoLego size="100" />
             <LinksCtn links={colOneLinks} />
           </div>
           <div className="col_two">
@@ -128,10 +128,10 @@ export default function Footer({ mobile }: Props) {
   );
 
   const mobileView = (
-    <footer className={`${styles.main} mobile`}>
+    <footer className={`${styles.main} mobile`} role="contentinfo">
       <div className={styles.content}>
         <section className={`${styles.row}`}>
-          <LegoLego width="100px" height="100px" />
+          <LegoLego size="100" />
           <LinksCtn links={colOneLinks} />
         </section>
         <section className={`${styles.row}`}>

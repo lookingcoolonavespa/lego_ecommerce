@@ -1,0 +1,44 @@
+.main {
+  display: flex;
+  border-top: 1px solid var(--border);
+
+  :global(.active) {
+    button {
+      background-color: var(--action-color);
+      height: 2em;
+      width: 2em;
+      border-radius: 50%;
+      color: white;
+      padding: 0;
+    }
+  }
+
+  button {
+    height: 100%;
+    width: 100%;
+    padding: 2em 0;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  li {
+    flex: 1;
+    border-right: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease-out;
+
+    &:hover {
+      background-color: #eef5fa;
+    }
+  }
+
+  .text_btn {
+    flex: 2;
+  }
+}
