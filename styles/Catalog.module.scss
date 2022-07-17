@@ -8,7 +8,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  position: fixed;
+  position: sticky;
   top: 0;
   right: 0;
   left: 0;
@@ -57,6 +57,7 @@
 
   :global(.scroller) {
     display: flex;
+    justify-content: space-between;
     flex-wrap: wrap;
     column-gap: 3em;
     row-gap: 3em;

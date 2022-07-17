@@ -64,13 +64,14 @@ const colOneLinks = [
 
 interface Props {
   mobile: boolean;
+  forwardedRef?: React.RefObject<HTMLElement>;
 }
 
-export default function Footer({ mobile }: Props) {
+export default function Footer({ mobile, forwardedRef }: Props) {
   const { email, inputStatus, submit, handleChange } = useEmail();
 
   const desktopView = (
-    <footer className={styles.main} role="contentinfo">
+    <footer ref={forwardedRef} className={styles.main} role="contentinfo">
       <div className={styles.content}>
         <section className={`${styles.row} two_col_view`}>
           <div className="col_one">

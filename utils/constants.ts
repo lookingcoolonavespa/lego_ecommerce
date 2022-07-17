@@ -451,3 +451,12 @@ export const BEST_SELLERS = [
     price: '34.99',
   },
 ];
+
+export const BEST_SELLERS_MULTIPLIED = [
+  ...BEST_SELLERS,
+  ...BEST_SELLERS,
+  ...BEST_SELLERS,
+  ...BEST_SELLERS,
+  ...BEST_SELLERS,
+  ...BEST_SELLERS,
+];
