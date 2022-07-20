@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import Image from 'next/image';
 import styles from '../styles/ProductPreview.module.scss';
 import { ProductInterface } from '../types/interfaces';
 import CartSvg from './svg/CartSvg';
+import CartContext from '../utils/CartContext';
 
 interface Props {
   product: ProductInterface;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function ProductPreview({ product, className }: Props) {
+  const { handleCart } = useContext(CartContext);
   const [cartSize, setCartSize] = useState('24px');
   const priceNode = useRef<HTMLHeadingElement | null>(null);
 
@@ -19,6 +21,16 @@ export default function ProductPreview({ product, className }: Props) {
     const priceSize = window.getComputedStyle(priceNode.current).fontSize;
     setCartSize(priceSize);
   }, []);
+
+  function addToCart() {
+    handleCart({
+      type: 'add',
+      payload: {
+        product,
+        quantity: 1,
+      },
+    });
+  }
 
   const rootClasses = [styles.main];
   if (className) rootClasses.push(className);
@@ -42,7 +54,11 @@ export default function ProductPreview({ product, className }: Props) {
           <div className={styles.price_wrapper}>
             <p ref={priceNode}>{product.price} $</p>
           </div>
-          <button type="button" className={styles.add_to_cart}>
+          <button
+            type="button"
+            className={styles.add_to_cart}
+            onClick={addToCart}
+          >
             <CartSvg size={cartSize} />
           </button>
         </div>

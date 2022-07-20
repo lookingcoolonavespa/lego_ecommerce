@@ -6,6 +6,7 @@ import CartSvg from '../svg/CartSvg';
 import LanguageSvg from '../svg/LanguageSvg';
 import AccountSvg from '../svg/AccountSvg';
 import Link from 'next/link';
+import NavCart from '../NavCart';
 
 export default function CatalogNav() {
   return (
@@ -16,17 +17,17 @@ export default function CatalogNav() {
           <h3>CATALOG</h3>
         </header>
       </Link>
-      <div className={styles.nav_item}>Catalog</div>
-      <div className={styles.nav_item}>Characters</div>
-      <div className={styles.nav_item}>Brand</div>
-      <div className={styles.nav_item}>
+      <div className={`${styles.nav_item} inactive`}>Catalog</div>
+      <div className={`${styles.nav_item} inactive`}>Characters</div>
+      <div className={`${styles.nav_item} inactive`}>Brand</div>
+      <div className={`${styles.nav_item} inactive`}>
         <Icon svg={<LanguageSvg />} text="English" />
       </div>
-      <div className={styles.nav_item}>
+      <div className={`${styles.nav_item} inactive`}>
         <Icon svg={<AccountSvg />} text="Sign in" />
       </div>
       <div className={styles.nav_item}>
-        <Icon svg={<CartSvg />} />
+        <NavCart />
       </div>
     </nav>
   );

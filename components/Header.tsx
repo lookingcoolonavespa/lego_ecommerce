@@ -2,6 +2,7 @@ import React from 'react';
 import styles from '../styles/Header.module.scss';
 
 import hero_img from '../public/images/lego_header.png';
+import Link from 'next/link';
 
 export default function Header() {
   return (
@@ -11,7 +12,9 @@ export default function Header() {
           <p>Celebrate Our 90th</p>
           <p>Anniversary</p>
         </h2>
-        <button type="button">SHOP NOW</button>
+        <Link href="/shop">
+          <button type="button">SHOP NOW</button>
+        </Link>
       </div>
     </header>
   );

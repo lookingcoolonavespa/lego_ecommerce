@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTransition, animated } from 'react-spring';
 import styles from '../styles/Nav.module.scss';
 import Icon from './Icon';
@@ -9,6 +9,8 @@ import LanguageSvg from './svg/LanguageSvg';
 import AccountSvg from './svg/AccountSvg';
 import CartSvg from './svg/CartSvg';
 import Link from 'next/link';
+import CartContext from '../utils/CartContext';
+import NavCart from './NavCart';
 
 interface Props {
   mobile: boolean;
@@ -31,18 +33,18 @@ export default function Nav({ mobile }: Props) {
         <Link href="/shop">
           <a className={styles.nav_item}>Shop</a>
         </Link>
-        <div className={styles.nav_item}>Discover</div>
-        <div className={styles.nav_item}>Help</div>
+        <div className={`${styles.nav_item} inactive`}>Discover</div>
+        <div className={`${styles.nav_item} inactive`}>Help</div>
       </section>
       <section className={styles.right}>
-        <div className={styles.nav_item}>
+        <div className={`${styles.nav_item} inactive`}>
           <Icon svg={<LanguageSvg />} text="English" />
         </div>
-        <div className={styles.nav_item}>
+        <div className={`${styles.nav_item} inactive`}>
           <Icon svg={<AccountSvg />} text="Sign in" />
         </div>
         <div className={styles.nav_item}>
-          <Icon svg={<CartSvg />} />
+          <NavCart />
         </div>
       </section>
     </nav>
@@ -70,7 +72,7 @@ export default function Nav({ mobile }: Props) {
           <Icon svg={<AccountSvg size={mobileIconSize} />} />
         </div>
         <div className={styles.nav_item}>
-          <Icon svg={<CartSvg size={mobileIconSize} />} />
+          <NavCart iconSize={mobileIconSize} />
         </div>
       </section>
     </nav>

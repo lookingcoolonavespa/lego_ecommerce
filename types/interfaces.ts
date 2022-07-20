@@ -9,7 +9,10 @@ export interface ProductInterface {
   imgSrc: string;
   title: string;
   price: string;
-  rating: string | null;
+}
+
+export interface ProductInCartInterface extends ProductInterface {
+  quantity: number;
 }
 
 export interface LinkInterface {

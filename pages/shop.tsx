@@ -97,7 +97,6 @@ export default function Catalog({
       const scrollerHeight = Number(
         window.getComputedStyle(scroller.current).height.slice(0, -2)
       );
-      console.log(window.scrollY);
 
       if (
         (scroller.current.scrollHeight >
@@ -120,7 +119,6 @@ export default function Catalog({
   useEffect(
     function resetScrollOnPageChange() {
       if (!footer.current || !scroller.current || !container.current) return;
-      console.log('firing 2');
       window.scrollTo(0, 0);
       // scroller.current.scrollTop = 0;
       // container.current.style.top = window.scrollY + 'px';
@@ -141,9 +139,6 @@ export default function Catalog({
           />
           <main>
             <div className={styles.main}>
-              <header>
-                <h2>Catalog</h2>
-              </header>
               <div className={styles.subheader}>
                 <SearchBar />
                 <SortBy />

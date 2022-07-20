@@ -196,6 +196,29 @@ ul {
   overflow: auto;
 }
 
+.inactive {
+  cursor: default !important;
+}
+
+.cart_wrapper {
+  position: relative;
+}
+
+.cart_counter {
+  position: absolute;
+  background-color: var(--action-color);
+  border-radius: 50%;
+  height: 1.5em;
+  width: 1.5em;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -0.75em;
+  right: -1.5em;
+  font-size: 12px;
+}
+
 @media screen and (max-width: 569px) {
   h2 {
     font-size: 30px;
@@ -209,7 +232,9 @@ ul {
     font-size: 16px;
   }
 
-  p {
+  p,
+  div,
+  button {
     font-size: 13px;
   }
 }

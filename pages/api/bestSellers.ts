@@ -67,7 +67,6 @@ export default async function handler(
     });
     document.documentElement.scroll(0, 8000);
     btn.click();
-    console.log(document.documentElement.scrollTop);
     await new Promise((resolve) => {
       setTimeout(resolve, 4000);
     });
@@ -85,7 +84,6 @@ export default async function handler(
     });
     document.documentElement.scroll(0, 12000);
     btn.click();
-    console.log(document.documentElement.scrollTop);
   });
 
   const products = await page.evaluate(async () => {

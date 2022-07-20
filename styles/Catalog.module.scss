@@ -34,7 +34,6 @@
 }
 
 .subheader {
-  margin-top: 1.5em;
   margin-bottom: 3em;
   display: flex;
   column-gap: 3em;
@@ -56,9 +55,9 @@
   flex: 1;
 
   :global(.scroller) {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 250px);
     justify-content: space-between;
-    flex-wrap: wrap;
     column-gap: 3em;
     row-gap: 3em;
     overflow: hidden;
