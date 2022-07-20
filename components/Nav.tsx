@@ -27,9 +27,11 @@ export default function Nav({ mobile }: Props) {
   const desktopView = (
     <nav className={`${styles.main} ${styles.desktop}`}>
       <section className={styles.left}>
-        <div className={`centered`}>
-          <div className={styles.logo_wrapper}>{<LegoLego size="70" />}</div>
-        </div>
+        <Link href="/">
+          <a className={`centered`}>
+            <div className={styles.logo_wrapper}>{<LegoLego size="70" />}</div>
+          </a>
+        </Link>
         <Link href="/shop">
           <a className={styles.nav_item}>Shop</a>
         </Link>
@@ -43,9 +45,11 @@ export default function Nav({ mobile }: Props) {
         <div className={`${styles.nav_item} inactive`}>
           <Icon svg={<AccountSvg />} text="Sign in" />
         </div>
-        <div className={styles.nav_item}>
-          <NavCart />
-        </div>
+        <Link href="/cart">
+          <a className={styles.nav_item}>
+            <NavCart />
+          </a>
+        </Link>
       </section>
     </nav>
   );
@@ -71,9 +75,11 @@ export default function Nav({ mobile }: Props) {
         <div className={styles.nav_item}>
           <Icon svg={<AccountSvg size={mobileIconSize} />} />
         </div>
-        <div className={styles.nav_item}>
-          <NavCart iconSize={mobileIconSize} />
-        </div>
+        <Link href="/cart">
+          <a className={styles.nav_item}>
+            <NavCart iconSize={mobileIconSize} />
+          </a>
+        </Link>
       </section>
     </nav>
   );

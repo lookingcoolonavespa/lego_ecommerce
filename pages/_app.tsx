@@ -61,7 +61,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       const parsed = JSON.parse(storedCart) as ProductInCartInterface[];
-      console.log(parsed);
       handleCart({
         type: 'set',
         payload: { cart: parsed },

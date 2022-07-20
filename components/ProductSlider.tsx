@@ -12,7 +12,7 @@ interface Props {
 
 export default function ProductSlider({ products, title }: Props) {
   return (
-    <section className={styles.main}>
+    <section className={`${styles.main} section`}>
       <Slider className={styles.main_content} slideWidth={290} title={title}>
         {products.map((product, i) => {
           return (

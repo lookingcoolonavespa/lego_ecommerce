@@ -1,0 +1,28 @@
+.main {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 2em 2em;
+  justify-content: space-between;
+}
+
+.product_img_wrapper {
+  position: relative;
+  width: 300px;
+}
+
+.product_details {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1em;
+  align-items: flex-end;
+}
+
+.title_wrapper {
+  h3 {
+    font-weight: 400;
+  }
+}
+
+.price_wrapper {
+  font-weight: 600;
+}

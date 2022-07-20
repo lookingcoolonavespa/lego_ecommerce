@@ -26,9 +26,11 @@ export default function CatalogNav() {
       <div className={`${styles.nav_item} inactive`}>
         <Icon svg={<AccountSvg />} text="Sign in" />
       </div>
-      <div className={styles.nav_item}>
-        <NavCart />
-      </div>
+      <Link href="/cart">
+        <a className={styles.nav_item}>
+          <NavCart />
+        </a>
+      </Link>
     </nav>
   );
 }

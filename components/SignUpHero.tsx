@@ -14,7 +14,7 @@ export default function SignUpHero() {
   });
 
   return (
-    <section className={styles.main}>
+    <section className={`${styles.main} section`}>
       <div className={styles.img_col}>
         <Image src={HeroImg} alt="lego man in a chicken suit" />
       </div>

@@ -98,7 +98,7 @@ button {
   }
 }
 
-main > section {
+main > .section {
   margin: 50px 0;
 }
 
@@ -214,9 +214,9 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  top: -0.75em;
-  right: -1.5em;
-  font-size: 12px;
+  top: -0.4em;
+  right: -1em;
+  font-size: 10px;
 }
 
 @media screen and (max-width: 569px) {
