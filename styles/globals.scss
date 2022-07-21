@@ -223,9 +223,17 @@ ul {
   font-size: 10px;
 }
 
+.bold {
+  font-weight: 600;
+}
+
+.error {
+  border: 1px solid var(--action-color);
+}
+
 @media screen and (max-width: 569px) {
   h2 {
-    font-size: 30px;
+    font-size: 25px;
   }
 
   h3 {

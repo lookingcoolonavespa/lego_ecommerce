@@ -45,12 +45,12 @@ export default function Cart() {
               </section>
               <section className={styles.price_ctn}>
                 <span className={styles.detail_label}>Item(s) total:</span>
-                <span>${itemTotalRounded}</span>
+                <span>{itemTotalRounded} $</span>
                 <span className={styles.detail_label}>Shipping:</span>
-                <span>$5</span>
+                <span>5 $</span>
                 <span className={styles.detail_label}>Total:</span>
-                <span>
-                  {itemTotalRounded ? `$${itemTotalRounded + 5}` : '--'}
+                <span className="bold">
+                  {itemTotalRounded ? `${itemTotalRounded + 5} $` : '--'}
                 </span>
               </section>
             </main>

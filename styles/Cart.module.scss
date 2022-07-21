@@ -37,12 +37,12 @@
     justify-content: center;
     font-weight: 400;
     min-height: 500px;
+    border-bottom: 1px solid var(--border);
   }
 }
 
 .price_ctn {
-  border-top: 1px solid var(--border);
-  padding: 1em 2em;
+  padding: 2em 2em;
   display: grid;
   grid-template-columns: repeat(2, auto);
   justify-content: flex-end;

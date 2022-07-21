@@ -17,11 +17,13 @@
   row-gap: 1em;
   align-items: flex-end;
   max-width: 50%;
+  flex-shrink: 0;
 }
 
 .title_wrapper {
   width: 100%;
   white-space: nowrap;
+  margin-bottom: 1em;
 
   h3 {
     overflow: hidden;
@@ -34,9 +36,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
+  width: 158px;
 }
 
 .price_wrapper {
   font-weight: 600;
+}
+
+@media screen and (max-width: 569px) {
+  .product_details {
+    width: 50%;
+
+    select {
+      padding: 0.2em 0.4em;
+    }
+  }
+  .detail_wrapper {
+    width: 100%;
+  }
 }

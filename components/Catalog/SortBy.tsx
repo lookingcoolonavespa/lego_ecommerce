@@ -21,6 +21,7 @@ export default function SortBy({ setSortMethod, sortMethod }: Props) {
       </div>
       <select
         ref={select}
+        value={sortMethod}
         onChange={() => {
           if (!select.current) return;
           const value = select.current.value as
@@ -31,7 +32,7 @@ export default function SortBy({ setSortMethod, sortMethod }: Props) {
         }}
       >
         {sortMethods.map((method) => (
-          <option key={method} value={method} selected={method === sortMethod}>
+          <option key={method} value={method}>
             {method}
           </option>
         ))}

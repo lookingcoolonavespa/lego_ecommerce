@@ -10,12 +10,14 @@ interface Props {
   className: string;
   priceFilters: PriceFilterInterface;
   setPriceFilters: React.Dispatch<React.SetStateAction<PriceFilterInterface>>;
+  resetFilters: () => void;
 }
 
 export default function Sidebar({
   className,
   priceFilters,
   setPriceFilters,
+  resetFilters,
 }: Props) {
   return (
     <aside className={`${styles.main} ${className}`}>
@@ -45,7 +47,12 @@ export default function Sidebar({
         <button type="button" className={`${styles.apply_filters} flat_btn`}>
           APPLY FILTER
         </button>
-        <button type="button" className={`${styles.remove_filters} `}>
+        <button
+          type="button"
+          className={`${styles.remove_filters}`}
+          aria-label="remove filters"
+          onClick={resetFilters}
+        >
           <TrashSvg />
         </button>
       </section>

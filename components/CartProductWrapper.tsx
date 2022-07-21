@@ -28,13 +28,14 @@ export default function CartProductWrapper({ product }: Props) {
         </div>
         <div className={styles.detail_wrapper}>
           <span className={styles.detail_label}>Price:</span>
-          <span className={styles.price_wrapper}>${product.price}</span>
+          <span className={styles.price_wrapper}>{product.price} $</span>
         </div>
         <div className={styles.detail_wrapper}>
           <span className={styles.detail_label}>Quantity:</span>
           <div className={styles.quantity_wrapper}>
             <select
               ref={selectInput}
+              value={product.quantity}
               onChange={() => {
                 if (!selectInput.current) return;
                 handleCart({
@@ -50,11 +51,7 @@ export default function CartProductWrapper({ product }: Props) {
                 .map((v, i) => i)
                 .map((num) => {
                   return (
-                    <option
-                      key={num}
-                      value={num}
-                      selected={num === product.quantity}
-                    >
+                    <option key={num} value={num}>
                       {num}
                     </option>
                   );

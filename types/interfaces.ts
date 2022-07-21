@@ -1,3 +1,4 @@
+import { NumericDictionary } from 'cypress/types/lodash';
 import React, { ChangeEvent } from 'react';
 
 export interface SvgProps {
@@ -21,11 +22,7 @@ export interface LinkInterface {
 }
 
 export interface InputDetailsInterface {
-  type: 'text' | 'number';
-  name?: string;
-  placeholder?: string;
-  onChange?: (e: ChangeEvent<Element>) => void;
-  value: string | number;
+  [key: string]: string | number | ((e: InputEvent) => void);
 }
 
 export interface InputStatusInterface {

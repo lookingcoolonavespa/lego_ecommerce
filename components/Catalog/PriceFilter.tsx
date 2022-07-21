@@ -24,22 +24,40 @@ export default function PriceFilter({
           label="From"
           inputDetails={{
             type: 'number',
-            value: min,
+            value: min.toString(),
+            min: 0,
+            max: 9999,
+            name: 'From',
+            'aria-label': 'From',
             onChange: (e) => {
               const el = e.target as HTMLInputElement;
-              setPriceFilters((prev) => ({ ...prev, min: Number(el.value) }));
+              setPriceFilters((prev) => {
+                if (Number(el.value) < 0) return prev;
+                if (Number(el.value) > 9999) return prev;
+
+                return { ...prev, min: Number(el.value) };
+              });
             },
           }}
           text="$"
         />
         <InputWrapper
           label="Up to"
+          className={min > max ? 'error' : ''}
           inputDetails={{
             type: 'number',
-            value: max,
+            value: max.toString(),
+            min: 0,
+            max: 9999,
+            name: 'To',
+            'aria-label': 'To',
             onChange: (e) => {
               const el = e.target as HTMLInputElement;
-              setPriceFilters((prev) => ({ ...prev, max: Number(el.value) }));
+              setPriceFilters((prev) => {
+                if (Number(el.value) < 0) return prev;
+                if (Number(el.value) > 9999) return prev;
+                return { ...prev, max: Number(el.value) };
+              });
             },
           }}
           text="$"

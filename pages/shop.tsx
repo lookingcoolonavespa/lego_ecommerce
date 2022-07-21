@@ -68,6 +68,10 @@ export default function Catalog({
     'Popular' | 'Price: High to Low' | 'Price: Low to High'
   >('Popular');
 
+  function resetFilters() {
+    setPriceFilters({ min: 0, max: 0 });
+  }
+
   const sorted =
     sortMethod === 'Popular'
       ? bestSellers
@@ -153,6 +157,7 @@ export default function Catalog({
             priceFilters={priceFilters}
             className={styles.sidebar}
             setPriceFilters={setPriceFilters}
+            resetFilters={resetFilters}
           />
           <main>
             <div className={styles.main}>
