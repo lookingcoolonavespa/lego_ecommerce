@@ -64,8 +64,25 @@ export default function Catalog({
 }: Props) {
   const [priceFilters, setPriceFilters] = useState({ min: 0, max: 0 });
   const [page, setPage] = useState(1);
+  const [sortMethod, setSortMethod] = useState<
+    'Popular' | 'Price: High to Low' | 'Price: Low to High'
+  >('Popular');
 
-  const currentPaginationData = bestSellers.slice(
+  const sorted =
+    sortMethod === 'Popular'
+      ? bestSellers
+      : [...bestSellers].sort((a, b) => {
+          switch (sortMethod) {
+            case 'Price: High to Low': {
+              return Number(b.price) - Number(a.price);
+            }
+            case 'Price: Low to High': {
+              return Number(a.price) - Number(b.price);
+            }
+          }
+        });
+
+  const currentPaginationData = sorted.slice(
     (page - 1) * PRODUCTS_ON_PAGE,
     page * PRODUCTS_ON_PAGE
   );
@@ -141,7 +158,7 @@ export default function Catalog({
             <div className={styles.main}>
               <div className={styles.subheader}>
                 <SearchBar />
-                <SortBy />
+                <SortBy sortMethod={sortMethod} setSortMethod={setSortMethod} />
               </div>
               <div className={styles.grid_container}>
                 <ul

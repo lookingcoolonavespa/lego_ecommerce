@@ -16,10 +16,16 @@
   flex-direction: column;
   row-gap: 1em;
   align-items: flex-end;
+  max-width: 50%;
 }
 
 .title_wrapper {
+  width: 100%;
+  white-space: nowrap;
+
   h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-weight: 400;
   }
 }

@@ -1,16 +1,40 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import FilterSvg from '../svg/FilterSvg';
 
-export default function SortBy() {
+interface Props {
+  setSortMethod: React.Dispatch<
+    React.SetStateAction<
+      'Popular' | 'Price: High to Low' | 'Price: Low to High'
+    >
+  >;
+  sortMethod: 'Popular' | 'Price: High to Low' | 'Price: Low to High';
+}
+
+const sortMethods = ['Popular', 'Price: High to Low', 'Price: Low to High'];
+
+export default function SortBy({ setSortMethod, sortMethod }: Props) {
+  const select = useRef<HTMLSelectElement | null>(null);
   return (
     <div className="sort_by">
       <div className="svg_wrapper">
         <FilterSvg size="18" />
       </div>
-      <select>
-        <option>Popular</option>
-        <option>Price: High to Low</option>
-        <option>Price: Low to High</option>
+      <select
+        ref={select}
+        onChange={() => {
+          if (!select.current) return;
+          const value = select.current.value as
+            | 'Popular'
+            | 'Price: High to Low'
+            | 'Price: Low to High';
+          setSortMethod(value);
+        }}
+      >
+        {sortMethods.map((method) => (
+          <option key={method} value={method} selected={method === sortMethod}>
+            {method}
+          </option>
+        ))}
       </select>
     </div>
   );
