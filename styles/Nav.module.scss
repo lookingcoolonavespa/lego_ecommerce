@@ -76,4 +76,8 @@
   left: 0;
   right: 0;
   background-color: var(--background);
+
+  .nav_item {
+    border-bottom: 1px solid var(--border);
+  }
 }

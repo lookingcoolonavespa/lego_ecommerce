@@ -21,6 +21,8 @@ function MyApp({ Component, pageProps }: AppProps) {
     ): ProductInCartInterface[] => {
       const { quantity, product, cart } = action.payload;
 
+      if (action.type === 'update' && quantity === 0) action.type = 'delete';
+
       switch (action.type) {
         case 'update':
         case 'add': {

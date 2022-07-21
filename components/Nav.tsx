@@ -58,9 +58,11 @@ export default function Nav({ mobile }: Props) {
   const mobileView = (
     <nav className={`${styles.main} ${styles.mobile}`}>
       <section className={styles.left}>
-        <div className={`centered`}>
-          <div className={styles.logo_wrapper}>{<LegoLego size="30" />}</div>
-        </div>
+        <Link href="/">
+          <a className={`centered`}>
+            <div className={styles.logo_wrapper}>{<LegoLego size="30" />}</div>
+          </a>
+        </Link>
         <button
           aria-label="hamburger menu"
           onClick={() => setVisible((prev) => !prev)}
@@ -91,7 +93,9 @@ export default function Nav({ mobile }: Props) {
           (style, item) =>
             item && (
               <animated.div style={style} className={styles.pullout_menu}>
-                <div className={styles.nav_item}>Shop</div>
+                <Link href="/shop">
+                  <a className={styles.nav_item}>Shop</a>
+                </Link>
                 <div className={styles.nav_item}>Discover</div>
                 <div className={styles.nav_item}>Help</div>
               </animated.div>
