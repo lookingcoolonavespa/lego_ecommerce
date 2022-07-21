@@ -75,7 +75,7 @@ describe('Slider', () => {
     });
   });
 
-  it.only('doesnt go past last slider item even when resized', () => {
+  it('doesnt go past last slider item even when resized', () => {
     cy.mount(<ProductSlider products={RECOMMENDED} />);
 
     const nextBtn = cy.get('[aria-label="right"]');
@@ -129,7 +129,7 @@ describe('Slider', () => {
     });
   });
 
-  it.only('prev button works after resize', () => {
+  it('prev button works after resize', () => {
     cy.mount(<ProductSlider products={RECOMMENDED} />);
 
     const nextBtn = cy.get('[aria-label="right"]');
@@ -146,7 +146,7 @@ describe('Slider', () => {
       .should('contain', `transform: translateX(0px)`);
   });
 
-  it.only('on resize, places slider at the end if the last slider item was visible before resize', () => {
+  it('on resize, places slider at the end if the last slider item was visible before resize', () => {
     cy.mount(<ProductSlider products={RECOMMENDED} />);
     cy.viewport('macbook-15');
     const nextBtn = cy.get('[aria-label="right"]');
@@ -171,6 +171,37 @@ describe('Slider', () => {
       cy.get('.slides_ctn')
         .should('have.attr', 'style')
         .should('contain', `transform: translateX(-${expectedTranslateVal}px)`);
+    });
+  });
+
+  it.only('slides even on mobile', () => {
+    cy.viewport(375, 812);
+
+    cy.mount(<ProductSlider products={RECOMMENDED} />);
+    cy.document().then((doc) => {
+      const slideFrame = doc.querySelector('.slide_frame') as Element;
+      const slideFrameWidth = window.getComputedStyle(slideFrame).width;
+
+      const nextBtn = cy.get('[aria-label="right"]');
+      nextBtn.click();
+
+      const slideWidth = 290;
+      const expectedTranslateVal =
+        Math.max(
+          Math.floor(Number(slideFrameWidth.slice(0, -2)) / slideWidth),
+          1
+        ) * slideWidth;
+
+      cy.get('.slides_ctn')
+        .should('have.attr', 'style')
+        .should('contain', `transform: translateX(-${expectedTranslateVal}px)`);
+
+      const prevBtn = cy.get('[aria-label="left"]');
+      prevBtn.click();
+
+      cy.get('.slides_ctn')
+        .should('have.attr', 'style')
+        .should('contain', `transform: translateX(0px)`);
     });
   });
 });

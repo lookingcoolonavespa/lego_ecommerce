@@ -27,12 +27,12 @@ export default function Slider({
   const [slideFrameWidth, setSlideFrameWidth] = useState(0);
 
   const [translateVal, setTranslateVal] = useState(0);
-
   const [slideProps, slidePropsApi] = useSpring(() => ({
     offset: 0,
   }));
 
   useEffect(() => {
+    // run slider animation
     slidePropsApi.update(() => ({ offset: 0 - translateVal })).start();
   }, [translateVal, slidePropsApi]);
 
@@ -79,8 +79,9 @@ export default function Slider({
 
   function pageUp() {
     setTranslateVal((prev) => {
-      let newTranslateVal =
-        Math.floor(slideFrameWidth / slideWidth) * slideWidth + prev;
+      let newTranslateVal = // need to find max so it works when slide frame is smaller than slide width
+        Math.max(Math.floor(slideFrameWidth / slideWidth), 1) * slideWidth +
+        prev;
 
       if (
         // slider goes past end of last slide
@@ -96,8 +97,8 @@ export default function Slider({
   function pageDown() {
     setTranslateVal((prev) => {
       let newTranslateVal =
-        prev - Math.floor(slideFrameWidth / slideWidth) * slideWidth;
-
+        prev -
+        Math.max(Math.floor(slideFrameWidth / slideWidth), 1) * slideWidth;
       if (newTranslateVal < 0) return 0;
       if (
         // first slide is cut off

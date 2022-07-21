@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import styles from '../styles/ProductSlider.module.scss';
 import { ProductInterface } from '../types/interfaces';
