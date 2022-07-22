@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from '../styles/Catalog.module.scss';
-import axios from 'axios';
 import { BEST_SELLERS_MULTIPLIED } from '../utils/constants';
-import { ProductInterface } from '../types/interfaces';
+import { ProductWithCatsInterface } from '../types/interfaces';
 import Sidebar from '../components/Catalog/Sidebar';
 import CatalogNav from '../components/Catalog/CatalogNav';
 import SortBy from '../components/Catalog/SortBy';
@@ -11,6 +10,7 @@ import ProductPreview from '../components/ProductPreview';
 import Layout from '../components/Layout';
 import Pagination from '../components/Pagination';
 import { AgeGroup, ProductThemes } from '../types/types';
+import { isAgeGroup, isProductTheme } from '../types/typeGuards';
 
 // export async function getStaticProps() {
 //   try {
@@ -55,7 +55,7 @@ import { AgeGroup, ProductThemes } from '../types/types';
 // }
 
 interface Props {
-  bestSellers: ProductInterface[];
+  bestSellers: ProductWithCatsInterface[];
 }
 
 const PRODUCTS_ON_PAGE = 30;
@@ -66,7 +66,10 @@ export default function Catalog({
   const [priceFilters, setPriceFilters] = useState({ min: 0, max: 0 });
   const [themeFilters, setThemeFilters] = useState<ProductThemes[]>([]);
   const [ageFilters, setAgeFilters] = useState<AgeGroup[]>([]);
+  const [filtersActive, setFiltersActive] = useState(false);
+
   const [page, setPage] = useState(1);
+
   const [sortMethod, setSortMethod] = useState<
     'Popular' | 'Price: High to Low' | 'Price: Low to High'
   >('Popular');
@@ -94,15 +97,17 @@ export default function Catalog({
         });
       case 'theme':
         return setThemeFilters((prev) => {
-          const value = payload as ProductThemes;
+          if (!isProductTheme(payload)) return prev;
 
+          const value = payload;
           if (prev.includes(value)) return prev.filter((t) => t !== value);
           return [...prev, value];
         });
       case 'age':
         return setAgeFilters((prev) => {
-          const value = payload as AgeGroup;
+          if (!isAgeGroup(payload)) return prev;
 
+          const value = payload;
           if (prev.includes(value)) return prev.filter((t) => t !== value);
           return [...prev, value];
         });
@@ -111,20 +116,26 @@ export default function Catalog({
 
   function resetFilters() {
     setPriceFilters({ min: 0, max: 0 });
+    setThemeFilters([]);
+    setAgeFilters([]);
   }
 
   const themeCount = bestSellers.reduce(
-    (acc: { [key: string]: number }, curr) => {
-      if (!acc[curr.theme]) acc[curr.theme] = 0;
-
+    (acc: { [key in ProductThemes]: number }, curr) => {
       acc[curr.theme]++;
       return acc;
     },
-    {}
+    {
+      Space: 0,
+      Ninja: 0,
+      Transport: 0,
+      Buildings: 0,
+      Homes: 0,
+    }
   );
 
   const ageCount = bestSellers.reduce(
-    (acc: { [key: string]: number }, curr) => {
+    (acc: { [key in AgeGroup]: number }, curr) => {
       acc[curr.ageGroup]++;
       return acc;
     },
@@ -136,6 +147,15 @@ export default function Catalog({
       'Older than 12 years': 0,
     }
   );
+
+  bestSellers = filtersActive
+    ? bestSellers.filter((product) => {
+        return (
+          themeFilters.includes(product.theme) ||
+          ageFilters.includes(product.ageGroup)
+        );
+      })
+    : bestSellers;
 
   const sorted =
     sortMethod === 'Popular'
@@ -219,12 +239,15 @@ export default function Catalog({
         <CatalogNav />
         <div className={styles.content}>
           <Sidebar
+            themeFilters={themeFilters}
+            ageFilters={ageFilters}
             priceFilters={priceFilters}
             className={styles.sidebar}
             setFilters={setFilters}
             resetFilters={resetFilters}
             themeCount={themeCount}
             ageCount={ageCount}
+            toggleFilter={() => setFiltersActive((prev) => !prev)}
           />
           <main>
             <div className={styles.main}>

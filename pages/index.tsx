@@ -13,45 +13,47 @@ import Layout from '../components/Layout';
 import useMobile from '../utils/useMobile';
 import { useEffect } from 'react';
 
-export async function getStaticProps() {
-  try {
-    const res = await axios.get('/api/recommended');
+// export async function getStaticProps() {
+//   try {
+//     const res = await axios.get('/api/recommended');
 
-    if (res.status !== 200) {
-      throw new Error('something changed on the logo home page');
-    }
+//     if (res.status !== 200) {
+//       throw new Error('something changed on the logo home page');
+//     }
 
-    const products = await res.data;
-    return {
-      props: {
-        recommended: products,
-      },
-    };
-  } catch (err) {
-    if (err instanceof Error) console.log(err.message);
+//     const products = await res.data;
+//     return {
+//       props: {
+//         recommended: products,
+//       },
+//     };
+//   } catch (err) {
+//     if (err instanceof Error) console.log(err.message);
 
-    if (axios.isAxiosError(err)) {
-      switch (err.status) {
-        case '500':
-          console.log('something changed on lego homepage');
-          break;
-        default:
-          console.log(err.response?.statusText);
-      }
-    }
+//     if (axios.isAxiosError(err)) {
+//       switch (err.status) {
+//         case '500':
+//           console.log('something changed on lego homepage');
+//           break;
+//         default:
+//           console.log(err.response?.statusText);
+//       }
+//     }
 
-    return {
-      props: {
-        recommended: RECOMMENDED,
-      },
-    };
-  }
-}
+//     return {
+//       props: {
+//         recommended: RECOMMENDED,
+//       },
+//     };
+//   }
+// }
 
 interface Props {
   recommended: ProductInterface[];
 }
-const Home: NextPage<Props> = ({ recommended }) => {
+const Home: NextPage<Props> = ({
+  recommended = RECOMMENDED as ProductInterface[],
+}) => {
   const { mobileCheck } = useMobile();
   return (
     <div className={styles.container}>

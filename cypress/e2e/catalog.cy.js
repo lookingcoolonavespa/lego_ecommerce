@@ -46,14 +46,14 @@ describe('sort methods work', () => {
 
 describe('checkboxes work', () => {
   it('checks the input when the label is clicked', () => {
-    cy.get('.Sidebar_main__VH1Ms .accordion_title_row').each((el) => {
-      el.click();
+    cy.viewport('macbook-16');
+
+    cy.get('.Sidebar_main__VH1Ms .accordion_title_row').click({
+      multiple: true,
     });
 
-    cy.get(
-      '.Sidebar_main__VH1Ms .OptionsFilter_checkbox_wrapper__FyhOM label'
-    ).each((el) => {
-      el.click();
+    cy.get('.Sidebar_main__VH1Ms .Accordion_content__IOxFL label').click({
+      multiple: true,
     });
 
     cy.get('.Sidebar_main__VH1Ms input[type="checkbox"]').each((input) => {
@@ -92,14 +92,14 @@ describe('remove filters work', () => {
   });
 
   it('unchecks all checked themes + ages', () => {
-    cy.get('.Sidebar_main__VH1Ms .accordion_title_row').each((el) => {
-      el.click();
+    cy.viewport('macbook-16');
+
+    cy.get('.Sidebar_main__VH1Ms .accordion_title_row').click({
+      multiple: true,
     });
 
-    cy.get(
-      '.Sidebar_main__VH1Ms .OptionsFilter_checkbox_wrapper__FyhOM label'
-    ).each((el) => {
-      el.click();
+    cy.get('.Sidebar_main__VH1Ms .Accordion_content__IOxFL label').click({
+      multiple: true,
     });
 
     cy.get('.Sidebar_remove_filters__x6qzH').click();
@@ -107,5 +107,20 @@ describe('remove filters work', () => {
     cy.get('.Sidebar_main__VH1Ms input[type="checkbox"]').each((input) => {
       expect(input[0].checked).to.equal(false);
     });
+  });
+
+  it('turns filters off', () => {
+    cy.viewport('macbook-16');
+
+    cy.get('.Sidebar_main__VH1Ms .accordion_title_row').click({
+      multiple: true,
+    });
+
+    cy.get('.Sidebar_main__VH1Ms .Accordion_content__IOxFL label').click({
+      multiple: true,
+    });
+
+    cy.get('.Sidebar_remove_filters__x6qzH').click();
+    cy.get('button[aria-label="Goto page 11"]').should('exist');
   });
 });

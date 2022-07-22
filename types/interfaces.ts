@@ -1,5 +1,6 @@
 import { NumericDictionary } from 'cypress/types/lodash';
 import React, { ChangeEvent } from 'react';
+import { AgeGroup, ProductThemes } from './types';
 
 export interface SvgProps {
   height: string;
@@ -10,8 +11,11 @@ export interface ProductInterface {
   imgSrc: string;
   title: string;
   price: string;
-  theme: string;
-  ageGroup: string;
+}
+
+export interface ProductWithCatsInterface extends ProductInterface {
+  theme: ProductThemes;
+  ageGroup: AgeGroup;
 }
 
 export interface ProductInCartInterface extends ProductInterface {

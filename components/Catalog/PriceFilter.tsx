@@ -33,7 +33,7 @@ export default function PriceFilter({
             'aria-label': 'From',
             onChange: (e) => {
               const el = e.target as HTMLInputElement;
-              setPriceMax(Number(el.value));
+              setPriceMin(Number(el.value));
             },
           }}
           text="$"
@@ -50,7 +50,7 @@ export default function PriceFilter({
             'aria-label': 'To',
             onChange: (e) => {
               const el = e.target as HTMLInputElement;
-              setPriceMin(Number(el.value));
+              setPriceMax(Number(el.value));
             },
           }}
           text="$"
