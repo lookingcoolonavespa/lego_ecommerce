@@ -10,6 +10,7 @@ import SearchBar from '../components/Catalog/SearchBar';
 import ProductPreview from '../components/ProductPreview';
 import Layout from '../components/Layout';
 import Pagination from '../components/Pagination';
+import { AgeGroup, ProductThemes } from '../types/types';
 
 // export async function getStaticProps() {
 //   try {
@@ -63,14 +64,78 @@ export default function Catalog({
   bestSellers = BEST_SELLERS_MULTIPLIED,
 }: Props) {
   const [priceFilters, setPriceFilters] = useState({ min: 0, max: 0 });
+  const [themeFilters, setThemeFilters] = useState<ProductThemes[]>([]);
+  const [ageFilters, setAgeFilters] = useState<AgeGroup[]>([]);
   const [page, setPage] = useState(1);
   const [sortMethod, setSortMethod] = useState<
     'Popular' | 'Price: High to Low' | 'Price: Low to High'
   >('Popular');
 
+  function setFilters(
+    type: 'priceMin' | 'priceMax' | 'theme' | 'age',
+    payload: number | ProductThemes | AgeGroup
+  ) {
+    switch (type) {
+      case 'priceMin':
+        return setPriceFilters((prev) => {
+          const value = payload as number;
+          if (Number(value) < 0) return prev;
+          if (Number(value) > 9999) return prev;
+
+          return { ...prev, min: value };
+        });
+      case 'priceMax':
+        return setPriceFilters((prev) => {
+          const value = payload as number;
+          if (Number(value) < 0) return prev;
+          if (Number(value) > 9999) return prev;
+
+          return { ...prev, max: value };
+        });
+      case 'theme':
+        return setThemeFilters((prev) => {
+          const value = payload as ProductThemes;
+
+          if (prev.includes(value)) return prev.filter((t) => t !== value);
+          return [...prev, value];
+        });
+      case 'age':
+        return setAgeFilters((prev) => {
+          const value = payload as AgeGroup;
+
+          if (prev.includes(value)) return prev.filter((t) => t !== value);
+          return [...prev, value];
+        });
+    }
+  }
+
   function resetFilters() {
     setPriceFilters({ min: 0, max: 0 });
   }
+
+  const themeCount = bestSellers.reduce(
+    (acc: { [key: string]: number }, curr) => {
+      if (!acc[curr.theme]) acc[curr.theme] = 0;
+
+      acc[curr.theme]++;
+      return acc;
+    },
+    {}
+  );
+
+  const ageCount = bestSellers.reduce(
+    (acc: { [key: string]: number }, curr) => {
+      acc[curr.ageGroup]++;
+      return acc;
+    },
+    {
+      'Up to a year': 0,
+      '1 year - 2 years': 0,
+      '3 years - 5 years': 0,
+      '6 years - 10 years': 0,
+      'Older than 12 years': 0,
+    }
+  );
 
   const sorted =
     sortMethod === 'Popular'
@@ -156,8 +221,10 @@ export default function Catalog({
           <Sidebar
             priceFilters={priceFilters}
             className={styles.sidebar}
-            setPriceFilters={setPriceFilters}
+            setFilters={setFilters}
             resetFilters={resetFilters}
+            themeCount={themeCount}
+            ageCount={ageCount}
           />
           <main>
             <div className={styles.main}>

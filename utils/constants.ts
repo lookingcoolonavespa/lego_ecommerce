@@ -1,3 +1,19 @@
+export const PRODUCT_THEMES = [
+  'Space',
+  'Ninja',
+  'Transport',
+  'Buildings',
+  'Homes',
+] as const;
+
+export const AGE_GROUPS = [
+  'Up to a year',
+  '1 year - 2 years',
+  '3 years - 5 years',
+  '6 years - 10 years',
+  'Older than 12 years',
+] as const;
+
 export const RECOMMENDED = [
   {
     imgSrc:
@@ -450,7 +466,13 @@ export const BEST_SELLERS = [
     rating: '4.6',
     price: '34.99',
   },
-];
+].map((product) => {
+  return {
+    ...product,
+    theme: PRODUCT_THEMES[Math.floor(Math.random() * PRODUCT_THEMES.length)],
+    ageGroup: AGE_GROUPS[Math.floor(Math.random() * AGE_GROUPS.length)],
+  };
+});
 
 export const BEST_SELLERS_MULTIPLIED = [
   ...BEST_SELLERS,

@@ -7,14 +7,16 @@ interface Props {
   min: number;
   max: number;
   className: string;
-  setPriceFilters: React.Dispatch<React.SetStateAction<PriceFilterInterface>>;
+  setPriceMax: (value: number) => void;
+  setPriceMin: (value: number) => void;
 }
 
 export default function PriceFilter({
   min,
   max,
   className,
-  setPriceFilters,
+  setPriceMax,
+  setPriceMin,
 }: Props) {
   return (
     <div className={`${styles.main} ${className}`}>
@@ -31,12 +33,7 @@ export default function PriceFilter({
             'aria-label': 'From',
             onChange: (e) => {
               const el = e.target as HTMLInputElement;
-              setPriceFilters((prev) => {
-                if (Number(el.value) < 0) return prev;
-                if (Number(el.value) > 9999) return prev;
-
-                return { ...prev, min: Number(el.value) };
-              });
+              setPriceMax(Number(el.value));
             },
           }}
           text="$"
@@ -53,11 +50,7 @@ export default function PriceFilter({
             'aria-label': 'To',
             onChange: (e) => {
               const el = e.target as HTMLInputElement;
-              setPriceFilters((prev) => {
-                if (Number(el.value) < 0) return prev;
-                if (Number(el.value) > 9999) return prev;
-                return { ...prev, max: Number(el.value) };
-              });
+              setPriceMin(Number(el.value));
             },
           }}
           text="$"

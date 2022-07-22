@@ -44,6 +44,24 @@ describe('sort methods work', () => {
   });
 });
 
+describe('checkboxes work', () => {
+  it('checks the input when the label is clicked', () => {
+    cy.get('.Sidebar_main__VH1Ms .accordion_title_row').each((el) => {
+      el.click();
+    });
+
+    cy.get(
+      '.Sidebar_main__VH1Ms .OptionsFilter_checkbox_wrapper__FyhOM label'
+    ).each((el) => {
+      el.click();
+    });
+
+    cy.get('.Sidebar_main__VH1Ms input[type="checkbox"]').each((input) => {
+      expect(input[0].checked).to.equal(true);
+    });
+  });
+});
+
 describe('price filters work', () => {
   it('has a minimum of 0', () => {
     cy.get('input[name="From"]').type(`{leftArrow}-1000`);
@@ -62,7 +80,7 @@ describe('price filters work', () => {
   });
 });
 
-describe.only('remove filters work', () => {
+describe('remove filters work', () => {
   it('resets price filter inputs', () => {
     cy.get('input[name="From"]').type(`10000`);
     cy.get('input[name="To"]').type(`10000`);
@@ -71,5 +89,23 @@ describe.only('remove filters work', () => {
 
     cy.get('input[name="From"]').should('have.value', '0');
     cy.get('input[name="To"]').should('have.value', '0');
+  });
+
+  it('unchecks all checked themes + ages', () => {
+    cy.get('.Sidebar_main__VH1Ms .accordion_title_row').each((el) => {
+      el.click();
+    });
+
+    cy.get(
+      '.Sidebar_main__VH1Ms .OptionsFilter_checkbox_wrapper__FyhOM label'
+    ).each((el) => {
+      el.click();
+    });
+
+    cy.get('.Sidebar_remove_filters__x6qzH').click();
+
+    cy.get('.Sidebar_main__VH1Ms input[type="checkbox"]').each((input) => {
+      expect(input[0].checked).to.equal(false);
+    });
   });
 });

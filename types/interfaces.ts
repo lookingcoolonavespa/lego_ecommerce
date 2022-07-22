@@ -10,6 +10,8 @@ export interface ProductInterface {
   imgSrc: string;
   title: string;
   price: string;
+  theme: string;
+  ageGroup: string;
 }
 
 export interface ProductInCartInterface extends ProductInterface {
