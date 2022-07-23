@@ -8,34 +8,17 @@ import Nav from '../components/Nav';
 import { act } from 'react-dom/test-utils';
 import CartContext from '../utils/CartContext';
 
-let container;
 beforeEach(() => {
-  container = document.createElement('div');
-  document.body.appendChild(container);
-
-  act(() => {
-    ReactDOM.createRoot(container).render(
-      <CartContext.Provider
-        value={{
-          cart: [],
-          handleCart: () => {},
-        }}
-      >
-        <Nav mobile={true} />
-      </CartContext.Provider>
-    );
-  });
-});
-
-afterEach(() => {
-  jest.resetAllMocks();
-
-  document.body.removeChild(container);
-  container = null;
-});
-
-afterAll(() => {
-  jest.clearAllMocks();
+  render(
+    <CartContext.Provider
+      value={{
+        cart: [],
+        handleCart: () => {},
+      }}
+    >
+      <Nav mobile={true} />
+    </CartContext.Provider>
+  );
 });
 
 describe('mobile views', () => {
@@ -50,7 +33,9 @@ describe('mobile views', () => {
 
     act(() => screen.getByRole('button', { name: 'hamburger menu' }).click());
 
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    await act(
+      async () => await new Promise((resolve) => setTimeout(resolve, 800))
+    );
     expect(screen.getByText('Shop')).toBeVisible();
   });
 });

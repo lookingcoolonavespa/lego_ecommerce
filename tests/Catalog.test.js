@@ -16,37 +16,30 @@ window.scrollTo = jest.fn();
 
 const productList = BEST_SELLERS_MULTIPLIED;
 
-let container;
-beforeEach(() => {
-  container = document.createElement('div');
-  document.body.appendChild(container);
+let user;
 
-  act(() => {
-    ReactDOM.createRoot(container).render(
-      <CartContext.Provider
-        value={{
-          cart: [],
-          handleCart: () => {},
-        }}
-      >
-        <Catalog bestSellers={productList} />
-      </CartContext.Provider>
-    );
-  });
+beforeEach(() => {
+  user = userEvent.setup();
+  render(
+    <CartContext.Provider
+      value={{
+        cart: [],
+        handleCart: () => {},
+      }}
+    >
+      <Catalog bestSellers={productList} />
+    </CartContext.Provider>
+  );
 });
 
 afterEach(() => {
   jest.resetAllMocks();
-
-  document.body.removeChild(container);
-  container = null;
+  user = null;
 });
 
 afterAll(() => {
   jest.clearAllMocks();
 });
-
-const user = userEvent.setup();
 
 describe('sidebar works', () => {
   const setup = () => {
@@ -64,6 +57,8 @@ describe('sidebar works', () => {
     };
   };
   describe('price filters work', () => {
+    jest.setTimeout(10000); // these tests timeout at 5000 for some reason
+
     test('inputs have minimum of 0', async () => {
       const { fromInput, toInput } = setup();
 
@@ -95,7 +90,7 @@ describe('sidebar works', () => {
   describe('checkbox filters work', () => {
     test('input is checked when label is clicked', async () => {
       // for themes
-      act(() => screen.getByText('Theme').click());
+      await user.click(screen.getByText('Theme'));
       const list = screen.getByRole('list', { name: 'themes' });
       const themeOptions = within(list).getAllByRole('checkbox');
       async function clickLabel(el) {
@@ -107,7 +102,7 @@ describe('sidebar works', () => {
       themeOptions.forEach((el) => expect(el).not.toBeChecked());
 
       // for age groups
-      act(() => screen.getByText('Age').click());
+      await user.click(screen.getByText('Age'));
       const list2 = screen.getByRole('list', { name: 'age groups' });
       const ageOptions = within(list2).getAllByRole('checkbox');
       await Promise.all(ageOptions.map(clickLabel));
@@ -117,7 +112,7 @@ describe('sidebar works', () => {
     });
 
     test('turns filter off when last one is unchecked', async () => {
-      act(() => screen.getByText('Theme').click());
+      await user.click(screen.getByText('Theme'));
       const list = screen.getByRole('list', { name: 'themes' });
       const themeOptions = within(list).getAllByRole('checkbox');
 
@@ -144,7 +139,7 @@ describe('sidebar works', () => {
 
   describe('apply filters works', () => {
     test('applies checkbox filters', async () => {
-      act(() => screen.getByText('Theme').click());
+      await user.click(screen.getByText('Theme'));
       const list = screen.getByRole('list', { name: 'themes' });
       const themeOptions = within(list).getAllByRole('checkbox');
 
@@ -193,7 +188,7 @@ describe('sidebar works', () => {
     });
 
     test('it unchecks all checked filters', async () => {
-      act(() => screen.getByText('Theme').click());
+      await user.click(screen.getByText('Theme'));
       const list = screen.getByRole('list', { name: 'themes' });
       const themeOptions = within(list).getAllByRole('checkbox');
       async function clickLabel(el) {
@@ -202,7 +197,7 @@ describe('sidebar works', () => {
       await Promise.all(themeOptions.map(clickLabel));
 
       // for age groups
-      act(() => screen.getByText('Age').click());
+      await user.click(screen.getByText('Age'));
       const list2 = screen.getByRole('list', { name: 'age groups' });
       const ageOptions = within(list2).getAllByRole('checkbox');
       await Promise.all(ageOptions.map(clickLabel));
@@ -285,7 +280,7 @@ describe('sort methods work', () => {
 
 describe('active filters close properly', () => {
   test('it unchecks input when closed', async () => {
-    act(() => screen.getByText('Theme').click());
+    await user.click(screen.getByText('Theme'));
     const list = screen.getByRole('list', { name: 'themes' });
     const themeOptions = within(list).getAllByRole('checkbox');
 

@@ -52,7 +52,10 @@ describe('input functionality works', () => {
     await new Promise((resolve) => setTimeout(() => resolve(), 100));
     expect(await screen.findByText('success')).toBeVisible();
 
-    await new Promise((resolve) => setTimeout(() => resolve(), 2000));
+    await act(
+      async () =>
+        await new Promise((resolve) => setTimeout(() => resolve(), 2000))
+    );
     expect(screen.queryByText('success')).toBeNull();
   });
 });
