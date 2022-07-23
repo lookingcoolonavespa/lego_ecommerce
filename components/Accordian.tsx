@@ -7,9 +7,10 @@ interface Props {
   className: string;
   title: string;
   insides: ReactNode;
+  name?: string;
 }
 
-export default function Accordion({ className, title, insides }: Props) {
+export default function Accordion({ className, title, insides, name }: Props) {
   const [visible, setVisible] = useState(false);
   const [contentNodeHeight, setContentNodeHeight] = useState('0px');
 
@@ -38,9 +39,9 @@ export default function Accordion({ className, title, insides }: Props) {
           <ArrowSvg dir={visible ? 'up' : 'down'} />
         </div>
       </div>
-      <animated.div className={styles.content} style={spring}>
+      <animated.ul className={styles.content} style={spring} aria-label={name}>
         {insides}
-      </animated.div>
+      </animated.ul>
       <div className={styles.hidden} ref={contentNode}>
         {insides}
       </div>

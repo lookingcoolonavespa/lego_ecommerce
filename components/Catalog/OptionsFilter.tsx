@@ -8,6 +8,7 @@ interface OptionsAsArray<Options> {
   className: string;
   selected: Options[];
   selectOption: (option: Options) => void;
+  name?: string;
 }
 
 interface OptionsAsObject<T, K extends keyof T> {
@@ -16,6 +17,7 @@ interface OptionsAsObject<T, K extends keyof T> {
   className: string;
   selected: K[];
   selectOption: (option: K) => void;
+  name?: string;
 }
 
 export default function OptionsFilter({
@@ -24,6 +26,7 @@ export default function OptionsFilter({
   options,
   selected,
   selectOption,
+  name,
 }:
   | OptionsAsArray<string>
   | OptionsAsObject<{ [key: string]: number }, string>) {
@@ -31,12 +34,13 @@ export default function OptionsFilter({
     <Accordion
       title={title}
       className={`${styles.main} ${className}`}
+      name={name}
       insides={
         <>
           {Array.isArray(options)
             ? options.map((option) => {
                 return (
-                  <div key={option} className={styles.checkbox_wrapper}>
+                  <li key={option} className={styles.checkbox_wrapper}>
                     <label>
                       <input
                         type="checkbox"
@@ -49,14 +53,14 @@ export default function OptionsFilter({
                       <span className={styles.checkbox} />
                       <span className={styles.label_text}>{option}</span>
                     </label>
-                  </div>
+                  </li>
                 );
               })
             : Object.entries(options).map((subArray) => {
                 const [option, count] = subArray;
 
                 return (
-                  <div key={option} className={styles.checkbox_wrapper}>
+                  <li key={option} className={styles.checkbox_wrapper}>
                     <label>
                       <input
                         type="checkbox"
@@ -74,7 +78,7 @@ export default function OptionsFilter({
                         {option} ({count})
                       </span>
                     </label>
-                  </div>
+                  </li>
                 );
               })}
         </>

@@ -35,7 +35,7 @@ export default function useEmail() {
     setTimeout(resetInputStatus, 2000);
   }
 
-  function handleChange(e: ChangeEvent) {
+  function handleChange(e: InputEvent) {
     const input = e.target as HTMLInputElement;
     if (validateEmail(input.value) && inputStatus.type === 'error')
       resetInputStatus();

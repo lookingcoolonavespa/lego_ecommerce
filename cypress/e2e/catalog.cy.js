@@ -44,7 +44,7 @@ describe('sort methods work', () => {
   });
 });
 
-describe('checkboxes work', () => {
+describe.only('checkboxes work', () => {
   it('checks the input when the label is clicked', () => {
     cy.viewport('macbook-16');
 
@@ -59,6 +59,46 @@ describe('checkboxes work', () => {
     cy.get('.Sidebar_main__VH1Ms input[type="checkbox"]').each((input) => {
       expect(input[0].checked).to.equal(true);
     });
+  });
+
+  it('unchecks the input when the label is clicked and input is checked', () => {
+    it('checks the input when the label is clicked', () => {
+      cy.viewport('macbook-16');
+
+      cy.get('.Sidebar_main__VH1Ms .accordion_title_row').click({
+        multiple: true,
+      });
+
+      cy.get('.Sidebar_main__VH1Ms .Accordion_content__IOxFL label').click({
+        multiple: true,
+      });
+
+      cy.get('.Sidebar_main__VH1Ms .Accordion_content__IOxFL label').click({
+        multiple: true,
+      });
+
+      cy.get('.Sidebar_main__VH1Ms input[type="checkbox"]').each((input) => {
+        expect(input[0].checked).to.equal(false);
+      });
+    });
+  });
+
+  it('turns filters off if last filter is unchecked', () => {
+    cy.viewport('macbook-16');
+
+    cy.get('.Sidebar_main__VH1Ms .accordion_title_row').first().click();
+
+    cy.get('.Sidebar_main__VH1Ms .Accordion_content__IOxFL label')
+      .first()
+      .click();
+
+    cy.get('.Sidebar_apply_filters__n1dlg').click();
+
+    cy.get('.Sidebar_main__VH1Ms .Accordion_content__IOxFL label')
+      .first()
+      .click();
+
+    cy.get('button[aria-label="Goto page 11"]').should('exist');
   });
 });
 
@@ -119,6 +159,8 @@ describe('remove filters work', () => {
     cy.get('.Sidebar_main__VH1Ms .Accordion_content__IOxFL label').click({
       multiple: true,
     });
+
+    cy.get('.Sidebar_apply_filters__n1dlg').click();
 
     cy.get('.Sidebar_remove_filters__x6qzH').click();
     cy.get('button[aria-label="Goto page 11"]').should('exist');

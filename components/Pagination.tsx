@@ -47,9 +47,16 @@ export default function Pagination({
               key={key}
               className={rootClasses.join(' ')}
               aria-current={currentPage === pageNumber}
-              onClick={() => onPageChange(pageNumber)}
+              onClick={() => {
+                if (typeof pageNumber !== 'number') return;
+                onPageChange(pageNumber);
+              }}
             >
-              <button type="button" aria-label={`Goto page ${pageNumber}`}>
+              <button
+                type="button"
+                aria-label={`Goto page ${pageNumber}`}
+                disabled={typeof pageNumber !== 'number'}
+              >
                 {pageNumber}
               </button>
             </li>

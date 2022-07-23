@@ -47,6 +47,27 @@
   }
 }
 
+.active_filters_ctn {
+  display: flex;
+  margin-bottom: 3em;
+}
+.active_filter {
+  background-color: var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  column-gap: 0.5em;
+
+  span {
+    user-select: none;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
 .grid_container {
   position: relative;
   height: 100%;

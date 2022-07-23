@@ -482,3 +482,5 @@ export const BEST_SELLERS_MULTIPLIED = [
   ...BEST_SELLERS,
   ...BEST_SELLERS,
 ];
+
+export const PRODUCTS_ON_PAGE = 30;

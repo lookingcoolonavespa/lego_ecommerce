@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from '../styles/Catalog.module.scss';
-import { BEST_SELLERS_MULTIPLIED } from '../utils/constants';
+import { BEST_SELLERS_MULTIPLIED, PRODUCTS_ON_PAGE } from '../utils/constants';
 import { ProductWithCatsInterface } from '../types/interfaces';
 import Sidebar from '../components/Catalog/Sidebar';
 import CatalogNav from '../components/Catalog/CatalogNav';
@@ -11,6 +11,7 @@ import Layout from '../components/Layout';
 import Pagination from '../components/Pagination';
 import { AgeGroup, ProductThemes } from '../types/types';
 import { isAgeGroup, isProductTheme } from '../types/typeGuards';
+import ActiveFilter from '../components/Catalog/ActiveFilter';
 
 // export async function getStaticProps() {
 //   try {
@@ -58,8 +59,6 @@ interface Props {
   bestSellers: ProductWithCatsInterface[];
 }
 
-const PRODUCTS_ON_PAGE = 30;
-
 export default function Catalog({
   bestSellers = BEST_SELLERS_MULTIPLIED,
 }: Props) {
@@ -100,7 +99,10 @@ export default function Catalog({
           if (!isProductTheme(payload)) return prev;
 
           const value = payload;
-          if (prev.includes(value)) return prev.filter((t) => t !== value);
+          if (prev.includes(value)) {
+            if (prev.length === 1) setFiltersActive(false);
+            return prev.filter((t) => t !== value);
+          }
           return [...prev, value];
         });
       case 'age':
@@ -108,7 +110,10 @@ export default function Catalog({
           if (!isAgeGroup(payload)) return prev;
 
           const value = payload;
-          if (prev.includes(value)) return prev.filter((t) => t !== value);
+          if (prev.includes(value)) {
+            if (prev.length === 1) setFiltersActive(false);
+            return prev.filter((t) => t !== value);
+          }
           return [...prev, value];
         });
     }
@@ -118,6 +123,7 @@ export default function Catalog({
     setPriceFilters({ min: 0, max: 0 });
     setThemeFilters([]);
     setAgeFilters([]);
+    setFiltersActive(false);
   }
 
   const themeCount = bestSellers.reduce(
@@ -251,10 +257,33 @@ export default function Catalog({
           />
           <main>
             <div className={styles.main}>
-              <div className={styles.subheader}>
+              <div
+                className={styles.subheader}
+                style={filtersActive ? { marginBottom: '2em' } : undefined}
+              >
                 <SearchBar />
                 <SortBy sortMethod={sortMethod} setSortMethod={setSortMethod} />
               </div>
+              {filtersActive && (
+                <div className={styles.active_filters_ctn}>
+                  {themeFilters.map((v) => (
+                    <ActiveFilter
+                      key={v}
+                      className={styles.active_filter}
+                      text={v}
+                      close={() => setFilters('theme', v)}
+                    />
+                  ))}
+                  {ageFilters.map((v) => (
+                    <ActiveFilter
+                      key={v}
+                      className={styles.active_filter}
+                      text={v}
+                      close={() => setFilters('age', v)}
+                    />
+                  ))}
+                </div>
+              )}
               <div className={styles.grid_container}>
                 <ul
                   ref={scroller}

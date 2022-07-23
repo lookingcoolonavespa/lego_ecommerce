@@ -47,9 +47,9 @@ export default function Sidebar({
         className={styles.options_filter}
         options={themeCount}
         selected={themeFilters}
+        name="themes"
         selectOption={(option: string) => {
           if (!isProductTheme(option)) return;
-          console.log(option);
           setFilters('theme', option);
         }}
       />
@@ -58,6 +58,7 @@ export default function Sidebar({
         className={styles.options_filter}
         options={ageCount}
         selected={ageFilters}
+        name="age groups"
         selectOption={(option: string) => {
           if (!isAgeGroup(option)) return;
           setFilters('age', option);
@@ -67,6 +68,7 @@ export default function Sidebar({
         <button
           onClick={toggleFilter}
           type="button"
+          aria-label="apply filters"
           className={`${styles.apply_filters} flat_btn`}
         >
           APPLY FILTER

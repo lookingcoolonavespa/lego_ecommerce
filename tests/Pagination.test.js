@@ -1,22 +1,51 @@
 import { render, screen, within } from '@testing-library/react';
 import React from 'react';
+import ReactDOM from 'react-dom/client';
 import '@testing-library/jest-dom'; // optional
 import { act } from 'react-dom/test-utils';
 import Catalog from '../pages/shop';
-import { BEST_SELLERS } from '../utils/constants';
+import {
+  BEST_SELLERS,
+  BEST_SELLERS_MULTIPLIED,
+  PRODUCTS_ON_PAGE,
+} from '../utils/constants';
 import userEvent from '@testing-library/user-event';
+import CartContext from '../utils/CartContext';
 
-// ---------------------------------------------------------------- //
-//                                                                  //
-//                 PLEASE DO NOT MODIFY THIS FILE.                  //
-//               Hatchways automation depends on it.                //
-//                                                                  //
-// ---------------------------------------------------------------- //
+window.scrollTo = jest.fn();
+
+const productList = BEST_SELLERS_MULTIPLIED;
+const maxPage = Math.ceil(productList.length / PRODUCTS_ON_PAGE);
+
+let container;
+beforeEach(() => {
+  container = document.createElement('div');
+  document.body.appendChild(container);
+});
+
+afterEach(() => {
+  jest.resetAllMocks();
+
+  document.body.removeChild(container);
+  container = null;
+});
+
+afterAll(() => {
+  jest.clearAllMocks();
+});
 
 test('Prev button should exist', async () => {
-  render(<Catalog bestSellers={BEST_SELLERS} />);
-  const previousButton = screen.getByRole('button', {
-    name: 'Goto previous page',
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />
+      </CartContext.Provider>
+    );
   });
 
   expect(
@@ -27,7 +56,18 @@ test('Prev button should exist', async () => {
 });
 
 test('Next button should exist', async () => {
-  render(<Catalog bestSellers={BEST_SELLERS} />);
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />{' '}
+      </CartContext.Provider>
+    );
+  });
   const nextButton = screen.getByRole('button', {
     name: 'Goto next page',
   });
@@ -35,16 +75,27 @@ test('Next button should exist', async () => {
   expect(nextButton).toBeVisible();
 });
 
-test('First  posts should be rendered by default', async () => {
-  render(<Catalog bestSellers={BEST_SELLERS} />);
-  const blogList = screen.getByRole('list', { name: 'product list' });
-  const productItems = within(blogList).getAllByRole('listitem');
+test('First products should be rendered by default', async () => {
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />{' '}
+      </CartContext.Provider>
+    );
+  });
+  const list = screen.getByRole('list', { name: 'product list' });
+  const productItems = within(list).getAllByRole('listitem');
 
-  expect(productItems).toHaveLength(10);
+  expect(productItems).toHaveLength(PRODUCTS_ON_PAGE);
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < PRODUCTS_ON_PAGE; i++) {
     const productItem = productItems[i];
-    const product = BEST_SELLERS[i];
+    const product = productList[i];
 
     const title = within(productItem).getByText(product.title);
     expect(title).toBeInTheDocument();
@@ -54,7 +105,18 @@ test('First  posts should be rendered by default', async () => {
 });
 
 test('Page 1 is initially selected', async () => {
-  render(<Catalog bestSellers={BEST_SELLERS} />);
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />{' '}
+      </CartContext.Provider>
+    );
+  });
   const currentPage = screen.getByRole('listitem', {
     current: true,
   });
@@ -64,7 +126,18 @@ test('Page 1 is initially selected', async () => {
 
 test('Page 1 is not selected when page 2 is selected', async () => {
   const user = userEvent.setup();
-  render(<Catalog bestSellers={BEST_SELLERS} />);
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />{' '}
+      </CartContext.Provider>
+    );
+  });
   const pageTwoButton = screen.getByText('2', { selector: 'button' });
 
   await user.click(pageTwoButton);
@@ -77,7 +150,18 @@ test('Page 1 is not selected when page 2 is selected', async () => {
 
 test('Prev button should be disabled when page 1 is selected', async () => {
   const user = userEvent.setup();
-  render(<Catalog bestSellers={BEST_SELLERS} />);
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />{' '}
+      </CartContext.Provider>
+    );
+  });
   const pageOneButton = screen.getByText('1', { selector: 'button' });
   await user.click(pageOneButton);
 
@@ -90,9 +174,20 @@ test('Prev button should be disabled when page 1 is selected', async () => {
 
 test('Next button should be disabled when max page is selected', async () => {
   const user = userEvent.setup();
-  render(<Catalog bestSellers={BEST_SELLERS} />);
-  const pageSixButton = screen.getByText('6', { selector: 'button' });
-  await user.click(pageSixButton);
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />
+      </CartContext.Provider>
+    );
+  });
+  const lastPageButton = screen.getByText(`${maxPage}`, { selector: 'button' });
+  await user.click(lastPageButton);
 
   const nextButton = screen.getByRole('button', {
     name: 'Goto next page',
@@ -102,7 +197,18 @@ test('Next button should be disabled when max page is selected', async () => {
 });
 
 test('All pagination buttons should exist by default', async () => {
-  render(<Catalog bestSellers={BEST_SELLERS} />);
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />{' '}
+      </CartContext.Provider>
+    );
+  });
 
   const paginationList = screen.getByRole('list', {
     name: 'pagination list',
@@ -116,7 +222,7 @@ test('All pagination buttons should exist by default', async () => {
     '2',
     '3',
     '…',
-    '6',
+    `${maxPage}`,
     'Next',
   ]);
 
@@ -133,8 +239,19 @@ test('All pagination buttons should exist by default', async () => {
 test('Pagination buttons are correct on last page', async () => {
   const user = userEvent.setup();
 
-  render(<Catalog bestSellers={BEST_SELLERS} />);
-  const lastPageButton = screen.getByText('6', { selector: 'button' });
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />{' '}
+      </CartContext.Provider>
+    );
+  });
+  const lastPageButton = screen.getByText(`${maxPage}`, { selector: 'button' });
   await user.click(lastPageButton);
 
   const paginationList = screen.getByRole('list', {
@@ -147,9 +264,9 @@ test('Pagination buttons are correct on last page', async () => {
     'Previous',
     '1',
     '…',
-    '4',
-    '5',
-    '6',
+    `${maxPage - 2}`,
+    `${maxPage - 1}`,
+    `${maxPage}`,
     'Next',
   ]);
 
@@ -166,7 +283,18 @@ test('Pagination buttons are correct on last page', async () => {
 test('Pagination buttons are correct on fourth page', async () => {
   const user = userEvent.setup();
 
-  render(<Catalog bestSellers={BEST_SELLERS} />);
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog bestSellers={productList} />{' '}
+      </CartContext.Provider>
+    );
+  });
   const thirdPageButton = screen.getByText('3', { selector: 'button' });
   await user.click(thirdPageButton);
   const fourthPageButton = screen.getByText('4', { selector: 'button' });
@@ -186,7 +314,7 @@ test('Pagination buttons are correct on fourth page', async () => {
     '4',
     '5',
     '…',
-    '6',
+    `${maxPage}`,
     'Next',
   ]);
 
@@ -198,4 +326,72 @@ test('Pagination buttons are correct on fourth page', async () => {
     name: 'Goto next page',
   });
   expect(paginationItems[8]).toContainElement(nextButton);
+});
+
+test('Pagination buttons show up correctly when max page is between 1 - 3', async () => {
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog
+          bestSellers={productList.filter(
+            (p, i) => i < 2 * PRODUCTS_ON_PAGE - 5
+          )}
+        />{' '}
+      </CartContext.Provider>
+    );
+  });
+
+  const paginationList = screen.getByRole('list', {
+    name: 'pagination list',
+  });
+
+  const paginationItems = within(paginationList).getAllByRole('listitem');
+  expect(paginationItems).toHaveLength(7);
+  expect(paginationItems.map((item) => item.textContent)).toStrictEqual([
+    'Previous',
+    '1',
+    '2',
+    '--',
+    '--',
+    `--`,
+    'Next',
+  ]);
+});
+
+test('Pagination buttons show up correctly when max page is between 1', async () => {
+  act(() => {
+    ReactDOM.createRoot(container).render(
+      <CartContext.Provider
+        value={{
+          cart: [],
+          handleCart: () => {},
+        }}
+      >
+        <Catalog
+          bestSellers={productList.filter((p, i) => i < PRODUCTS_ON_PAGE - 2)}
+        />
+      </CartContext.Provider>
+    );
+  });
+
+  const paginationList = screen.getByRole('list', {
+    name: 'pagination list',
+  });
+
+  const paginationItems = within(paginationList).getAllByRole('listitem');
+  expect(paginationItems).toHaveLength(7);
+  expect(paginationItems.map((item) => item.textContent)).toStrictEqual([
+    'Previous',
+    '1',
+    '--',
+    '--',
+    '--',
+    `--`,
+    'Next',
+  ]);
 });
