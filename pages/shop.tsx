@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import styles from '../styles/Catalog.module.scss';
 import { BEST_SELLERS_MULTIPLIED, PRODUCTS_ON_PAGE } from '../utils/constants';
 import { ProductWithCatsInterface } from '../types/interfaces';
@@ -12,6 +12,8 @@ import Pagination from '../components/Pagination';
 import { AgeGroup, ProductThemes } from '../types/types';
 import { isAgeGroup, isProductTheme } from '../types/typeGuards';
 import ActiveFilter from '../components/Catalog/ActiveFilter';
+import useFilters from '../utils/useFilters';
+import useStickyScroll from '../utils/useStickyScroll';
 
 // export async function getStaticProps() {
 //   try {
@@ -62,111 +64,61 @@ interface Props {
 export default function Catalog({
   bestSellers = BEST_SELLERS_MULTIPLIED,
 }: Props) {
-  const [priceFilters, setPriceFilters] = useState({ min: 0, max: 0 });
-  const [themeFilters, setThemeFilters] = useState<ProductThemes[]>([]);
-  const [ageFilters, setAgeFilters] = useState<AgeGroup[]>([]);
-  const [filtersActive, setFiltersActive] = useState(false);
-
   const [page, setPage] = useState(1);
 
   const [sortMethod, setSortMethod] = useState<
     'Popular' | 'Price: High to Low' | 'Price: Low to High'
   >('Popular');
 
-  function setFilters(
-    type: 'priceMin' | 'priceMax' | 'theme' | 'age',
-    payload: number | ProductThemes | AgeGroup
-  ) {
-    switch (type) {
-      case 'priceMin':
-        return setPriceFilters((prev) => {
-          const value = payload as number;
-          if (Number(value) < 0) return prev;
-          if (Number(value) > 9999) return prev;
+  const {
+    filters,
+    filtered,
+    filtersActive,
+    setFiltersActive,
+    setFilters,
+    resetFilters,
+  } = useFilters(bestSellers);
 
-          return { ...prev, min: value };
-        });
-      case 'priceMax':
-        return setPriceFilters((prev) => {
-          const value = payload as number;
-          if (Number(value) < 0) return prev;
-          if (Number(value) > 9999) return prev;
-
-          return { ...prev, max: value };
-        });
-      case 'theme':
-        return setThemeFilters((prev) => {
-          if (!isProductTheme(payload)) return prev;
-
-          const value = payload;
-          if (prev.includes(value)) {
-            if (prev.length === 1) setFiltersActive(false);
-            return prev.filter((t) => t !== value);
-          }
-          return [...prev, value];
-        });
-      case 'age':
-        return setAgeFilters((prev) => {
-          if (!isAgeGroup(payload)) return prev;
-
-          const value = payload;
-          if (prev.includes(value)) {
-            if (prev.length === 1) setFiltersActive(false);
-            return prev.filter((t) => t !== value);
-          }
-          return [...prev, value];
-        });
-    }
-  }
-
-  function resetFilters() {
-    setPriceFilters({ min: 0, max: 0 });
-    setThemeFilters([]);
-    setAgeFilters([]);
-    setFiltersActive(false);
-  }
-
-  const themeCount = bestSellers.reduce(
-    (acc: { [key in ProductThemes]: number }, curr) => {
-      acc[curr.theme]++;
-      return acc;
-    },
-    {
-      Space: 0,
-      Ninja: 0,
-      Transport: 0,
-      Buildings: 0,
-      Homes: 0,
-    }
+  const themeCount = useMemo(
+    () =>
+      bestSellers.reduce(
+        (acc: { [key in ProductThemes]: number }, curr) => {
+          acc[curr.theme]++;
+          return acc;
+        },
+        {
+          Space: 0,
+          Ninja: 0,
+          Transport: 0,
+          Buildings: 0,
+          Homes: 0,
+        }
+      ),
+    [bestSellers]
   );
 
-  const ageCount = bestSellers.reduce(
-    (acc: { [key in AgeGroup]: number }, curr) => {
-      acc[curr.ageGroup]++;
-      return acc;
-    },
-    {
-      'Up to a year': 0,
-      '1 year - 2 years': 0,
-      '3 years - 5 years': 0,
-      '6 years - 10 years': 0,
-      'Older than 12 years': 0,
-    }
+  const ageCount = useMemo(
+    () =>
+      bestSellers.reduce(
+        (acc: { [key in AgeGroup]: number }, curr) => {
+          acc[curr.ageGroup]++;
+          return acc;
+        },
+        {
+          'Up to a year': 0,
+          '1 year - 2 years': 0,
+          '3 years - 5 years': 0,
+          '6 years - 10 years': 0,
+          'Older than 12 years': 0,
+        }
+      ),
+    [bestSellers]
   );
-
-  bestSellers = filtersActive
-    ? bestSellers.filter((product) => {
-        return (
-          themeFilters.includes(product.theme) ||
-          ageFilters.includes(product.ageGroup)
-        );
-      })
-    : bestSellers;
 
   const sorted =
     sortMethod === 'Popular'
-      ? bestSellers
-      : [...bestSellers].sort((a, b) => {
+      ? filtered
+      : [...filtered].sort((a, b) => {
           switch (sortMethod) {
             case 'Price: High to Low': {
               return Number(b.price) - Number(a.price);
@@ -193,51 +145,7 @@ export default function Catalog({
     setPage(num);
   };
 
-  const footer = useRef<HTMLElement | null>(null);
-  const scroller = useRef<HTMLUListElement | null>(null);
-  const container = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    function handleScroll() {
-      // push the content down as you scroll until scroller reaches the bottom
-      // this way the content "sticks" until the scroller is done scrolling
-      if (!footer.current || !scroller.current || !container.current) return;
-      scroller.current.scroll({
-        top: window.scrollY,
-        behavior: 'smooth',
-      });
-
-      const scrollerHeight = Number(
-        window.getComputedStyle(scroller.current).height.slice(0, -2)
-      );
-
-      if (
-        (scroller.current.scrollHeight >
-          scroller.current.scrollTop + scrollerHeight &&
-          window.scrollY <= scroller.current.scrollHeight) ||
-        (scroller.current.scrollHeight ===
-          scroller.current.scrollTop + scrollerHeight - 0.2 &&
-          window.scrollY <= scroller.current.scrollHeight)
-      ) {
-        container.current.style.top = window.scrollY + 'px';
-        footer.current.style.marginTop = window.scrollY + 'px';
-      }
-    }
-
-    window.addEventListener('scroll', handleScroll);
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [page]);
-
-  useEffect(
-    function resetScrollOnPageChange() {
-      if (!footer.current || !scroller.current || !container.current) return;
-      window.scrollTo(0, 0);
-      // scroller.current.scrollTop = 0;
-      // container.current.style.top = window.scrollY + 'px';
-      // footer.current.style.marginTop = window.scrollY + 'px';
-    },
-    [page]
-  );
+  const { footer, container, scroller } = useStickyScroll(page);
 
   return (
     <Layout mobile={false} className={styles.layout} footerRef={footer}>
@@ -245,9 +153,9 @@ export default function Catalog({
         <CatalogNav />
         <div className={styles.content}>
           <Sidebar
-            themeFilters={themeFilters}
-            ageFilters={ageFilters}
-            priceFilters={priceFilters}
+            themeFilters={filters.theme}
+            ageFilters={filters.age}
+            priceFilters={filters.price}
             className={styles.sidebar}
             setFilters={setFilters}
             resetFilters={resetFilters}
@@ -261,25 +169,30 @@ export default function Catalog({
                 className={styles.subheader}
                 style={filtersActive ? { marginBottom: '2em' } : undefined}
               >
-                <SearchBar />
+                <SearchBar
+                  value={filters.search}
+                  setSearchFilter={(val: string) =>
+                    setFilters({ type: 'search', payload: val })
+                  }
+                />
                 <SortBy sortMethod={sortMethod} setSortMethod={setSortMethod} />
               </div>
               {filtersActive && (
                 <div className={styles.active_filters_ctn}>
-                  {themeFilters.map((v) => (
+                  {filters.theme.map((v) => (
                     <ActiveFilter
                       key={v}
                       className={styles.active_filter}
                       text={v}
-                      close={() => setFilters('theme', v)}
+                      close={() => setFilters({ type: 'theme', payload: v })}
                     />
                   ))}
-                  {ageFilters.map((v) => (
+                  {filters.age.map((v) => (
                     <ActiveFilter
                       key={v}
                       className={styles.active_filter}
                       text={v}
-                      close={() => setFilters('age', v)}
+                      close={() => setFilters({ type: 'age', payload: v })}
                     />
                   ))}
                 </div>

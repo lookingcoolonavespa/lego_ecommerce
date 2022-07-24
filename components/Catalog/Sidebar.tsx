@@ -12,10 +12,10 @@ interface Props {
   themeFilters: ProductThemes[];
   ageFilters: AgeGroup[];
   priceFilters: PriceFilterInterface;
-  setFilters: (
-    type: 'priceMin' | 'priceMax' | 'theme' | 'age',
-    payload: number | ProductThemes | AgeGroup
-  ) => void;
+  setFilters: React.Dispatch<{
+    type: 'priceMin' | 'priceMax' | 'theme' | 'age' | 'search' | 'reset';
+    payload?: string | number | undefined;
+  }>;
   resetFilters: () => void;
   themeCount: { [key in ProductThemes]: number };
   ageCount: { [key in AgeGroup]: number };
@@ -24,9 +24,9 @@ interface Props {
 
 export default function Sidebar({
   className,
+  priceFilters,
   themeFilters,
   ageFilters,
-  priceFilters,
   setFilters,
   resetFilters,
   themeCount,
@@ -39,8 +39,12 @@ export default function Sidebar({
         className={styles.price_filter}
         min={priceFilters.min}
         max={priceFilters.max}
-        setPriceMax={(value: number) => setFilters('priceMax', value)}
-        setPriceMin={(value: number) => setFilters('priceMin', value)}
+        setPriceMax={(value: number) =>
+          setFilters({ type: 'priceMax', payload: value })
+        }
+        setPriceMin={(value: number) =>
+          setFilters({ type: 'priceMin', payload: value })
+        }
       />
       <OptionsFilter
         title="Theme"
@@ -50,7 +54,7 @@ export default function Sidebar({
         name="themes"
         selectOption={(option: string) => {
           if (!isProductTheme(option)) return;
-          setFilters('theme', option);
+          setFilters({ type: 'theme', payload: option });
         }}
       />
       <OptionsFilter
@@ -61,7 +65,7 @@ export default function Sidebar({
         name="age groups"
         selectOption={(option: string) => {
           if (!isAgeGroup(option)) return;
-          setFilters('age', option);
+          setFilters({ type: 'age', payload: option });
         }}
       />
       <section className={styles.btn_ctn}>

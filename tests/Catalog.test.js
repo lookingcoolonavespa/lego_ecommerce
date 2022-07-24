@@ -295,3 +295,28 @@ describe('active filters close properly', () => {
     expect(themeOptions[0]).not.toBeChecked();
   });
 });
+
+describe('search works', () => {
+  test('input displays the typed string', async () => {
+    await user.type(screen.getByRole('textbox', { name: 'search' }), 'volcano');
+
+    expect(screen.getByDisplayValue('volcano')).toBeInTheDocument();
+  });
+
+  test('search filters out products whose title contains string', async () => {
+    const searchStr = 'ab';
+
+    await user.type(screen.getByRole('textbox', { name: 'search' }), 'ab');
+
+    const plist = screen.getByRole('list', { name: 'product list' });
+    const productItems = within(plist).getAllByRole('listitem');
+
+    for (let i = 0; i < PRODUCTS_ON_PAGE; i++) {
+      const productItem = productItems[i];
+      if (!productItem) return;
+
+      const titleEl = within(productItem).getByRole('link');
+      expect(titleEl.textContent.includes(searchStr)).toBe(true);
+    }
+  });
+});

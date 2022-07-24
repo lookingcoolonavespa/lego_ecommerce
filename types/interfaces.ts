@@ -40,3 +40,13 @@ export interface PriceFilterInterface {
   min: number;
   max: number;
 }
+
+export interface Filters {
+  price: {
+    min: number;
+    max: number;
+  };
+  theme: ProductThemes[];
+  age: AgeGroup[];
+  search: string;
+}
