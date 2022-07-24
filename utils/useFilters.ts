@@ -78,14 +78,18 @@ export default function useFilters(products: ProductWithCatsInterface[]) {
     setFiltersActive(false);
   }
 
+  const matchSearch = products.filter((product) =>
+    product.title.includes(filters.search)
+  );
+
   const filtered = filtersActive
-    ? products.filter((product) => {
+    ? matchSearch.filter((product) => {
         return (
           filters.theme.includes(product.theme) ||
           filters.age.includes(product.ageGroup)
         );
       })
-    : products;
+    : matchSearch;
 
   return {
     filters,

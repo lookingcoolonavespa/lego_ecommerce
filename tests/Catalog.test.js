@@ -303,7 +303,7 @@ describe('search works', () => {
     expect(screen.getByDisplayValue('volcano')).toBeInTheDocument();
   });
 
-  test('search filters out products whose title contains string', async () => {
+  test.only('search filters out products whose title contains string', async () => {
     const searchStr = 'ab';
 
     await user.type(screen.getByRole('textbox', { name: 'search' }), 'ab');
@@ -315,7 +315,7 @@ describe('search works', () => {
       const productItem = productItems[i];
       if (!productItem) return;
 
-      const titleEl = within(productItem).getByRole('link');
+      const titleEl = within(productItem).getByRole('heading');
       expect(titleEl.textContent.includes(searchStr)).toBe(true);
     }
   });

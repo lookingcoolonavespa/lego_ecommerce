@@ -48,7 +48,9 @@ export default function ProductPreview({ product, className }: Props) {
       </div>
       <div className={styles.details_ctn}>
         <div className={styles.top_row}>
-          <a className={styles.title_wrapper}>{product.title}</a>
+          <a className={styles.title_wrapper}>
+            <h5>{product.title}</h5>
+          </a>
         </div>
         <div className={styles.bottom_row}>
           <div className={styles.price_wrapper}>

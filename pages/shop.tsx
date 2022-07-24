@@ -134,7 +134,7 @@ export default function Catalog({
     page * PRODUCTS_ON_PAGE
   );
 
-  const maxPage = Math.ceil(bestSellers.length / PRODUCTS_ON_PAGE);
+  const maxPage = Math.ceil(sorted.length / PRODUCTS_ON_PAGE);
 
   const updatePage = (num: number) => {
     if (num < 1 || num > maxPage) {
