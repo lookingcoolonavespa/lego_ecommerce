@@ -6,14 +6,15 @@ import CartContext from '../utils/CartContext';
 
 interface Props {
   product: ProductInCartInterface;
+  divRef?: React.RefObject<HTMLDivElement>;
 }
 
-export default function CartProductWrapper({ product }: Props) {
+export default function CartProductWrapper({ product, divRef }: Props) {
   const { handleCart } = useContext(CartContext);
   const selectInput = useRef<HTMLSelectElement | null>(null);
 
   return (
-    <div className={styles.main}>
+    <div ref={divRef} className={styles.main}>
       <div className={styles.product_img_wrapper}>
         <Image
           src={product.imgSrc}

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useRef, useContext } from 'react';
 import CartContext from '../utils/CartContext';
 import Layout from '../components/Layout';
 import styles from '../styles/Cart.module.scss';
@@ -12,12 +12,19 @@ export default function Cart() {
   const { cart } = useContext(CartContext);
   const { mobileCheck } = useMobile();
 
-  const itemTotal = cart.reduce(
+  const costTotal = cart.reduce(
     (acc: number, curr: ProductInCartInterface) =>
       acc + Number(curr.price) * curr.quantity,
     0
   );
-  const itemTotalRounded = Math.ceil(itemTotal * 100) / 100; // so price is cut off after two decimal points
+  const costTotalRounded = Math.ceil(costTotal * 100) / 100; // so price is cut off after two decimal points
+
+  const productWrapper = useRef<HTMLDivElement | null>(null);
+  const productWrapperHeight = productWrapper.current
+    ? Number(
+        window.getComputedStyle(productWrapper.current).height.slice(0, -2)
+      )
+    : 0;
 
   return (
     <>
@@ -29,28 +36,37 @@ export default function Cart() {
               <h2>shopping cart</h2>
             </header>
             <main className={styles.cart}>
-              <section className={styles.products_ctn}>
-                {cart.length ? (
-                  cart.map((product: ProductInCartInterface) => {
-                    return (
-                      <CartProductWrapper
-                        key={product.title}
-                        product={product}
-                      />
-                    );
-                  })
-                ) : (
-                  <h3>No items are in your cart</h3>
-                )}
+              <section
+                className={styles.products_ctn}
+                style={{
+                  height:
+                    cart.length > 3 ? `${3 * productWrapperHeight}px` : 'auto',
+                }}
+              >
+                <div className={cart.length > 3 ? 'scroller' : ''}>
+                  {cart.length ? (
+                    cart.map((product: ProductInCartInterface) => {
+                      return (
+                        <CartProductWrapper
+                          divRef={productWrapper}
+                          key={product.title}
+                          product={product}
+                        />
+                      );
+                    })
+                  ) : (
+                    <h3>No items are in your cart</h3>
+                  )}
+                </div>
               </section>
               <section className={styles.price_ctn}>
                 <span className={styles.detail_label}>Item(s) total:</span>
-                <span>{itemTotalRounded} $</span>
+                <span>{costTotalRounded} $</span>
                 <span className={styles.detail_label}>Shipping:</span>
                 <span>5 $</span>
                 <span className={styles.detail_label}>Total:</span>
                 <span className="bold">
-                  {itemTotalRounded ? `${itemTotalRounded + 5} $` : '--'}
+                  {costTotalRounded ? `${costTotalRounded + 5} $` : '--'}
                 </span>
               </section>
             </main>

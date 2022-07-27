@@ -1,3 +1,5 @@
+@use './variables';
+
 .main {
   position: relative;
   display: flex;
@@ -64,7 +66,7 @@
 }
 
 .mobile {
-  height: 50px;
+  height: variables.$nav_height-mobile;
 
   .logo_wrapper {
     margin: 0 20px;
