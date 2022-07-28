@@ -100,6 +100,11 @@ button {
   &:hover {
     filter: brightness(0.9);
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
 }
 
 main > .section {
@@ -158,8 +163,7 @@ ul {
 
 .flat_btn {
   color: var(--background);
-  width: 6.5em;
-  height: 2.2em;
+  padding: 0.6em 1.2em;
   border-radius: 3px;
 }
 

@@ -7,14 +7,19 @@ import CartContext from '../utils/CartContext';
 interface Props {
   product: ProductInCartInterface;
   divRef?: React.RefObject<HTMLDivElement>;
+  readonly?: boolean;
 }
 
-export default function CartProductWrapper({ product, divRef }: Props) {
+export default function CartProductWrapper({
+  product,
+  divRef,
+  readonly = false,
+}: Props) {
   const { handleCart } = useContext(CartContext);
   const selectInput = useRef<HTMLSelectElement | null>(null);
 
   return (
-    <div ref={divRef} className={styles.main}>
+    <div ref={divRef} className={`${styles.main} product_wrapper`}>
       <div className={styles.product_img_wrapper}>
         <Image
           src={product.imgSrc}
@@ -34,30 +39,34 @@ export default function CartProductWrapper({ product, divRef }: Props) {
         <div className={styles.detail_wrapper}>
           <span className={styles.detail_label}>Quantity:</span>
           <div className={styles.quantity_wrapper}>
-            <select
-              ref={selectInput}
-              value={product.quantity}
-              onChange={() => {
-                if (!selectInput.current) return;
-                handleCart({
-                  type: 'update',
-                  payload: {
-                    product,
-                    quantity: Number(selectInput.current.value),
-                  },
-                });
-              }}
-            >
-              {[...Array(11)]
-                .map((v, i) => i)
-                .map((num) => {
-                  return (
-                    <option key={num} value={num}>
-                      {num}
-                    </option>
-                  );
-                })}
-            </select>
+            {readonly ? (
+              <span className="">{product.quantity}</span>
+            ) : (
+              <select
+                ref={selectInput}
+                value={product.quantity}
+                onChange={() => {
+                  if (!selectInput.current) return;
+                  handleCart({
+                    type: 'update',
+                    payload: {
+                      product,
+                      quantity: Number(selectInput.current.value),
+                    },
+                  });
+                }}
+              >
+                {[...Array(11)]
+                  .map((v, i) => i)
+                  .map((num) => {
+                    return (
+                      <option key={num} value={num}>
+                        {num}
+                      </option>
+                    );
+                  })}
+              </select>
+            )}
           </div>
         </div>
       </div>

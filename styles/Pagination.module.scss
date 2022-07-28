@@ -19,11 +19,6 @@
     padding: 2em 0;
   }
 
-  button:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
-
   li {
     flex: 1;
     border-right: 1px solid var(--border);

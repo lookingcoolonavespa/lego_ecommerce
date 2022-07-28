@@ -1,4 +1,5 @@
 import React, { useRef, useContext } from 'react';
+import Link from 'next/link';
 import CartContext from '../utils/CartContext';
 import Layout from '../components/Layout';
 import styles from '../styles/Cart.module.scss';
@@ -20,7 +21,7 @@ export default function Cart() {
   const costTotalRounded = Math.ceil(costTotal * 100) / 100; // so price is cut off after two decimal points
 
   const productWrapper = useRef<HTMLDivElement | null>(null);
-  const productWrapperHeight = productWrapper.current
+  const productWrapperHeight = productWrapper.current // dont need to recalculate on resize because useMobile rerenders component on resize
     ? Number(
         window.getComputedStyle(productWrapper.current).height.slice(0, -2)
       )
@@ -55,7 +56,9 @@ export default function Cart() {
                       );
                     })
                   ) : (
-                    <h3>No items are in your cart</h3>
+                    <h3 className={styles.no_items}>
+                      No items are in your cart
+                    </h3>
                   )}
                 </div>
               </section>
@@ -70,6 +73,15 @@ export default function Cart() {
                 </span>
               </section>
             </main>
+            <Link href="/checkout">
+              <button
+                className={`${styles.checkout_btn} flat_btn`}
+                type="button"
+                disabled={!cart.length ? true : undefined}
+              >
+                Proceed to checkout
+              </button>
+            </Link>
           </div>
         </div>
       </Layout>

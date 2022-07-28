@@ -99,9 +99,9 @@ export default function Footer({ mobile, forwardedRef }: Props) {
                   type: 'text',
                   placeholder: 'your email address',
                   value: email,
-                  onChange: handleChange,
                 }}
                 inputStatus={inputStatus}
+                handleChange={handleChange}
               />
               <button>
                 <ArrowSvg dir="right" />
@@ -157,9 +157,9 @@ export default function Footer({ mobile, forwardedRef }: Props) {
                   type: 'text',
                   placeholder: 'your email address',
                   value: email,
-                  onChange: handleChange,
                 }}
                 inputStatus={inputStatus}
+                handleChange={handleChange}
               />
               <button>
                 <ArrowSvg dir="right" />

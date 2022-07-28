@@ -1,10 +1,6 @@
 import { ChangeEvent, useState, FormEvent } from 'react';
 import { InputStatusInterface } from '../types/interfaces';
-
-const defaultInputStatus = {
-  type: undefined,
-  message: '',
-};
+import { DEFAULT_INPUT_STATUS as defaultInputStatus } from './constants';
 
 export default function useEmail() {
   const [email, setEmail] = useState('');
@@ -35,7 +31,7 @@ export default function useEmail() {
     setTimeout(resetInputStatus, 2000);
   }
 
-  function handleChange(e: InputEvent) {
+  function handleChange(e: ChangeEvent) {
     const input = e.target as HTMLInputElement;
     if (validateEmail(input.value) && inputStatus.type === 'error')
       resetInputStatus();

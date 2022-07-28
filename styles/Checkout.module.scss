@@ -1,0 +1,57 @@
+.container {
+  position: relative;
+  height: 100vh;
+  padding: 2em 10%;
+
+  nav {
+    position: absolute;
+  }
+
+  :global(.two_col_view) {
+    height: 100%;
+  }
+}
+
+.logo_wrapper {
+  cursor: pointer;
+}
+
+.form_ctn {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: 1.5em;
+  padding: 0 1em;
+
+  :global(.input_wrapper) {
+    width: 100%;
+    max-width: 400px;
+
+    label {
+      display: block;
+      margin-bottom: 0.2em;
+    }
+  }
+
+  :global(.flat_btn) {
+    background-color: var(--action-color);
+    align-self: start;
+  }
+}
+
+.products_ctn {
+  height: 100%;
+  width: 50%;
+  padding: 0 1em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  :global(.product_wrapper) {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+  }
+}

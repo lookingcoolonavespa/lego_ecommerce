@@ -1,4 +1,3 @@
-import { NumericDictionary } from 'cypress/types/lodash';
 import React, { ChangeEvent } from 'react';
 import { AgeGroup, ProductThemes } from './types';
 
@@ -49,4 +48,11 @@ export interface Filters {
   theme: ProductThemes[];
   age: AgeGroup[];
   search: string;
+}
+
+export interface InputFieldInterface {
+  inputDetails: InputDetailsInterface;
+  status: InputStatusInterface;
+  label: string;
+  validator: (val: string) => boolean | ((val: number) => boolean);
 }

@@ -484,3 +484,8 @@ export const BEST_SELLERS_MULTIPLIED = [
 ];
 
 export const PRODUCTS_ON_PAGE = 30;
+
+export const DEFAULT_INPUT_STATUS = {
+  type: undefined,
+  message: '',
+};

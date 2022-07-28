@@ -27,9 +27,9 @@ export default function SignUpHero() {
             name: 'email',
             placeholder: 'email',
             value: email,
-            onChange: handleChange,
           }}
           inputStatus={inputStatus}
+          handleChange={handleChange}
         />
 
         <animated.button className="flat_btn" style={spring}>
