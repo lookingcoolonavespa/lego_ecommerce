@@ -148,6 +148,16 @@ ul {
 .input_wrapper {
   position: relative;
 
+  input,
+  label {
+    position: relative;
+    z-index: 2;
+  }
+
+  input {
+    background-color: var(--background);
+  }
+
   .input_error {
     color: tomato;
     position: absolute;

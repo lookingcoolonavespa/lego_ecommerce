@@ -5,7 +5,7 @@ import React, {
   ChangeEvent,
   FocusEvent,
 } from 'react';
-import { useSpring, animated } from 'react-spring';
+import { useSpring, animated, useSprings } from 'react-spring';
 import Link from 'next/link';
 import CartContext from '../utils/CartContext';
 import styles from '../styles/Checkout.module.scss';
@@ -17,6 +17,7 @@ import {
 import CartProductWrapper from '../components/CartProductWrapper';
 import InputWrapperWithError from '../components/InputWrapperWithError';
 import { DEFAULT_INPUT_STATUS } from '../utils/constants';
+import { ApiError } from 'next/dist/server/api-utils';
 
 function InputField(
   type: string,
@@ -31,12 +32,13 @@ function InputField(
       type,
       value,
       name: label,
+      'aria-label': label,
     },
     status: DEFAULT_INPUT_STATUS,
   };
 }
 
-const defaultInputFields = {
+export const defaultInputFields = {
   1: [
     InputField('text', '', 'Email', (email: string) => {
       return /\S+@\S+\.\S+/.test(email);
@@ -50,13 +52,13 @@ const defaultInputFields = {
   ],
   2: [
     InputField('text', '', 'Street Address', (addy: string) => {
-      return /^[a-zA-Z0-9\s]+$/.test(addy);
+      return true;
     }),
-    InputField('text', '', 'Apt #, Floor ,etc (optional)', (addy: string) => {
-      return /^[a-zA-Z0-9\s]+$/.test(addy);
+    InputField('text', '', 'Apt #, Floor ,etc (optional)', () => {
+      return true;
     }),
     InputField('text', '', 'City', (city: string) => {
-      return city.length < 40 && /^[a-zA-Z\s]+$/.test(city);
+      return city.length < 40 && /^[a-zA-Z.\s]+$/.test(city);
     }),
     InputField('text', '', 'State', (state: string) => {
       return state.length < 40 && /^[a-zA-Z\s]+$/.test(state);
@@ -70,17 +72,39 @@ const defaultInputFields = {
 export default function Checkout() {
   const { cart } = useContext(CartContext);
 
-  const [page, setPage] = useState<1>(1);
+  const [page, setPage] = useState<1 | 2>(1);
   const [inputFields, setInputFields] = useState(defaultInputFields);
 
-  const [slideProps, slidePropsApi] = useSpring(() => ({
+  const [spring, springApi] = useSpring(() => ({
     offset: 1,
+  }));
+  const [springs, springsApi] = useSprings(inputFields[page].length, (idx) => ({
+    transform: 'translateY(0em)',
   }));
 
   useEffect(() => {
-    // run slider animation
-    slidePropsApi.start();
-  }, [inputFields, slidePropsApi]);
+    // run animation
+    const totalErrors = inputFields[page].reduce((acc, curr) => {
+      if (curr.status.type === 'error') acc++;
+
+      return acc;
+    }, 0);
+
+    springsApi.start((idx) => {
+      const errorsAboveInput = inputFields[page].reduce((acc, curr, i) => {
+        if (idx <= i) return acc;
+        if (curr.status.type === 'error') acc++;
+        console.log({ idx, i, acc });
+        return acc;
+      }, 0);
+
+      console.log({ errorsAboveInput, idx });
+      return {
+        transform: `translateY(${errorsAboveInput * 2}em)`,
+      };
+    });
+    springApi.update(() => ({ offset: totalErrors })).start();
+  }, [inputFields, page, springApi, springsApi]);
 
   function handleInputChange(e: ChangeEvent) {
     if (!e.target || !(e.target instanceof HTMLInputElement)) return;
@@ -93,8 +117,13 @@ export default function Checkout() {
         [page]: prev[page].map((field) => {
           if (field.inputDetails.name !== name) return field;
 
+          const validated = field.validator(value);
+          let status = field.status;
+          if (validated) status.type = undefined;
+
           return {
             ...field,
+            status,
             inputDetails: { ...field.inputDetails, value },
           };
         }),
@@ -129,6 +158,15 @@ export default function Checkout() {
       });
   }
 
+  const maxPage = Object.keys(defaultInputFields).length;
+  function toNextPage() {
+    setPage((prev) => {
+      if (prev === 2) return prev;
+      const nextPage = (prev + 1) as 2;
+      return nextPage;
+    });
+  }
+
   let valid = false;
   for (let i = 0; i < inputFields[page].length; i++) {
     const field = inputFields[page][i];
@@ -137,7 +175,6 @@ export default function Checkout() {
     if (i === inputFields[page].length - 1) valid = true;
   }
 
-  let fieldsWithErrors = 0;
   return (
     <div className={styles.container}>
       <nav>
@@ -149,23 +186,33 @@ export default function Checkout() {
       </nav>
       <main className="two_col_view">
         <form className={styles.form_ctn}>
-          {inputFields[page].map((field, i) => {
-            const fieldHasError = field.status.type === 'error';
-            if (fieldHasError) fieldsWithErrors++;
+          {springs.map((styles, i) => {
+            const field = inputFields[page][i];
+            return (
+              <animated.div key={field.label} style={styles}>
+                <InputWrapperWithError
+                  label={field.label}
+                  inputDetails={field.inputDetails}
+                  inputStatus={field.status}
+                  handleChange={handleInputChange}
+                  handleBlur={handleInputBlur}
+                />
+              </animated.div>
+            );
+          })}
+          {/* {inputFields[page].map((field, i) => {
+            const passedErrors = inputFields[page].reduce((acc, curr, idx) => {
+              if (idx >= i) return acc;
+              if (curr.status.type === 'error') acc++;
+
+              return acc;
+            }, 0);
+
             return (
               <animated.div
                 key={field.label}
                 style={{
-                  transform: slideProps.offset.to(
-                    (offset) =>
-                      `translateY(${
-                        offset *
-                        (fieldHasError
-                          ? fieldsWithErrors - 1
-                          : fieldsWithErrors) *
-                        2
-                      }em)`
-                  ),
+                  transform: `translateY(${passedErrors * 2}em)`,
                   willChange: 'transform',
                 }}
               >
@@ -178,15 +225,16 @@ export default function Checkout() {
                 />
               </animated.div>
             );
-          })}
+          })} */}
           <animated.button
             type="button"
+            onClick={toNextPage}
             className="flat_btn"
-            disabled={!valid}
+            disabled={!valid || page === maxPage}
             aria-label="next"
             style={{
-              transform: slideProps.offset.to(
-                (offset) => `translateY(${offset * fieldsWithErrors * 2}em)`
+              transform: spring.offset.to(
+                (offset) => `translateY(${offset * 2}em)`
               ),
               willChange: 'transform',
             }}
