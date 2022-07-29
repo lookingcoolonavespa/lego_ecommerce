@@ -54,5 +54,9 @@ export interface InputFieldInterface {
   inputDetails: InputDetailsInterface;
   status: InputStatusInterface;
   label: string;
-  validator: (val: string) => boolean | ((val: number) => boolean);
+  dataType: string;
+  validator: (val: string) => boolean;
+  handleChange?: ((val: string) => void) | ((val: string) => string);
+  maxLength?: number;
+  halfSize: boolean;
 }

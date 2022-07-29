@@ -3,7 +3,7 @@ import { useSpring, animated } from 'react-spring';
 import Image from 'next/image';
 import HeroImg from '../public/images/favpng_lego-minifigures-online-toy.png';
 import styles from '../styles/SignUpHero.module.scss';
-import useEmail from '../utils/useEmail';
+import useEmail from '../utils/hooks/useEmail';
 import InputWrapper from './InputWrapperWithError';
 
 export default function SignUpHero() {

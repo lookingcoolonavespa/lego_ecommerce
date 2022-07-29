@@ -8,7 +8,7 @@
   column-gap: 1em;
 
   :global(.input_wrapper) {
-    background-color: var(--faded-text);
+    background-color: var(--border);
     padding: 0.5em 1em;
     display: flex;
     flex: 0 0 auto;
@@ -22,6 +22,7 @@
     -moz-appearance: textfield;
     color: var(--main-text);
     text-align: center;
+    background-color: var(--border);
   }
 
   input::-webkit-outer-spin-button,

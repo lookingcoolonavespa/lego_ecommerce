@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useMemo } from 'react';
 import { ProductThemes, AgeGroup } from '../types/types';
 import { isProductTheme, isAgeGroup } from '../types/typeGuards';
 import { ProductWithCatsInterface, Filters } from '../types/interfaces';
@@ -78,18 +78,21 @@ export default function useFilters(products: ProductWithCatsInterface[]) {
     setFiltersActive(false);
   }
 
-  const matchSearch = products.filter((product) =>
-    product.title.includes(filters.search)
+  const matchSearch = useMemo(
+    () => products.filter((product) => product.title.includes(filters.search)),
+    [filters.search, products]
   );
 
-  const filtered = filtersActive
-    ? matchSearch.filter((product) => {
-        return (
-          filters.theme.includes(product.theme) ||
-          filters.age.includes(product.ageGroup)
-        );
-      })
-    : matchSearch;
+  const filtered = useMemo(() => {
+    return filtersActive
+      ? matchSearch.filter((product) => {
+          return (
+            filters.theme.includes(product.theme) ||
+            filters.age.includes(product.ageGroup)
+          );
+        })
+      : matchSearch;
+  }, [filters.age, filters.theme, filtersActive, matchSearch]);
 
   return {
     filters,

@@ -1,7 +1,10 @@
 .container {
   position: relative;
   height: 100vh;
-  padding: 2em 10%;
+  padding: 2em 0;
+  margin: 0 auto;
+  max-width: 1000px;
+  width: 90%;
 
   nav {
     position: absolute;
@@ -9,6 +12,21 @@
 
   :global(.two_col_view) {
     height: 100%;
+  }
+
+  input[type='number'] {
+    background: var(--background);
+    border: 1px solid var(--border);
+    padding: 0.6em 0.8em;
+    border-radius: 4px;
+    width: 100%;
+    -moz-appearance: textfield;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
 
@@ -21,12 +39,11 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  row-gap: 1.5em;
-  padding: 0 1em;
+  row-gap: 2em;
+  padding-right: 2em;
 
   :global(.input_wrapper) {
     width: 100%;
-    max-width: 400px;
 
     label {
       display: block;
@@ -40,10 +57,26 @@
   }
 }
 
+$columnGap: 1em;
+.inputs_ctn {
+  display: flex;
+  row-gap: 1.5em;
+  column-gap: $columnGap;
+  flex-wrap: wrap;
+
+  :global(.full-size) {
+    width: 100%;
+  }
+
+  :global(.half-size) {
+    flex: 1 0 45%;
+    max-width: calc(50% - $columnGap/2);
+  }
+}
+
 .products_ctn {
   height: 100%;
   width: 50%;
-  padding: 0 1em;
   display: flex;
   flex-direction: column;
   justify-content: center;

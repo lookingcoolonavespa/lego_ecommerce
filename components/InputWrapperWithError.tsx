@@ -9,7 +9,7 @@ interface Props {
   label?: string;
   inputDetails: InputDetailsInterface;
   inputStatus: InputStatusInterface;
-  handleChange?: (e: ChangeEvent) => void;
+  handleChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   handleBlur?: (e: FocusEvent<HTMLInputElement>) => void;
 }
 

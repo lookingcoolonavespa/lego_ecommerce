@@ -4,6 +4,7 @@ import React, {
   useContext,
   ChangeEvent,
   FocusEvent,
+  useReducer,
 } from 'react';
 import { useSpring, animated, useSprings } from 'react-spring';
 import Link from 'next/link';
@@ -17,17 +18,32 @@ import {
 import CartProductWrapper from '../components/CartProductWrapper';
 import InputWrapperWithError from '../components/InputWrapperWithError';
 import { DEFAULT_INPUT_STATUS } from '../utils/constants';
-import { ApiError } from 'next/dist/server/api-utils';
+import {
+  testAlphabet,
+  testEmail,
+  testMMYY,
+  testNumeric,
+} from '../utils/validators';
+import { InputFields } from '../types/types';
+import useInputFields from '../utils/hooks/useInputFields';
 
 function InputField(
   type: string,
   value = '',
   label: string,
-  validator: (val: string) => boolean | ((val: number) => boolean)
+  dataType = label,
+  validator: (val: string) => boolean,
+  maxLength?: number,
+  halfSize = false,
+  handleChange?: (val: string) => void
 ): InputFieldInterface {
   return {
     label,
+    dataType,
     validator,
+    maxLength,
+    halfSize,
+    handleChange,
     inputDetails: {
       type,
       value,
@@ -38,67 +54,111 @@ function InputField(
   };
 }
 
-export const defaultInputFields = {
+export const defaultInputFields: InputFields = {
   1: [
-    InputField('text', '', 'Email', (email: string) => {
-      return /\S+@\S+\.\S+/.test(email);
-    }),
-    InputField('text', '', 'First Name', (name: string) => {
-      return name.length < 40 && /^[a-zA-Z\s]+$/.test(name);
-    }),
-    InputField('text', '', 'Last Name', (name: string) => {
-      return name.length < 40 && /^[a-zA-Z\s]+$/.test(name);
-    }),
+    InputField('text', '', 'Email', undefined, testEmail),
+    InputField(
+      'text',
+      '',
+      'First Name',
+      undefined,
+      testAlphabet(1, 40),
+      40,
+      true
+    ),
+    InputField(
+      'text',
+      '',
+      'Last Name',
+      undefined,
+      testAlphabet(1, 40),
+      40,
+      true
+    ),
   ],
   2: [
-    InputField('text', '', 'Street Address', (addy: string) => {
+    InputField('text', '', 'Street Address', undefined, () => {
       return true;
     }),
-    InputField('text', '', 'Apt #, Floor ,etc (optional)', () => {
+    InputField('text', '', 'Apt #, Floor, etc (optional)', 'value', () => {
       return true;
     }),
-    InputField('text', '', 'City', (city: string) => {
-      return city.length < 40 && /^[a-zA-Z.\s]+$/.test(city);
-    }),
-    InputField('text', '', 'State', (state: string) => {
-      return state.length < 40 && /^[a-zA-Z\s]+$/.test(state);
-    }),
-    InputField('text', '', 'Zip Code', (zipCode: string) => {
-      return zipCode.length === 5 && /^[0-9]+$/.test(zipCode);
-    }),
+    InputField('text', '', 'City', undefined, testAlphabet(1, 40), 40, true),
+    InputField('text', '', 'State', undefined, testAlphabet(1, 2), 2, true),
+    InputField('number', '', 'Zip Code', undefined, testNumeric(1, 5), 5, true),
+  ],
+  3: [
+    InputField('number', '', 'Credit Card', undefined, testNumeric(1, 16), 16),
+    InputField(
+      'text',
+      '',
+      'Exp. (MM/YY)',
+      'expiration date',
+      testMMYY,
+      5,
+      true,
+      (value: string) => {
+        if (value.length === 1 && Number(value) > 1) value = '0' + value;
+        if (value.length === 2) value += '/';
+
+        return value;
+      }
+    ),
+    InputField('text', '', 'CVV', 'security code', testNumeric(1, 3), 3, true),
   ],
 };
 
 export default function Checkout() {
   const { cart } = useContext(CartContext);
 
-  const [page, setPage] = useState<1 | 2>(1);
-  const [inputFields, setInputFields] = useState(defaultInputFields);
+  type PageRange = 1 | 2 | 3;
+  const [page, setPage] = useState<PageRange>(2);
+  const { inputFields, handleInputBlur, handleInputChange } = useInputFields(
+    page,
+    defaultInputFields
+  );
 
   const [spring, springApi] = useSpring(() => ({
-    offset: 1,
+    offset: 0,
   }));
-  const [springs, springsApi] = useSprings(inputFields[page].length, (idx) => ({
+  const [springs, springsApi] = useSprings(inputFields[page].length, () => ({
     transform: 'translateY(0em)',
   }));
 
   useEffect(() => {
     // run animation
-    const totalErrors = inputFields[page].reduce((acc, curr) => {
-      if (curr.status.type === 'error') acc++;
+    const totalErrors = Math.ceil(
+      inputFields[page].reduce((acc, curr) => {
+        if (curr.status.type === 'error') {
+          if (curr.halfSize) acc += 0.5;
+          else acc++;
+        }
 
-      return acc;
-    }, 0);
+        return acc;
+      }, 0)
+    );
 
     springsApi.start((idx) => {
-      const errorsAboveInput = inputFields[page].reduce((acc, curr, i) => {
-        if (idx <= i) return acc;
-        if (curr.status.type === 'error') acc++;
-        console.log({ idx, i, acc });
-        return acc;
-      }, 0);
+      let halfSizeCount = 0;
+      for (let i = 0; i < idx; i++) {
+        if (!inputFields[page][i].halfSize) continue;
+        halfSizeCount++;
+      }
+      const newRow = halfSizeCount % 2 === 0;
 
-      console.log({ errorsAboveInput, idx });
+      const roundingFn = newRow ? Math.ceil : Math.floor;
+
+      const errorsAboveInput = roundingFn(
+        inputFields[page].reduce((acc, curr, i, arr) => {
+          if (idx <= i) return acc;
+          if (curr.status.type === 'error') {
+            if (curr.halfSize) acc += 0.5;
+            else acc++;
+          }
+          return acc;
+        }, 0)
+      );
+
       return {
         transform: `translateY(${errorsAboveInput * 2}em)`,
       };
@@ -106,67 +166,16 @@ export default function Checkout() {
     springApi.update(() => ({ offset: totalErrors })).start();
   }, [inputFields, page, springApi, springsApi]);
 
-  function handleInputChange(e: ChangeEvent) {
-    if (!e.target || !(e.target instanceof HTMLInputElement)) return;
-    const name = e.target.name;
-    const value = e.target.value;
-
-    setInputFields((prev) => {
-      return {
-        ...prev,
-        [page]: prev[page].map((field) => {
-          if (field.inputDetails.name !== name) return field;
-
-          const validated = field.validator(value);
-          let status = field.status;
-          if (validated) status.type = undefined;
-
-          return {
-            ...field,
-            status,
-            inputDetails: { ...field.inputDetails, value },
-          };
-        }),
-      };
-    });
-  }
-
-  function handleInputBlur(e: FocusEvent<HTMLInputElement>) {
-    if (!e.target || !(e.target instanceof HTMLInputElement)) return;
-    const name = e.target.name;
-    const value = e.target.value;
-
-    const field = inputFields[page].find((f) => f.inputDetails.name === name);
-    const validated = field?.validator(value as string);
-
-    if (!validated)
-      setInputFields((prev) => {
-        return {
-          ...prev,
-          [page]: prev[page].map((field) => {
-            if (field.inputDetails.name !== name) return field;
-
-            return {
-              ...field,
-              status: {
-                type: 'error',
-                message: `not a valid ${field.label.toLowerCase()}`,
-              },
-            };
-          }),
-        };
-      });
-  }
-
   const maxPage = Object.keys(defaultInputFields).length;
   function toNextPage() {
     setPage((prev) => {
-      if (prev === 2) return prev;
-      const nextPage = (prev + 1) as 2;
+      if (prev === maxPage) return prev;
+      const nextPage = (prev + 1) as PageRange;
       return nextPage;
     });
   }
 
+  // check to disable/enable 'next' button
   let valid = false;
   for (let i = 0; i < inputFields[page].length; i++) {
     const field = inputFields[page][i];
@@ -186,46 +195,26 @@ export default function Checkout() {
       </nav>
       <main className="two_col_view">
         <form className={styles.form_ctn}>
-          {springs.map((styles, i) => {
-            const field = inputFields[page][i];
-            return (
-              <animated.div key={field.label} style={styles}>
-                <InputWrapperWithError
-                  label={field.label}
-                  inputDetails={field.inputDetails}
-                  inputStatus={field.status}
-                  handleChange={handleInputChange}
-                  handleBlur={handleInputBlur}
-                />
-              </animated.div>
-            );
-          })}
-          {/* {inputFields[page].map((field, i) => {
-            const passedErrors = inputFields[page].reduce((acc, curr, idx) => {
-              if (idx >= i) return acc;
-              if (curr.status.type === 'error') acc++;
-
-              return acc;
-            }, 0);
-
-            return (
-              <animated.div
-                key={field.label}
-                style={{
-                  transform: `translateY(${passedErrors * 2}em)`,
-                  willChange: 'transform',
-                }}
-              >
-                <InputWrapperWithError
-                  label={field.label}
-                  inputDetails={field.inputDetails}
-                  inputStatus={field.status}
-                  handleChange={handleInputChange}
-                  handleBlur={handleInputBlur}
-                />
-              </animated.div>
-            );
-          })} */}
+          <div className={styles.inputs_ctn}>
+            {springs.map((animationStyles, i) => {
+              const field = inputFields[page][i];
+              return (
+                <animated.div
+                  key={field.label}
+                  style={animationStyles}
+                  className={field.halfSize ? 'half-size' : 'full-size'}
+                >
+                  <InputWrapperWithError
+                    label={field.label}
+                    inputDetails={field.inputDetails}
+                    inputStatus={field.status}
+                    handleChange={handleInputChange}
+                    handleBlur={handleInputBlur}
+                  />
+                </animated.div>
+              );
+            })}
+          </div>
           <animated.button
             type="button"
             onClick={toNextPage}

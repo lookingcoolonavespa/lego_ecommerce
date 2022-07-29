@@ -5,7 +5,7 @@ import LinksCtn from './LinksCtn';
 import SocialsCtn from './SocialsCtn';
 import ArrowSvg from './svg/ArrowSvg';
 import LegoLego from './svg/LegoLogo';
-import useEmail from '../utils/useEmail';
+import useEmail from '../utils/hooks/useEmail';
 import Accordion from './Accordian';
 import InputWrapperWithError from './InputWrapperWithError';
 

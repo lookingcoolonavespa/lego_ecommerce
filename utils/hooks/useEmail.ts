@@ -1,6 +1,6 @@
 import { ChangeEvent, useState, FormEvent } from 'react';
-import { InputStatusInterface } from '../types/interfaces';
-import { DEFAULT_INPUT_STATUS as defaultInputStatus } from './constants';
+import { InputStatusInterface } from '../../types/interfaces';
+import { DEFAULT_INPUT_STATUS as defaultInputStatus } from '../constants';
 
 export default function useEmail() {
   const [email, setEmail] = useState('');

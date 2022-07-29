@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import styles from '../styles/Catalog.module.scss';
 import { BEST_SELLERS_MULTIPLIED, PRODUCTS_ON_PAGE } from '../utils/constants';
 import { ProductWithCatsInterface } from '../types/interfaces';
@@ -14,6 +14,7 @@ import { isAgeGroup, isProductTheme } from '../types/typeGuards';
 import ActiveFilter from '../components/Catalog/ActiveFilter';
 import useFilters from '../utils/useFilters';
 import useStickyScroll from '../utils/useStickyScroll';
+import { useTrail, animated } from 'react-spring';
 
 // export async function getStaticProps() {
 //   try {
@@ -60,7 +61,7 @@ import useStickyScroll from '../utils/useStickyScroll';
 interface Props {
   bestSellers: ProductWithCatsInterface[];
 }
-
+let count = 0;
 export default function Catalog({
   bestSellers = BEST_SELLERS_MULTIPLIED,
 }: Props) {
@@ -115,8 +116,8 @@ export default function Catalog({
     [bestSellers]
   );
 
-  const sorted =
-    sortMethod === 'Popular'
+  const sorted = useMemo(() => {
+    return sortMethod === 'Popular'
       ? filtered
       : [...filtered].sort((a, b) => {
           switch (sortMethod) {
@@ -128,11 +129,24 @@ export default function Catalog({
             }
           }
         });
+  }, [filtered, sortMethod]);
 
-  const currentPaginationData = sorted.slice(
-    (page - 1) * PRODUCTS_ON_PAGE,
-    page * PRODUCTS_ON_PAGE
+  const currentPaginationData = useMemo(
+    () => sorted.slice((page - 1) * PRODUCTS_ON_PAGE, page * PRODUCTS_ON_PAGE),
+    [sorted, page]
   );
+
+  const [trail, trailApi] = useTrail(currentPaginationData.length, () => ({
+    opacity: 0,
+    transform: 'translate3d(5%, 15%, 0)',
+  }));
+  useEffect(() => {
+    console.log('run');
+    trailApi.start({
+      opacity: 1,
+      transform: 'translate3d(0%, 0%, 0)',
+    });
+  }, [currentPaginationData, trailApi]);
 
   const maxPage = Math.ceil(sorted.length / PRODUCTS_ON_PAGE);
 
@@ -203,7 +217,17 @@ export default function Catalog({
                   className="scroller"
                   aria-label="product list"
                 >
-                  {currentPaginationData.map((product, i) => {
+                  {trail.map((animatedStyles, i) => {
+                    return (
+                      <animated.li key={count++} style={animatedStyles}>
+                        <ProductPreview
+                          product={currentPaginationData[i]}
+                          className={styles.product_wrapper}
+                        />
+                      </animated.li>
+                    );
+                  })}
+                  {/* {currentPaginationData.map((product, i) => {
                     return (
                       <li key={i}>
                         <ProductPreview
@@ -212,7 +236,7 @@ export default function Catalog({
                         />
                       </li>
                     );
-                  })}
+                  })} */}
                 </ul>
               </div>
             </div>
