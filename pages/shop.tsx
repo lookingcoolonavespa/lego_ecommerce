@@ -14,7 +14,7 @@ import { isAgeGroup, isProductTheme } from '../types/typeGuards';
 import ActiveFilter from '../components/Catalog/ActiveFilter';
 import useFilters from '../utils/hooks/useFilters';
 import useStickyScroll from '../utils/hooks/useStickyScroll';
-import { useTrail, animated } from 'react-spring';
+import { useSpring, animated } from 'react-spring';
 
 // export async function getStaticProps() {
 //   try {
@@ -136,16 +136,22 @@ export default function Catalog({
     [sorted, page]
   );
 
-  const [trail, trailApi] = useTrail(currentPaginationData.length, () => ({
+  const [spring, springApi] = useSpring(() => ({
     opacity: 0,
     transform: 'translate3d(5%, 15%, 0)',
   }));
   useEffect(() => {
-    trailApi.start({
-      opacity: 1,
-      transform: 'translate3d(0%, 0%, 0)',
+    springApi.start({
+      from: {
+        opacity: 0,
+        transform: 'translate3d(5%, 15%, 0)',
+      },
+      to: {
+        opacity: 1,
+        transform: 'translate3d(0%, 0%, 0)',
+      },
     });
-  }, [currentPaginationData, trailApi]);
+  }, [currentPaginationData, springApi]);
 
   const maxPage = Math.ceil(sorted.length / PRODUCTS_ON_PAGE);
 
@@ -216,11 +222,11 @@ export default function Catalog({
                   className="scroller"
                   aria-label="product list"
                 >
-                  {trail.map((animatedStyles, i) => {
+                  {currentPaginationData.map((product, i) => {
                     return (
-                      <animated.li key={count++} style={animatedStyles}>
+                      <animated.li key={count++} style={spring}>
                         <ProductPreview
-                          product={currentPaginationData[i]}
+                          product={product}
                           className={styles.product_wrapper}
                         />
                       </animated.li>

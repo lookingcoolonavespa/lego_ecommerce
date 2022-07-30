@@ -2,8 +2,8 @@ import React, {
   useEffect,
   useState,
   useContext,
-  ChangeEvent,
-  FocusEvent,
+  useMemo,
+  useRef,
   useReducer,
 } from 'react';
 import { useSpring, animated, useSprings } from 'react-spring';
@@ -27,9 +27,10 @@ import {
   testNumeric,
   testState,
 } from '../utils/validators';
-import { InputFields } from '../types/types';
+import { CheckoutFormTitles, InputFields } from '../types/types';
 import useInputFields from '../utils/hooks/useInputFields';
 import { isCheckbox } from '../types/typeGuards';
+import Animate from '../components/Animate';
 
 function TextInputField(
   type: string,
@@ -85,9 +86,8 @@ function CheckboxInputField(
     },
   };
 }
-
 export const defaultInputFields: InputFields = {
-  1: [
+  'Personal Information': [
     TextInputField('text', '', 'Email', undefined, testEmail),
     TextInputField(
       'text',
@@ -108,7 +108,7 @@ export const defaultInputFields: InputFields = {
       true
     ),
   ],
-  2: [
+  'Shipping Address': [
     TextInputField('text', '', 'Street Address', undefined, () => {
       return true;
     }),
@@ -122,18 +122,18 @@ export const defaultInputFields: InputFields = {
       '',
       'Zip Code',
       undefined,
-      testNumeric(1, 5),
+      testNumeric.haveLength(5),
       5,
       true
     ),
   ],
-  3: [
+  'Billing Information': [
     TextInputField(
       'number',
       '',
       'Credit Card',
       undefined,
-      testNumeric(1, 17),
+      testNumeric.haveLength(16),
       16
     ),
     TextInputField(
@@ -156,18 +156,9 @@ export const defaultInputFields: InputFields = {
       '',
       'CVV',
       'security code',
-      testNumeric(1, 4),
+      testNumeric.haveLength(3),
       3,
       true
-    ),
-    CheckboxInputField(
-      true,
-      'Billing address same as shipping',
-      'sameAddress',
-      false,
-      () => true,
-      () => {},
-      styles.checkbox_wrapper
     ),
     TextInputField('text', '', 'Street Address', undefined, () => {
       return true;
@@ -182,45 +173,82 @@ export const defaultInputFields: InputFields = {
       '',
       'Zip Code',
       undefined,
-      testNumeric(1, 5),
+      testNumeric.haveLength(5),
       5,
       true
     ),
   ],
 };
 
-const titles = {
-  1: 'Personal Information',
-  2: 'Shipping Address',
-  3: 'Billing Information',
-  4: 'Billing Address',
-};
+const billingAddyStartIdx = defaultInputFields['Billing Information'].findIndex(
+  (inputField) => inputField.label === 'Street Address'
+);
+
+const billingCheckbox = CheckboxInputField(
+  true,
+  'Billing address same as shipping',
+  'sameAddress',
+  false,
+  () => true,
+  () => {},
+  styles.checkbox_wrapper
+);
 
 export default function Checkout() {
   const { cart } = useContext(CartContext);
 
-  type PageRange = 1 | 2 | 3;
-  const [page, setPage] = useState<PageRange>(3);
+  type PageRange = 0 | 1 | 2;
+  const startPage = 2;
+  const [page, setPage] = useState<PageRange>(startPage);
+  const prevPage = useRef(startPage);
+  const pageTitle = useMemo(
+    () => Object.keys(defaultInputFields)[page] as CheckoutFormTitles,
+    [page]
+  );
   const { inputFields, handleInputBlur, handleInputChange } = useInputFields(
-    page,
+    pageTitle,
     defaultInputFields
   );
+  const [billingAddySameAsShipping, setBillingAddySameAsShipping] =
+    useState(true);
 
-  const [spring, springApi] = useSpring(() => ({
-    offset: 0,
-  }));
-  const [springs, springsApi] = useSprings(inputFields[page].length, () => ({
+  const billingSpring = useSpring({
+    transform: billingAddySameAsShipping
+      ? 'translateY(-10%)'
+      : 'translateY(0%)',
+    opacity: billingAddySameAsShipping ? 0 : 1,
+  });
+  const [btnSpring, btnSpringApi] = useSpring(() => ({
     transform: 'translateY(0em)',
   }));
+  const [checkboxSpring, checkboxSpringApi] = useSpring(() => ({
+    transform: 'translateY(0em)',
+  }));
+  const [springs, springsApi] = useSprings(
+    inputFields[pageTitle].length,
+    () => ({
+      transform: 'translateY(0em)',
+    })
+  );
 
   useEffect(() => {
     // run animation
 
     let halfSizeCount = 0;
 
+    let errorsAboveCheckbox = 0;
     let totalErrors = 0;
     springsApi.start((idx) => {
-      const curr = inputFields[page][idx];
+      if (idx === billingAddyStartIdx && pageTitle === 'Billing Information')
+        errorsAboveCheckbox = totalErrors;
+
+      if (
+        idx >= billingAddyStartIdx &&
+        pageTitle === 'Billing Information' &&
+        billingAddySameAsShipping
+      )
+        return;
+      const curr = inputFields[pageTitle][idx];
       if (curr.halfSize) {
         // every two halfSize elements means a new row
         if (halfSizeCount === 2) halfSizeCount = 0;
@@ -229,8 +257,9 @@ export default function Checkout() {
 
       if (
         halfSizeCount === 2 &&
-        inputFields[page][idx - 1].status.type === 'error'
+        inputFields[pageTitle][idx - 1].status.type === 'error'
       ) {
+        halfSizeCount = 0;
         return {
           transform: `translateY(${(totalErrors - 1) * 2}em)`,
         };
@@ -245,14 +274,29 @@ export default function Checkout() {
         transform: `translateY(${totalErrors * 2}em)`,
       };
     });
-    springApi.update(() => ({ offset: totalErrors })).start();
-  }, [inputFields, page, springApi, springsApi]);
+
+    checkboxSpringApi.start(() => ({
+      transform: `translateY(${errorsAboveCheckbox * 2}em)`,
+    }));
+
+    btnSpringApi.start(() => ({
+      transform: `translateY(${totalErrors * 2}em)`,
+    }));
+  }, [
+    inputFields,
+    billingAddySameAsShipping,
+    pageTitle,
+    btnSpringApi,
+    springsApi,
+    checkboxSpringApi,
+  ]);
 
   const maxPage = Object.keys(defaultInputFields).length;
   function toNextPage() {
     setPage((prev) => {
       if (prev === maxPage) return prev;
       const nextPage = (prev + 1) as PageRange;
+      prevPage.current = prev;
       return nextPage;
     });
   }
@@ -260,21 +304,22 @@ export default function Checkout() {
   function toPrevPage() {
     setPage((prev) => {
       if (prev === 1) return prev;
-      const prevPage = (prev - 1) as PageRange;
-      return prev;
+      const previousPage = (prev - 1) as PageRange;
+      prevPage.current = prev;
+      return previousPage;
     });
   }
 
   // check to disable/enable 'next' button
   let valid = false;
-  for (let i = 0; i < inputFields[page].length; i++) {
-    const field = inputFields[page][i];
+  for (let i = 0; i < inputFields[pageTitle].length; i++) {
+    const field = inputFields[pageTitle][i];
     if (!field.validator) continue;
     const validated = isCheckbox(field)
       ? field.validator(field.inputDetails.checked as boolean)
       : field.validator(field.inputDetails.value as string);
     if (!validated) break;
-    if (i === inputFields[page].length - 1) valid = true;
+    if (i === inputFields[pageTitle].length - 1) valid = true;
   }
 
   return (
@@ -287,19 +332,42 @@ export default function Checkout() {
         </Link>
       </nav>
       <main className="two_col_view">
-        <form className={styles.form_ctn}>
+        <Animate
+          tag="form"
+          className={styles.form_ctn}
+          key={page}
+          animation={{
+            from: {
+              transform:
+                page - prevPage.current > 0
+                  ? 'translateX(10%)'
+                  : 'translateX(-10%)',
+              opacity: 0,
+            },
+            to: {
+              transform: 'translateY(0%)',
+              opacity: 1,
+            },
+          }}
+        >
           <header>
-            <h3>{titles[page]}</h3>
+            <h3>{pageTitle}</h3>
           </header>
           <div className={styles.inputs_ctn}>
             {springs.map((animationStyles, i) => {
-              const field = inputFields[page][i];
+              if (
+                i >= billingAddyStartIdx &&
+                pageTitle === 'Billing Information'
+              )
+                return;
+              const field = inputFields[pageTitle][i];
 
+              const rootClass = [field.halfSize ? 'half-size' : 'full-size'];
               return (
                 <animated.div
                   key={field.label}
                   style={animationStyles}
-                  className={field.halfSize ? 'half-size' : 'full-size'}
+                  className={rootClass.join(' ')}
                 >
                   <InputWrapperWithError
                     label={field.label}
@@ -312,16 +380,52 @@ export default function Checkout() {
                 </animated.div>
               );
             })}
+            {pageTitle === 'Billing Information' && (
+              <animated.div style={checkboxSpring}>
+                <InputWrapperWithError
+                  label={billingCheckbox.label}
+                  inputDetails={{
+                    ...billingCheckbox.inputDetails,
+                    checked: billingAddySameAsShipping,
+                  }}
+                  inputStatus={billingCheckbox.status}
+                  handleChange={() =>
+                    setBillingAddySameAsShipping((prev) => !prev)
+                  }
+                  className={billingCheckbox.className}
+                />
+              </animated.div>
+            )}
+            {pageTitle === 'Billing Information' && !billingAddySameAsShipping && (
+              <animated.div style={billingSpring} className={styles.inputs_ctn}>
+                {springs.map((animationStyles, i) => {
+                  if (i < billingAddyStartIdx) return;
+                  const field = inputFields[pageTitle][i];
+
+                  const rootClass = [
+                    field.halfSize ? 'half-size' : 'full-size',
+                  ];
+                  return (
+                    <animated.div
+                      key={field.label}
+                      style={animationStyles}
+                      className={rootClass.join(' ')}
+                    >
+                      <InputWrapperWithError
+                        label={field.label}
+                        inputDetails={field.inputDetails}
+                        inputStatus={field.status}
+                        handleChange={handleInputChange}
+                        handleBlur={handleInputBlur}
+                        className={field.className}
+                      />
+                    </animated.div>
+                  );
+                })}
+              </animated.div>
+            )}
           </div>
-          <animated.div
-            className={styles.btn_ctn}
-            style={{
-              transform: spring.offset.to(
-                (offset) => `translateY(${offset * 2}em)`
-              ),
-              willChange: 'transform',
-            }}
-          >
+          <animated.div className={styles.btn_ctn} style={btnSpring}>
             <button
               type="button"
               onClick={toPrevPage}
@@ -341,8 +445,21 @@ export default function Checkout() {
               Next
             </button>
           </animated.div>
-        </form>
-        <div className={styles.products_ctn}>
+        </Animate>
+        <Animate
+          tag="div"
+          animation={{
+            from: {
+              transform: 'translateX(10%)',
+              opacity: 0,
+            },
+            to: {
+              transform: 'translateY(0%)',
+              opacity: 1,
+            },
+          }}
+          className={styles.products_ctn}
+        >
           {cart.length ? (
             cart.map((product: ProductInCartInterface) => {
               return (
@@ -356,7 +473,7 @@ export default function Checkout() {
           ) : (
             <h3 className={styles.no_items}>No items are in your cart</h3>
           )}
-        </div>
+        </Animate>
       </main>
     </div>
   );

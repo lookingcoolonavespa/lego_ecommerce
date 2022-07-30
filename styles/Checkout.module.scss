@@ -44,11 +44,11 @@
 
   :global(.input_wrapper) {
     width: 100%;
+  }
 
-    label {
-      display: block;
-      margin-bottom: 0.2em;
-    }
+  label {
+    display: block;
+    margin-bottom: 0.2em;
   }
 
   :global(.flat_btn) {
@@ -95,7 +95,7 @@ $columnGap: 1em;
   justify-content: flex-end;
   align-items: center;
 
-  .input_wrapper label {
+  label {
     margin-bottom: 0;
   }
 }

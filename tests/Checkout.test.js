@@ -274,6 +274,10 @@ describe('input functionality works', () => {
   });
 });
 
+describe('form animations', () => {
+  test('inputs on page one have correct translate value when error messages are visible', () => {});
+});
+
 describe('form displays correct inputs for the page', () => {
   test('page one', () => {
     const { queryByLabelText } = setup();

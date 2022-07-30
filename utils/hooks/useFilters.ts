@@ -92,8 +92,7 @@ export default function useFilters(products: ProductWithCatsInterface[]) {
           );
         })
       : matchSearch;
-  }, [filters.age, filters.theme, filtersActive, matchSearch]);
-
+  }, [filters.age, filters.theme, filters.price, filtersActive, matchSearch]);
   return {
     filters,
     filtered,

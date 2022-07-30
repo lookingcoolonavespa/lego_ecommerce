@@ -16,9 +16,13 @@ export const testState = (val: string) => {
   return val.length <= 2 && /^[a-zA-Z]+$/.test(val);
 };
 
-export const testNumeric = (min = 1, max: number) => {
-  return (val: string) =>
-    val.length > min && val.length < max && /^[0-9]+$/.test(val);
+export const testNumeric = {
+  betweenLength:
+    (min = 1, max: number) =>
+    (val: string) =>
+      val.length > min && val.length < max && /^[0-9]+$/.test(val),
+  haveLength: (num: number) => (val: string) =>
+    val.length === num && /^[0-9]+$/.test(val),
 };
 
 export const testMMYY = (val: string) => {
