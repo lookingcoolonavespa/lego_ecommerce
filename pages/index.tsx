@@ -10,7 +10,7 @@ import { ProductInterface } from '../types/interfaces';
 import { RECOMMENDED } from '../utils/constants';
 import SignUpHero from '../components/SignUpHero';
 import Layout from '../components/Layout';
-import useMobile from '../utils/useMobile';
+import useMobile from '../utils/hooks/useMobile';
 import { useEffect } from 'react';
 
 // export async function getStaticProps() {

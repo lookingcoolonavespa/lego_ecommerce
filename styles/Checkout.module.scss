@@ -52,8 +52,7 @@
   }
 
   :global(.flat_btn) {
-    background-color: var(--action-color);
-    align-self: start;
+    align-self: flex-start;
   }
 }
 
@@ -87,4 +86,30 @@ $columnGap: 1em;
     border: 1px solid var(--border);
     border-radius: 5px;
   }
+}
+
+.checkbox_wrapper {
+  display: flex;
+  flex-direction: row-reverse;
+  column-gap: 1em;
+  justify-content: flex-end;
+  align-items: center;
+
+  .input_wrapper label {
+    margin-bottom: 0;
+  }
+}
+
+.btn_ctn {
+  display: flex;
+  column-gap: 1em;
+}
+
+.next_btn {
+  background-color: var(--action-color);
+}
+
+.prev_btn {
+  background-color: var(--border);
+  color: black;
 }

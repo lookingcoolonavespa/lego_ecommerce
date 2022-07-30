@@ -1,7 +1,7 @@
 import { useState, useReducer, useMemo } from 'react';
-import { ProductThemes, AgeGroup } from '../types/types';
-import { isProductTheme, isAgeGroup } from '../types/typeGuards';
-import { ProductWithCatsInterface, Filters } from '../types/interfaces';
+import { ProductThemes, AgeGroup } from '../../types/types';
+import { isProductTheme, isAgeGroup } from '../../types/typeGuards';
+import { ProductWithCatsInterface, Filters } from '../../types/interfaces';
 
 export default function useFilters(products: ProductWithCatsInterface[]) {
   const [filtersActive, setFiltersActive] = useState(false);

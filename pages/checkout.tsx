@@ -12,6 +12,7 @@ import CartContext from '../utils/CartContext';
 import styles from '../styles/Checkout.module.scss';
 import LegoLego from '../components/svg/LegoLogo';
 import {
+  CheckboxInputFieldInterface,
   InputFieldInterface,
   ProductInCartInterface,
 } from '../types/interfaces';
@@ -20,14 +21,17 @@ import InputWrapperWithError from '../components/InputWrapperWithError';
 import { DEFAULT_INPUT_STATUS } from '../utils/constants';
 import {
   testAlphabet,
+  testCity,
   testEmail,
   testMMYY,
   testNumeric,
+  testState,
 } from '../utils/validators';
 import { InputFields } from '../types/types';
 import useInputFields from '../utils/hooks/useInputFields';
+import { isCheckbox } from '../types/typeGuards';
 
-function InputField(
+function TextInputField(
   type: string,
   value = '',
   label: string,
@@ -35,7 +39,8 @@ function InputField(
   validator: (val: string) => boolean,
   maxLength?: number,
   halfSize = false,
-  handleChange?: (val: string) => void
+  handleChange?: (val: string) => void,
+  className?: string
 ): InputFieldInterface {
   return {
     label,
@@ -44,6 +49,7 @@ function InputField(
     maxLength,
     halfSize,
     handleChange,
+    className,
     inputDetails: {
       type,
       value,
@@ -54,10 +60,36 @@ function InputField(
   };
 }
 
+function CheckboxInputField(
+  checked = false,
+  label: string,
+  id: string,
+  halfSize = false,
+  validator: (bool: boolean) => boolean,
+  handleChange?: (val: string) => void,
+  className?: string
+): CheckboxInputFieldInterface {
+  return {
+    label,
+    halfSize,
+    className,
+    handleChange,
+    validator,
+    status: DEFAULT_INPUT_STATUS,
+    inputDetails: {
+      id,
+      checked,
+      type: 'checkbox',
+      name: label,
+      'aria-label': label,
+    },
+  };
+}
+
 export const defaultInputFields: InputFields = {
   1: [
-    InputField('text', '', 'Email', undefined, testEmail),
-    InputField(
+    TextInputField('text', '', 'Email', undefined, testEmail),
+    TextInputField(
       'text',
       '',
       'First Name',
@@ -66,7 +98,7 @@ export const defaultInputFields: InputFields = {
       40,
       true
     ),
-    InputField(
+    TextInputField(
       'text',
       '',
       'Last Name',
@@ -77,19 +109,34 @@ export const defaultInputFields: InputFields = {
     ),
   ],
   2: [
-    InputField('text', '', 'Street Address', undefined, () => {
+    TextInputField('text', '', 'Street Address', undefined, () => {
       return true;
     }),
-    InputField('text', '', 'Apt #, Floor, etc (optional)', 'value', () => {
+    TextInputField('text', '', 'Apt #, Floor, etc (optional)', 'value', () => {
       return true;
     }),
-    InputField('text', '', 'City', undefined, testAlphabet(1, 40), 40, true),
-    InputField('text', '', 'State', undefined, testAlphabet(1, 2), 2, true),
-    InputField('number', '', 'Zip Code', undefined, testNumeric(1, 5), 5, true),
+    TextInputField('text', '', 'City', undefined, testCity(1, 41), 40, true),
+    TextInputField('text', '', 'State', undefined, testState, 2, true),
+    TextInputField(
+      'number',
+      '',
+      'Zip Code',
+      undefined,
+      testNumeric(1, 5),
+      5,
+      true
+    ),
   ],
   3: [
-    InputField('number', '', 'Credit Card', undefined, testNumeric(1, 16), 16),
-    InputField(
+    TextInputField(
+      'number',
+      '',
+      'Credit Card',
+      undefined,
+      testNumeric(1, 17),
+      16
+    ),
+    TextInputField(
       'text',
       '',
       'Exp. (MM/YY)',
@@ -104,15 +151,56 @@ export const defaultInputFields: InputFields = {
         return value;
       }
     ),
-    InputField('text', '', 'CVV', 'security code', testNumeric(1, 3), 3, true),
+    TextInputField(
+      'text',
+      '',
+      'CVV',
+      'security code',
+      testNumeric(1, 4),
+      3,
+      true
+    ),
+    CheckboxInputField(
+      true,
+      'Billing address same as shipping',
+      'sameAddress',
+      false,
+      () => true,
+      () => {},
+      styles.checkbox_wrapper
+    ),
+    TextInputField('text', '', 'Street Address', undefined, () => {
+      return true;
+    }),
+    TextInputField('text', '', 'Apt #, Floor, etc (optional)', 'value', () => {
+      return true;
+    }),
+    TextInputField('text', '', 'City', undefined, testCity(1, 41), 40, true),
+    TextInputField('text', '', 'State', undefined, testState, 2, true),
+    TextInputField(
+      'number',
+      '',
+      'Zip Code',
+      undefined,
+      testNumeric(1, 5),
+      5,
+      true
+    ),
   ],
+};
+
+const titles = {
+  1: 'Personal Information',
+  2: 'Shipping Address',
+  3: 'Billing Information',
+  4: 'Billing Address',
 };
 
 export default function Checkout() {
   const { cart } = useContext(CartContext);
 
   type PageRange = 1 | 2 | 3;
-  const [page, setPage] = useState<PageRange>(2);
+  const [page, setPage] = useState<PageRange>(3);
   const { inputFields, handleInputBlur, handleInputChange } = useInputFields(
     page,
     defaultInputFields
@@ -127,40 +215,34 @@ export default function Checkout() {
 
   useEffect(() => {
     // run animation
-    const totalErrors = Math.ceil(
-      inputFields[page].reduce((acc, curr) => {
-        if (curr.status.type === 'error') {
-          if (curr.halfSize) acc += 0.5;
-          else acc++;
-        }
 
-        return acc;
-      }, 0)
-    );
+    let halfSizeCount = 0;
 
+    let totalErrors = 0;
     springsApi.start((idx) => {
-      let halfSizeCount = 0;
-      for (let i = 0; i < idx; i++) {
-        if (!inputFields[page][i].halfSize) continue;
-        halfSizeCount++;
+      const curr = inputFields[page][idx];
+      if (curr.halfSize) {
+        // every two halfSize elements means a new row
+        if (halfSizeCount === 2) halfSizeCount = 0;
+        if (halfSizeCount < 2) halfSizeCount++;
       }
-      const newRow = halfSizeCount % 2 === 0;
 
-      const roundingFn = newRow ? Math.ceil : Math.floor;
+      if (
+        halfSizeCount === 2 &&
+        inputFields[page][idx - 1].status.type === 'error'
+      ) {
+        return {
+          transform: `translateY(${(totalErrors - 1) * 2}em)`,
+        };
+      }
 
-      const errorsAboveInput = roundingFn(
-        inputFields[page].reduce((acc, curr, i, arr) => {
-          if (idx <= i) return acc;
-          if (curr.status.type === 'error') {
-            if (curr.halfSize) acc += 0.5;
-            else acc++;
-          }
-          return acc;
-        }, 0)
-      );
+      if (curr.status.type === 'error')
+        return {
+          transform: `translateY(${totalErrors++ * 2}em)`,
+        };
 
       return {
-        transform: `translateY(${errorsAboveInput * 2}em)`,
+        transform: `translateY(${totalErrors * 2}em)`,
       };
     });
     springApi.update(() => ({ offset: totalErrors })).start();
@@ -175,11 +257,22 @@ export default function Checkout() {
     });
   }
 
+  function toPrevPage() {
+    setPage((prev) => {
+      if (prev === 1) return prev;
+      const prevPage = (prev - 1) as PageRange;
+      return prev;
+    });
+  }
+
   // check to disable/enable 'next' button
   let valid = false;
   for (let i = 0; i < inputFields[page].length; i++) {
     const field = inputFields[page][i];
-    const validated = field.validator(field.inputDetails.value as string);
+    if (!field.validator) continue;
+    const validated = isCheckbox(field)
+      ? field.validator(field.inputDetails.checked as boolean)
+      : field.validator(field.inputDetails.value as string);
     if (!validated) break;
     if (i === inputFields[page].length - 1) valid = true;
   }
@@ -195,9 +288,13 @@ export default function Checkout() {
       </nav>
       <main className="two_col_view">
         <form className={styles.form_ctn}>
+          <header>
+            <h3>{titles[page]}</h3>
+          </header>
           <div className={styles.inputs_ctn}>
             {springs.map((animationStyles, i) => {
               const field = inputFields[page][i];
+
               return (
                 <animated.div
                   key={field.label}
@@ -210,17 +307,14 @@ export default function Checkout() {
                     inputStatus={field.status}
                     handleChange={handleInputChange}
                     handleBlur={handleInputBlur}
+                    className={field.className}
                   />
                 </animated.div>
               );
             })}
           </div>
-          <animated.button
-            type="button"
-            onClick={toNextPage}
-            className="flat_btn"
-            disabled={!valid || page === maxPage}
-            aria-label="next"
+          <animated.div
+            className={styles.btn_ctn}
             style={{
               transform: spring.offset.to(
                 (offset) => `translateY(${offset * 2}em)`
@@ -228,8 +322,25 @@ export default function Checkout() {
               willChange: 'transform',
             }}
           >
-            Next
-          </animated.button>
+            <button
+              type="button"
+              onClick={toPrevPage}
+              className={`flat_btn ${styles.prev_btn}`}
+              disabled={page === 1}
+              aria-label="previous"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              onClick={toNextPage}
+              className={`flat_btn ${styles.next_btn}`}
+              disabled={!valid || page === maxPage}
+              aria-label="next"
+            >
+              Next
+            </button>
+          </animated.div>
         </form>
         <div className={styles.products_ctn}>
           {cart.length ? (

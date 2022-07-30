@@ -27,7 +27,10 @@ export interface LinkInterface {
 }
 
 export interface InputDetailsInterface {
-  [key: string]: string | number | ((e: InputEvent) => void);
+  [key: string]: string | number | ((e: InputEvent) => void) | boolean;
+}
+interface CheckboxDetailsInterface extends InputDetailsInterface {
+  type: 'checkbox';
 }
 
 export interface InputStatusInterface {
@@ -59,4 +62,14 @@ export interface InputFieldInterface {
   handleChange?: ((val: string) => void) | ((val: string) => string);
   maxLength?: number;
   halfSize: boolean;
+  className?: string;
+}
+export interface CheckboxInputFieldInterface {
+  label: string;
+  halfSize: boolean;
+  className: string | undefined;
+  handleChange: ((val: string) => void) | undefined;
+  inputDetails: CheckboxDetailsInterface;
+  status: InputStatusInterface;
+  validator: (bool: boolean) => boolean;
 }

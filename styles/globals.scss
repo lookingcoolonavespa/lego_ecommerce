@@ -245,6 +245,10 @@ ul {
   border: 1px solid var(--action-color);
 }
 
+.flex {
+  display: flex;
+}
+
 @media screen and (max-width: 569px) {
   h2 {
     font-size: 25px;

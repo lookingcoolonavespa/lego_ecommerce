@@ -12,8 +12,8 @@ import Pagination from '../components/Pagination';
 import { AgeGroup, ProductThemes } from '../types/types';
 import { isAgeGroup, isProductTheme } from '../types/typeGuards';
 import ActiveFilter from '../components/Catalog/ActiveFilter';
-import useFilters from '../utils/useFilters';
-import useStickyScroll from '../utils/useStickyScroll';
+import useFilters from '../utils/hooks/useFilters';
+import useStickyScroll from '../utils/hooks/useStickyScroll';
 import { useTrail, animated } from 'react-spring';
 
 // export async function getStaticProps() {
@@ -141,7 +141,6 @@ export default function Catalog({
     transform: 'translate3d(5%, 15%, 0)',
   }));
   useEffect(() => {
-    console.log('run');
     trailApi.start({
       opacity: 1,
       transform: 'translate3d(0%, 0%, 0)',

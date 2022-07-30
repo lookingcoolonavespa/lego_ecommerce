@@ -5,6 +5,17 @@ export const testAlphabet = (min = 1, max?: number) => {
     /^[a-zA-Z\s]+$/.test(val);
 };
 
+export const testCity = (min = 1, max?: number) => {
+  return (val: string) =>
+    val.length > min &&
+    val.length < (max || Infinity) &&
+    /^[a-zA-Z\s.]+$/.test(val);
+};
+
+export const testState = (val: string) => {
+  return val.length <= 2 && /^[a-zA-Z]+$/.test(val);
+};
+
 export const testNumeric = (min = 1, max: number) => {
   return (val: string) =>
     val.length > min && val.length < max && /^[0-9]+$/.test(val);

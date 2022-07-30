@@ -12,7 +12,7 @@ interface Props {
 
 export default function ProductPreview({ product, className }: Props) {
   const { handleCart } = useContext(CartContext);
-  const [cartSize, setCartSize] = useState('24px');
+  const [cartSize, setCartSize] = useState('1.3em');
   const priceNode = useRef<HTMLHeadingElement | null>(null);
 
   useEffect(() => {

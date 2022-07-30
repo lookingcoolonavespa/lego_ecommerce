@@ -3,7 +3,7 @@ import Link from 'next/link';
 import CartContext from '../utils/CartContext';
 import Layout from '../components/Layout';
 import styles from '../styles/Cart.module.scss';
-import useMobile from '../utils/useMobile';
+import useMobile from '../utils/hooks/useMobile';
 import Nav from '../components/Nav';
 import Image from 'next/image';
 import { ProductInCartInterface } from '../types/interfaces';

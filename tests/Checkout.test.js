@@ -1,5 +1,10 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import {
+  fireEvent,
+  queryByDisplayValue,
+  render,
+  screen,
+} from '@testing-library/react';
 import '@testing-library/jest-dom'; // optional
 import userEvent from '@testing-library/user-event';
 import Checkout, { defaultInputFields } from '../pages/checkout';
@@ -159,9 +164,10 @@ describe('input functionality works', () => {
   });
 
   describe('second page validates correctly', () => {
-    let queryByLabelText, getByLabelText, getByRole, queryByText;
+    let queryByDisplayValue, getByLabelText, getByRole, queryByText;
     beforeEach(async () => {
-      ({ queryByLabelText, getByLabelText, getByRole, queryByText } = setup());
+      ({ queryByDisplayValue, getByLabelText, getByRole, queryByText } =
+        setup());
 
       expect(getByRole('button', { name: 'next' })).toBeDisabled();
 
@@ -183,14 +189,14 @@ describe('input functionality works', () => {
       });
     });
 
-    describe('city validates correctly', () => {
+    describe('city input behaves correctly', () => {
       test('handles numbers', async () => {
         const input = getByLabelText('City');
         await user.type(input, '498 citrus ave');
 
         act(() => fireEvent.blur(input));
 
-        expect(queryByText('not a valid city')).not.toBeNull();
+        expect(queryByText('not a valid city')).not.toBeVisible();
       });
 
       test('handles special characters', async () => {
@@ -212,28 +218,37 @@ describe('input functionality works', () => {
       });
     });
 
-    describe('state validates correctly', () => {
-      test('handles numbers', async () => {
+    describe('state input behaves correctly', () => {
+      test('shows error when string contains numbers', async () => {
         const input = getByLabelText('State');
-        await user.type(input, '498 citrus ave');
+        await user.type(input, '2c');
 
         act(() => fireEvent.blur(input));
 
         expect(queryByText('not a valid state')).not.toBeNull();
       });
 
-      test('handles special characters', async () => {
+      test('shows error when string contains special characters', async () => {
         const input = getByLabelText('State');
-        await user.type(input, '@san francisco');
+        await user.type(input, '@s');
 
         act(() => fireEvent.blur(input));
 
         expect(queryByText('not a valid state')).not.toBeNull();
+      });
+
+      test('should not be able to type string longer than 2', async () => {
+        const input = getByLabelText('State');
+        await user.type(input, 'san');
+
+        act(() => fireEvent.blur(input));
+
+        expect(queryByDisplayValue('sa')).toBeInTheDocument();
       });
 
       test('handles correct strings', async () => {
         const input = getByLabelText('State');
-        await user.type(input, 'California');
+        await user.type(input, 'ca');
 
         act(() => fireEvent.blur(input));
 
@@ -253,19 +268,10 @@ describe('input functionality works', () => {
 
     await user.type(input, 'hey@gmail.com');
 
-    expect(queryByText('not a valid email')).toBeNull();
+    await new Promise((resolve) => setTimeout(resolve, 800));
+
+    expect(queryByText('not a valid email')).not.toBeVisible();
   });
-});
-
-test('next button is disabled until all fields are valid', async () => {
-  const { getByLabelText, getByRole } = setup();
-  expect(getByRole('button', { name: 'next' })).toBeDisabled();
-
-  await user.type(getByLabelText('Email'), 'fdaf@gmail.com');
-  await user.type(getByLabelText('First Name'), 'fdaffdadfa');
-  await user.type(getByLabelText('Last Name'), 'fdadfafa');
-
-  expect(getByRole('button', { name: 'next' })).not.toBeDisabled();
 });
 
 describe('form displays correct inputs for the page', () => {
@@ -296,5 +302,33 @@ describe('form displays correct inputs for the page', () => {
         else expect(queryByLabelText(field.label)).toBeNull();
       });
     });
+  });
+});
+
+describe('prev/next buttons work', () => {
+  test('next button is disabled until all fields are valid', async () => {
+    const { getByLabelText, getByRole } = setup();
+    expect(getByRole('button', { name: 'next' })).toBeDisabled();
+
+    await user.type(getByLabelText('Email'), 'fdaf@gmail.com');
+    await user.type(getByLabelText('First Name'), 'fdaffdadfa');
+    await user.type(getByLabelText('Last Name'), 'fdadfafa');
+
+    expect(getByRole('button', { name: 'next' })).not.toBeDisabled();
+  });
+
+  // next button functionality is tested in 'form displays correct inputs for the page'
+
+  test('prev button is disabled on page one but not on others', async () => {
+    const { getByLabelText, getByRole } = setup();
+    expect(getByRole('button', { name: 'previous' })).toBeDisabled();
+
+    await user.type(getByLabelText('Email'), 'fdaf@gmail.com');
+    await user.type(getByLabelText('First Name'), 'fdaffdadfa');
+    await user.type(getByLabelText('Last Name'), 'fdadfafa');
+
+    await user.click(getByRole('button', { name: 'next' }));
+
+    expect(getByRole('button', { name: 'previous' })).not.toBeDisabled();
   });
 });
