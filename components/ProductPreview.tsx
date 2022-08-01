@@ -54,7 +54,9 @@ export default function ProductPreview({ product, className }: Props) {
         </div>
         <div className={styles.bottom_row}>
           <div className={styles.price_wrapper}>
-            <p ref={priceNode}>{product.price} $</p>
+            <p ref={priceNode}>
+              <span data-testid="price">{product.price}</span> $
+            </p>
           </div>
           <button
             type="button"

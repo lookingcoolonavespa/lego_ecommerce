@@ -18,6 +18,8 @@ export default function PriceFilter({
   setPriceMax,
   setPriceMin,
 }: Props) {
+  if (min && !max) max = Infinity;
+  if (max && !min) min = -Infinity;
   return (
     <div className={`${styles.main} ${className}`}>
       <header className={styles.title}>Price</header>
@@ -26,7 +28,7 @@ export default function PriceFilter({
           label="From"
           inputDetails={{
             type: 'number',
-            value: min.toString(),
+            value: min === -Infinity ? 0 : min.toString(),
             min: 0,
             max: 9999,
             name: 'From',
@@ -43,7 +45,7 @@ export default function PriceFilter({
           className={min > max ? 'error' : ''}
           inputDetails={{
             type: 'number',
-            value: max.toString(),
+            value: max === Infinity ? 0 : max.toString(),
             min: 0,
             max: 9999,
             name: 'To',

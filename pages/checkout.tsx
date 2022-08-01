@@ -31,6 +31,8 @@ import { CheckoutFormTitles, InputFields } from '../types/types';
 import useInputFields from '../utils/hooks/useInputFields';
 import { isCheckbox } from '../types/typeGuards';
 import Animate from '../components/Animate';
+import CartProductsCtn from '../components/CartProductsCtn';
+import CartPriceCtn from '../components/CartPriceCtn';
 
 function TextInputField(
   type: string,
@@ -198,7 +200,7 @@ export default function Checkout() {
   const { cart } = useContext(CartContext);
 
   type PageRange = 0 | 1 | 2;
-  const startPage = 2;
+  const startPage = 0;
   const [page, setPage] = useState<PageRange>(startPage);
   const prevPage = useRef(startPage);
   const pageTitle = useMemo(
@@ -426,15 +428,16 @@ export default function Checkout() {
             )}
           </div>
           <animated.div className={styles.btn_ctn} style={btnSpring}>
-            <button
-              type="button"
-              onClick={toPrevPage}
-              className={`flat_btn ${styles.prev_btn}`}
-              disabled={page === 1}
-              aria-label="previous"
-            >
-              Previous
-            </button>
+            {page !== 0 && (
+              <button
+                type="button"
+                onClick={toPrevPage}
+                className={`flat_btn ${styles.prev_btn}`}
+                aria-label="previous"
+              >
+                Previous
+              </button>
+            )}
             <button
               type="button"
               onClick={toNextPage}
@@ -442,7 +445,7 @@ export default function Checkout() {
               disabled={!valid || page === maxPage}
               aria-label="next"
             >
-              Next
+              {page === 2 ? 'Checkout' : 'Next'}
             </button>
           </animated.div>
         </Animate>
@@ -458,21 +461,10 @@ export default function Checkout() {
               opacity: 1,
             },
           }}
-          className={styles.products_ctn}
+          className={styles.col_two}
         >
-          {cart.length ? (
-            cart.map((product: ProductInCartInterface) => {
-              return (
-                <CartProductWrapper
-                  key={product.title}
-                  product={product}
-                  readonly={true}
-                />
-              );
-            })
-          ) : (
-            <h3 className={styles.no_items}>No items are in your cart</h3>
-          )}
+          <CartProductsCtn className={styles.products_ctn} />
+          <CartPriceCtn className={styles.price_ctn} />
         </Animate>
       </main>
     </div>

@@ -71,14 +71,15 @@ export default function Catalog({
     'Popular' | 'Price: High to Low' | 'Price: Low to High'
   >('Popular');
 
-  const {
-    filters,
-    filtered,
+  const [filtersActive, setFiltersActive] = useState(false);
+  const { filters, filtered, setFilters, resetFilters } = useFilters(
+    bestSellers,
     filtersActive,
-    setFiltersActive,
-    setFilters,
-    resetFilters,
-  } = useFilters(bestSellers);
+    () => {
+      setFiltersActive(false);
+      setPage(1);
+    }
+  );
 
   const themeCount = useMemo(
     () =>
@@ -138,13 +139,13 @@ export default function Catalog({
 
   const [spring, springApi] = useSpring(() => ({
     opacity: 0,
-    transform: 'translate3d(5%, 15%, 0)',
+    transform: 'translate3d(5%, 10%, 0)',
   }));
   useEffect(() => {
     springApi.start({
       from: {
         opacity: 0,
-        transform: 'translate3d(5%, 15%, 0)',
+        transform: 'translate3d(5%, 10%, 0)',
       },
       to: {
         opacity: 1,
@@ -166,6 +167,10 @@ export default function Catalog({
 
   const { footer, container, scroller } = useStickyScroll(page);
 
+  const { max, min } = filters.price;
+  const showPriceMaxFilter = min > 0 && max > 0 ? max > min : max > 0;
+  const showPriceMinFilter = min > 0 && max > 0 ? max > min : min > 0;
+
   return (
     <Layout mobile={false} className={styles.layout} footerRef={footer}>
       <div ref={container} className={styles.container}>
@@ -180,7 +185,10 @@ export default function Catalog({
             resetFilters={resetFilters}
             themeCount={themeCount}
             ageCount={ageCount}
-            toggleFilter={() => setFiltersActive((prev) => !prev)}
+            applyFilter={() => {
+              setPage(1);
+              setFiltersActive(true);
+            }}
           />
           <main>
             <div className={styles.main}>
@@ -196,26 +204,48 @@ export default function Catalog({
                 />
                 <SortBy sortMethod={sortMethod} setSortMethod={setSortMethod} />
               </div>
-              {filtersActive && (
-                <div className={styles.active_filters_ctn}>
-                  {filters.theme.map((v) => (
-                    <ActiveFilter
-                      key={v}
-                      className={styles.active_filter}
-                      text={v}
-                      close={() => setFilters({ type: 'theme', payload: v })}
-                    />
-                  ))}
-                  {filters.age.map((v) => (
-                    <ActiveFilter
-                      key={v}
-                      className={styles.active_filter}
-                      text={v}
-                      close={() => setFilters({ type: 'age', payload: v })}
-                    />
-                  ))}
-                </div>
-              )}
+              {filtersActive &&
+                (filters.theme.length ||
+                  filters.age.length ||
+                  showPriceMaxFilter ||
+                  showPriceMinFilter) && (
+                  <div className={styles.active_filters_ctn}>
+                    {showPriceMinFilter && (
+                      <ActiveFilter
+                        className={styles.active_filter}
+                        text={`From ${filters.price.min} $`}
+                        close={() =>
+                          setFilters({ type: 'priceMin', payload: 0 })
+                        }
+                      />
+                    )}
+                    {showPriceMaxFilter && (
+                      <ActiveFilter
+                        className={styles.active_filter}
+                        text={`To ${filters.price.max} $`}
+                        close={() =>
+                          setFilters({ type: 'priceMax', payload: 0 })
+                        }
+                      />
+                    )}
+                    {filters.theme.map((v) => (
+                      <ActiveFilter
+                        key={v}
+                        className={styles.active_filter}
+                        text={v}
+                        close={() => setFilters({ type: 'theme', payload: v })}
+                      />
+                    ))}
+                    {filters.age.map((v) => (
+                      <ActiveFilter
+                        key={v}
+                        className={styles.active_filter}
+                        text={v}
+                        close={() => setFilters({ type: 'age', payload: v })}
+                      />
+                    ))}
+                  </div>
+                )}
               <div className={styles.grid_container}>
                 <ul
                   ref={scroller}

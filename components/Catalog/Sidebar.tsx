@@ -12,14 +12,29 @@ interface Props {
   themeFilters: ProductThemes[];
   ageFilters: AgeGroup[];
   priceFilters: PriceFilterInterface;
-  setFilters: React.Dispatch<{
-    type: 'priceMin' | 'priceMax' | 'theme' | 'age' | 'search' | 'reset';
-    payload?: string | number | undefined;
-  }>;
+  setFilters: React.Dispatch<
+    | {
+        type: 'priceMin' | 'priceMax';
+        payload: number;
+      }
+    | {
+        type: 'theme';
+        payload: ProductThemes;
+      }
+    | {
+        type: 'age';
+        payload: AgeGroup;
+      }
+    | {
+        type: 'search';
+        payload: string;
+      }
+    | { type: 'reset'; payload?: null }
+  >;
   resetFilters: () => void;
   themeCount: { [key in ProductThemes]: number };
   ageCount: { [key in AgeGroup]: number };
-  toggleFilter: () => void;
+  applyFilter: () => void;
 }
 
 export default function Sidebar({
@@ -31,7 +46,7 @@ export default function Sidebar({
   resetFilters,
   themeCount,
   ageCount,
-  toggleFilter,
+  applyFilter,
 }: Props) {
   return (
     <aside className={`${styles.main} ${className}`}>
@@ -70,7 +85,7 @@ export default function Sidebar({
       />
       <section className={styles.btn_ctn}>
         <button
-          onClick={toggleFilter}
+          onClick={applyFilter}
           type="button"
           aria-label="apply filters"
           className={`${styles.apply_filters} flat_btn`}

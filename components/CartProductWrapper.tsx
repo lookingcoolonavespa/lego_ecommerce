@@ -6,7 +6,7 @@ import CartContext from '../utils/CartContext';
 
 interface Props {
   product: ProductInCartInterface;
-  divRef?: React.RefObject<HTMLDivElement>;
+  divRef?: React.RefObject<HTMLDivElement> | ((el: HTMLDivElement) => void);
   readonly?: boolean;
 }
 

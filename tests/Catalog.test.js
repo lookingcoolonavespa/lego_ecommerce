@@ -57,7 +57,7 @@ describe('sidebar works', () => {
     };
   };
   describe('price filters work', () => {
-    jest.setTimeout(10000); // these tests timeout at 5000 for some reason
+    // jest.setTimeout(10000); // these tests timeout at 5000 for some reason
 
     test('inputs have minimum of 0', async () => {
       const { fromInput, toInput } = setup();
@@ -76,11 +76,12 @@ describe('sidebar works', () => {
       expect(screen.getAllByDisplayValue('1000')).toHaveLength(2);
     });
 
-    test('input wrapper has error class if min is greater than max', async () => {
+    test('input wrapper has error class if min > 0 and min > max', async () => {
       const { fromInput, toInput } = setup();
 
       const inputWrapper = toInput.closest('div');
 
+      await user.type(toInput, '10');
       await user.type(fromInput, '10000');
 
       expect(inputWrapper.classList.contains('error')).toBe(true);
@@ -173,6 +174,110 @@ describe('sidebar works', () => {
         expect(titleEl.textContent).toBe(product.title);
       }
     });
+
+    describe('price filters work', () => {
+      test('it works when min < max', async () => {
+        const { fromInput, toInput } = setup();
+
+        const min = 50;
+        const max = 300;
+        await user.type(fromInput, `${min}`);
+        await user.type(toInput, `${max}`);
+
+        await user.click(screen.getByText('APPLY FILTER'));
+
+        await user.selectOptions(
+          screen.getByRole('combobox'),
+          screen.getByRole('option', { name: 'Price: Low to High' })
+        );
+
+        expect(
+          Number(screen.getAllByTestId('price')[0].textContent)
+        ).toBeGreaterThanOrEqual(min);
+
+        const paginationList = screen.getByRole('list', {
+          name: 'pagination list',
+        });
+
+        const paginationItems = within(paginationList).getAllByRole('listitem');
+
+        const filtered = paginationItems.filter((listitem) =>
+          listitem.classList.contains('paginationItem')
+        );
+
+        await user.click(filtered[filtered.length - 1]);
+        const allPrices = screen.getAllByTestId('price');
+
+        expect(
+          Number(allPrices[allPrices.length - 1].textContent)
+        ).toBeLessThanOrEqual(max);
+
+        // the active filter component shows up
+        expect(screen.queryByTestId(`From ${min} $`)).toBeInTheDocument();
+        expect(screen.queryByTestId(`To ${max} $`)).toBeInTheDocument();
+      });
+
+      test('it works when min > 0 and max === 0', async () => {
+        const { fromInput } = setup();
+
+        const min = 50;
+        await user.type(fromInput, `${min}`);
+
+        await user.click(screen.getByText('APPLY FILTER'));
+
+        await user.selectOptions(
+          screen.getByRole('combobox'),
+          screen.getByRole('option', { name: 'Price: Low to High' })
+        );
+
+        expect(
+          Number(screen.getAllByTestId('price')[0].textContent)
+        ).toBeGreaterThanOrEqual(min);
+
+        expect(screen.queryByTestId(`From ${min} $`)).toBeInTheDocument();
+      });
+
+      test('it doesnt work when max > 0 and min > max', async () => {
+        const { fromInput, toInput } = setup();
+
+        const min = 100;
+        const max = 50;
+        await user.type(fromInput, `${min}`);
+        await user.type(toInput, `${max}`);
+
+        await user.click(screen.getByText('APPLY FILTER'));
+
+        await user.selectOptions(
+          screen.getByRole('combobox'),
+          screen.getByRole('option', { name: 'Price: Low to High' })
+        );
+
+        expect(
+          Number(screen.getAllByTestId('price')[0].textContent)
+        ).toBeLessThanOrEqual(min);
+
+        const paginationList = screen.getByRole('list', {
+          name: 'pagination list',
+        });
+
+        const paginationItems = within(paginationList).getAllByRole('listitem');
+
+        const filtered = paginationItems.filter((listitem) =>
+          listitem.classList.contains('paginationItem')
+        );
+
+        await user.click(filtered[filtered.length - 1]);
+        const allPrices = screen.getAllByTestId('price');
+
+        expect(
+          Number(allPrices[allPrices.length - 1].textContent)
+        ).toBeGreaterThanOrEqual(max);
+
+        // the active filter component does not show up
+        expect(screen.queryByTestId(`From ${min} $`)).not.toBeInTheDocument();
+        expect(screen.queryByTestId(`To ${max} $`)).not.toBeInTheDocument();
+      });
+    });
   });
 
   describe('remove filters works', () => {
@@ -206,6 +311,40 @@ describe('sidebar works', () => {
 
       ageOptions.forEach((el) => expect(el).not.toBeChecked());
       themeOptions.forEach((el) => expect(el).not.toBeChecked());
+    });
+
+    test('it removes all active filter components', async () => {
+      const { fromInput, toInput } = setup();
+      // price filters
+      const min = 100;
+      const max = 50;
+      await user.type(fromInput, `${min}`);
+      await user.type(toInput, `${max}`);
+
+      //theme filters
+      await user.click(screen.getByText('Theme'));
+      const list = screen.getByRole('list', { name: 'themes' });
+      const themeOptions = within(list).getAllByRole('checkbox');
+
+      await user.click(themeOptions[0]);
+
+      await user.click(screen.getByText('Age'));
+      const ageList = screen.getByRole('list', { name: 'age groups' });
+      const ageOptions = within(ageList).getAllByRole('checkbox');
+
+      await user.click(ageOptions[0]);
+
+      await user.click(screen.getByText('APPLY FILTER'));
+
+      await user.click(screen.getByRole('button', { name: 'remove filters' }));
+
+      // the active filter component does not show up
+      expect(
+        screen.queryByTestId(themeOptions[0].value)
+      ).not.toBeInTheDocument();
+      expect(screen.queryByTestId(ageOptions[0].value)).not.toBeInTheDocument();
+      expect(screen.queryByTestId(`From ${min} $`)).not.toBeInTheDocument();
+      expect(screen.queryByTestId(`To ${max} $`)).not.toBeInTheDocument();
     });
   });
 });
@@ -303,7 +442,7 @@ describe('search works', () => {
     expect(screen.getByDisplayValue('volcano')).toBeInTheDocument();
   });
 
-  test.only('search filters out products whose title contains string', async () => {
+  test('search filters out products whose title contains string', async () => {
     const searchStr = 'ab';
 
     await user.type(screen.getByRole('textbox', { name: 'search' }), 'ab');
