@@ -34,7 +34,7 @@ export default function ProductPreview({
       payload: {
         product,
         quantity: 1,
-        selector: `.${containerSelector}`,
+        selector: containerSelector,
       },
     });
   }

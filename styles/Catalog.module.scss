@@ -24,6 +24,18 @@
     display: flex;
     flex-direction: column;
   }
+
+  &:global(.mobile) {
+    .sidebar {
+      position: absolute;
+      transform: translateX(-100%);
+      transition: transform 0.2s ease-out;
+
+      &:global(.visible) {
+        transform: translateX(0%);
+      }
+    }
+  }
 }
 
 .main {
@@ -38,12 +50,22 @@
   display: flex;
   column-gap: 3em;
 
+  &:global(.mobile) {
+    flex-direction: column;
+    row-gap: 1em;
+  }
+
   :global(.search_bar) {
     flex: 3 1 auto;
   }
 
   :global(.sort_by) {
     flex: 1 1 auto;
+  }
+
+  :global(.flat_btn) {
+    background-color: var(--border);
+    color: var(--text);
   }
 }
 

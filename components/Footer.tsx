@@ -129,7 +129,11 @@ export default function Footer({ mobile, forwardedRef }: Props) {
   );
 
   const mobileView = (
-    <footer className={`${styles.main} mobile`} role="contentinfo">
+    <footer
+      ref={forwardedRef}
+      className={`${styles.main} mobile`}
+      role="contentinfo"
+    >
       <div className={styles.content}>
         <section className={`${styles.row}`}>
           <LegoLego size="100" />

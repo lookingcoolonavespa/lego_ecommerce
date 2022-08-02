@@ -15,6 +15,7 @@ import ActiveFilter from '../components/Catalog/ActiveFilter';
 import useFilters from '../utils/hooks/useFilters';
 import useStickyScroll from '../utils/hooks/useStickyScroll';
 import { useSpring, animated } from 'react-spring';
+import useMobile from '../utils/hooks/useMobile';
 
 interface Props {
   bestSellers: ProductWithCatsInterface[];
@@ -23,7 +24,10 @@ let count = 0;
 export default function Catalog({
   bestSellers = BEST_SELLERS_MULTIPLIED,
 }: Props) {
+  const { mobileCheck } = useMobile();
+
   const [page, setPage] = useState(1);
+  const [sidebarVisible, setSidebarVisible] = useState(false);
 
   const [sortMethod, setSortMethod] = useState<
     'Popular' | 'Price: High to Low' | 'Price: Low to High'
@@ -130,15 +134,21 @@ export default function Catalog({
   const showPriceMinFilter = min > 0 && max > 0 ? max > min : min > 0;
 
   return (
-    <Layout mobile={false} className={styles.layout} footerRef={footer}>
+    <Layout
+      mobile={mobileCheck.current}
+      className={styles.layout}
+      footerRef={footer}
+    >
       <div ref={container} className={styles.container}>
-        <CatalogNav />
-        <div className={styles.content}>
+        <CatalogNav mobile={mobileCheck.current} />
+        <div
+          className={`${styles.content} ${mobileCheck.current ? 'mobile' : ''}`}
+        >
           <Sidebar
             themeFilters={filters.theme}
             ageFilters={filters.age}
             priceFilters={filters.price}
-            className={styles.sidebar}
+            className={`${styles.sidebar} ${sidebarVisible ? 'visible' : ''}`}
             setFilters={setFilters}
             resetFilters={resetFilters}
             themeCount={themeCount}
@@ -146,12 +156,17 @@ export default function Catalog({
             applyFilter={() => {
               setPage(1);
               setFiltersActive(true);
+              mobileCheck.current && setSidebarVisible(false);
             }}
+            close={() => setSidebarVisible(false)}
+            mobile={mobileCheck.current}
           />
           <main>
             <div className={styles.main}>
               <div
-                className={styles.subheader}
+                className={`${styles.subheader} ${
+                  mobileCheck.current ? 'mobile' : ''
+                }`}
                 style={filtersActive ? { marginBottom: '2em' } : undefined}
               >
                 <SearchBar
@@ -161,6 +176,15 @@ export default function Catalog({
                   }
                 />
                 <SortBy sortMethod={sortMethod} setSortMethod={setSortMethod} />
+                {mobileCheck.current && (
+                  <button
+                    className="flat_btn"
+                    type="button"
+                    onClick={() => setSidebarVisible(true)}
+                  >
+                    Show Filter Options
+                  </button>
+                )}
               </div>
               {filtersActive &&
                 (filters.theme.length ||
@@ -216,21 +240,11 @@ export default function Catalog({
                         <ProductPreview
                           product={product}
                           className={styles.product_wrapper}
-                          containerSelector={styles.main}
+                          containerSelector={`.${styles.main}`}
                         />
                       </animated.li>
                     );
                   })}
-                  {/* {currentPaginationData.map((product, i) => {
-                    return (
-                      <li key={i}>
-                        <ProductPreview
-                          product={product}
-                          className={styles.product_wrapper}
-                        />
-                      </li>
-                    );
-                  })} */}
                 </ul>
               </div>
             </div>

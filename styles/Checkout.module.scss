@@ -1,17 +1,15 @@
 .container {
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   padding: 2em 0;
   margin: 0 auto;
   max-width: 1000px;
   width: 90%;
-
-  nav {
-    position: absolute;
-  }
+  display: flex;
+  flex-direction: column;
 
   :global(.two_col_view) {
-    height: 100%;
+    flex: 1 0 auto;
   }
 
   input[type='number'] {
@@ -32,6 +30,11 @@
 
 .logo_wrapper {
   cursor: pointer;
+  display: inline-block;
+
+  svg {
+    display: block;
+  }
 }
 
 .form_ctn {
@@ -74,7 +77,6 @@ $columnGap: 1em;
 }
 
 .col_two {
-  height: 100%;
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -139,4 +141,16 @@ $columnGap: 1em;
 .prev_btn {
   background-color: var(--border);
   color: black;
+}
+
+.mobile {
+  .form_ctn {
+    width: 100%;
+    min-height: 50vh;
+    padding: 5em 0;
+  }
+
+  .col_two {
+    width: 100%;
+  }
 }

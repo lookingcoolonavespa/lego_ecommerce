@@ -35,6 +35,8 @@ interface Props {
   themeCount: { [key in ProductThemes]: number };
   ageCount: { [key in AgeGroup]: number };
   applyFilter: () => void;
+  close: () => void;
+  mobile: boolean;
 }
 
 export default function Sidebar({
@@ -47,6 +49,8 @@ export default function Sidebar({
   themeCount,
   ageCount,
   applyFilter,
+  close,
+  mobile,
 }: Props) {
   return (
     <aside className={`${styles.main} ${className}`}>
@@ -100,6 +104,17 @@ export default function Sidebar({
         >
           <TrashSvg />
         </button>
+      </section>
+      <section className="centered">
+        {mobile && (
+          <button
+            className={`${styles.close_btn} flat_btn`}
+            type="button"
+            onClick={close}
+          >
+            Close Filter Options
+          </button>
+        )}
       </section>
     </aside>
   );

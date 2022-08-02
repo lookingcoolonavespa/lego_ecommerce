@@ -1,22 +1,12 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useMemo,
-  useRef,
-  useReducer,
-} from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useSpring, animated, useSprings } from 'react-spring';
 import Link from 'next/link';
-import CartContext from '../utils/CartContext';
 import styles from '../styles/Checkout.module.scss';
 import LegoLego from '../components/svg/LegoLogo';
 import {
   CheckboxInputFieldInterface,
   InputFieldInterface,
-  ProductInCartInterface,
 } from '../types/interfaces';
-import CartProductWrapper from '../components/CartProductWrapper';
 import InputWrapperWithError from '../components/InputWrapperWithError';
 import { DEFAULT_INPUT_STATUS } from '../utils/constants';
 import {
@@ -33,6 +23,7 @@ import { isCheckbox } from '../types/typeGuards';
 import Animate from '../components/Animate';
 import CartProductsCtn from '../components/CartProductsCtn';
 import CartPriceCtn from '../components/CartPriceCtn';
+import useMobile from '../utils/hooks/useMobile';
 
 function TextInputField(
   type: string,
@@ -303,7 +294,7 @@ export default function Checkout() {
 
   function toPrevPage() {
     setPage((prev) => {
-      if (prev === 1) return prev;
+      if (prev === 0) return prev;
       const previousPage = (prev - 1) as PageRange;
       prevPage.current = prev;
       return previousPage;
@@ -322,6 +313,8 @@ export default function Checkout() {
     if (i === inputFields[pageTitle].length - 1) valid = true;
   }
 
+  const { mobileCheck } = useMobile();
+
   return (
     <div className={styles.container}>
       <nav>
@@ -331,7 +324,7 @@ export default function Checkout() {
           </div>
         </Link>
       </nav>
-      <main className="two_col_view">
+      <main className={mobileCheck ? `${styles.mobile}` : 'two_col_view'}>
         <Animate
           tag="form"
           className={styles.form_ctn}
