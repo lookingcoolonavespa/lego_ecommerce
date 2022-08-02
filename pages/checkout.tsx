@@ -197,8 +197,6 @@ const billingCheckbox = CheckboxInputField(
 );
 
 export default function Checkout() {
-  const { cart } = useContext(CartContext);
-
   type PageRange = 0 | 1 | 2;
   const startPage = 0;
   const [page, setPage] = useState<PageRange>(startPage);
@@ -362,8 +360,8 @@ export default function Checkout() {
                 pageTitle === 'Billing Information'
               )
                 return;
-              const field = inputFields[pageTitle][i];
 
+              const field = inputFields[pageTitle][i];
               const rootClass = [field.halfSize ? 'half-size' : 'full-size'];
               return (
                 <animated.div

@@ -253,6 +253,32 @@ ul {
   display: none;
 }
 
+.notification {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 1em;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background-color: var(--background);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 0.5em;
+
+  .svg_wrapper {
+    &.success {
+      color: #198754;
+    }
+
+    &.error {
+      color: var(--action-color);
+      border: none;
+    }
+  }
+}
+
 @media screen and (max-width: 569px) {
   h2 {
     font-size: 25px;

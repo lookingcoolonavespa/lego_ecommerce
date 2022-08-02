@@ -13,41 +13,6 @@ import Layout from '../components/Layout';
 import useMobile from '../utils/hooks/useMobile';
 import { useEffect } from 'react';
 
-// export async function getStaticProps() {
-//   try {
-//     const res = await axios.get('/api/recommended');
-
-//     if (res.status !== 200) {
-//       throw new Error('something changed on the logo home page');
-//     }
-
-//     const products = await res.data;
-//     return {
-//       props: {
-//         recommended: products,
-//       },
-//     };
-//   } catch (err) {
-//     if (err instanceof Error) console.log(err.message);
-
-//     if (axios.isAxiosError(err)) {
-//       switch (err.status) {
-//         case '500':
-//           console.log('something changed on lego homepage');
-//           break;
-//         default:
-//           console.log(err.response?.statusText);
-//       }
-//     }
-
-//     return {
-//       props: {
-//         recommended: RECOMMENDED,
-//       },
-//     };
-//   }
-// }
-
 interface Props {
   recommended: ProductInterface[];
 }

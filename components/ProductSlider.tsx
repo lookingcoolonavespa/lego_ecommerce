@@ -20,6 +20,7 @@ export default function ProductSlider({ products, title }: Props) {
               key={i}
               product={product}
               className={styles.product_wrapper}
+              containerSelector="body"
             />
           );
         })}
