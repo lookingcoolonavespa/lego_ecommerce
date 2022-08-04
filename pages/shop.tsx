@@ -6,7 +6,7 @@ import Sidebar from '../components/Catalog/Sidebar';
 import CatalogNav from '../components/Catalog/CatalogNav';
 import ProductPreview from '../components/ProductPreview';
 import Layout from '../components/Layout';
-import Pagination from '../components/Pagination';
+import Pagination from '../components/Catalog/Pagination';
 import { AgeGroup, ProductThemes, SortMethod } from '../types/types';
 import useFilters from '../utils/hooks/useFilters';
 import useStickyScroll from '../utils/hooks/useStickyScroll';
