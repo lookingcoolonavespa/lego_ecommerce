@@ -69,7 +69,7 @@
   }
 
   .products_ctn {
-    & > h3 {
+    :global(.no_items) {
       min-height: 300px;
     }
   }

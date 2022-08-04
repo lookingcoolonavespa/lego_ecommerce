@@ -12,7 +12,6 @@ import useFilters from '../utils/hooks/useFilters';
 import useStickyScroll from '../utils/hooks/useStickyScroll';
 import { useSpring, animated } from 'react-spring';
 import MobileNav from '../components/MobileNav';
-import Link from 'next/link';
 import Subheader from '../components/Catalog/Subheader';
 import ActiveFilterCtn from '../components/Catalog/ActiveFilterCtn';
 import Device from '../components/Device/index';

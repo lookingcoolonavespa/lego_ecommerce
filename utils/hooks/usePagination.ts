@@ -1,4 +1,4 @@
-import { PaginationType } from '../types/types';
+import { PaginationType } from '../../types/types';
 
 export const DOTS = '...';
 
