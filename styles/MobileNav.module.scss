@@ -1,29 +1,17 @@
 @use './variables';
 
 .main {
-  position: relative;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border);
+  height: variables.$nav_height-mobile;
   z-index: 3;
   background-color: var(--background);
+  position: relative;
+  border-bottom: 1px solid var(--border);
 }
 
-.desktop {
-  height: 70px;
-
-  .logo_wrapper {
-    width: 50%;
-  }
-
-  .left {
-    grid-template-columns: repeat(4, 1fr);
-
-    .nav_item {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-  }
+.logo_wrapper {
+  margin: 0 20px;
 }
 
 .left,
@@ -48,12 +36,6 @@
   border-left: 1px solid var(--border);
   display: grid;
   place-items: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease-out;
-
-  &:hover {
-    background-color: #eef5fa;
-  }
 }
 
 .nav_item:last-child {
@@ -63,4 +45,20 @@
 .logo_wrapper {
   display: flex;
   align-items: center;
+}
+
+.pullout_menu {
+  position: absolute;
+  top: variables.$nav_height-mobile;
+  left: 0;
+  right: 0;
+  background-color: var(--background);
+
+  .nav_item {
+    border-bottom: 1px solid var(--border);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: grid;
+    place-items: center;
+  }
 }

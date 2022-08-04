@@ -32,7 +32,10 @@ export default function Accordion({ className, title, insides, name }: Props) {
     <div className={rootClasses.join(' ')}>
       <div
         className={`${styles.title_row} accordion_title_row`}
-        onClick={() => setVisible((prev) => !prev)}
+        onClick={() => {
+          console.log('clicked');
+          setVisible((prev) => !prev);
+        }}
       >
         <div className={styles.title}>{title}</div>
         <div className={styles.arrowIcon}>

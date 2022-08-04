@@ -3,19 +3,42 @@ import Link from 'next/link';
 import CartContext from '../utils/CartContext';
 import Layout from '../components/Layout';
 import styles from '../styles/Cart.module.scss';
-import useMobile from '../utils/hooks/useMobile';
 import Nav from '../components/Nav';
 import CartProductsCtn from '../components/CartProductsCtn';
 import CartPriceCtn from '../components/CartPriceCtn';
+import MobileNav from '../components/MobileNav';
+import Device from '../components/Device/index';
 
 export default function Cart() {
   const { cart } = useContext(CartContext);
-  const { mobileCheck } = useMobile();
 
   return (
     <>
-      <Nav mobile={mobileCheck.current} />
-      <Layout mobile={mobileCheck.current}>
+      <Device>
+        {({ isMobile }) =>
+          isMobile ? (
+            <MobileNav
+              pulloutChildren={[
+                {
+                  href: 'shop',
+                  text: 'Shop',
+                },
+                {
+                  href: '',
+                  text: 'Discover',
+                },
+                {
+                  href: '',
+                  text: 'Help',
+                },
+              ]}
+            />
+          ) : (
+            <Nav />
+          )
+        }
+      </Device>
+      <Layout>
         <div className={styles.container}>
           <div className={styles.main}>
             <header>

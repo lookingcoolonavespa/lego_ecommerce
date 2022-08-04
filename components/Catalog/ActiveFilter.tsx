@@ -3,13 +3,12 @@ import CloseSvg from '../svg/CloseSvg';
 
 interface Props {
   text: string;
-  className: string;
   close: () => void;
 }
 
-export default function ActiveFilter({ className, text, close }: Props) {
+export default function ActiveFilter({ text, close }: Props) {
   return (
-    <div className={className} data-testid={text}>
+    <div className="active_filter" data-testid={text}>
       <span>{text}</span>
       <button type="button" onClick={close}>
         <CloseSvg size="18" />

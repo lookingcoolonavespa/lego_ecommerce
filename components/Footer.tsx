@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from '../styles/Footer.module.scss';
-import { capitalizeStr } from '../utils/misc';
 import LinksCtn from './LinksCtn';
 import SocialsCtn from './SocialsCtn';
 import ArrowSvg from './svg/ArrowSvg';
@@ -8,6 +7,7 @@ import LegoLego from './svg/LegoLogo';
 import useEmail from '../utils/hooks/useEmail';
 import Accordion from './Accordian';
 import InputWrapperWithError from './InputWrapperWithError';
+import Device from './Device/index';
 
 const footerLinks = [
   {
@@ -63,11 +63,10 @@ const colOneLinks = [
 ];
 
 interface Props {
-  mobile: boolean;
   forwardedRef?: React.RefObject<HTMLElement>;
 }
 
-export default function Footer({ mobile, forwardedRef }: Props) {
+export default function Footer({ forwardedRef }: Props) {
   const { email, inputStatus, submit, handleChange } = useEmail();
 
   const desktopView = (
@@ -192,5 +191,11 @@ export default function Footer({ mobile, forwardedRef }: Props) {
     </footer>
   );
 
-  return <>{mobile ? mobileView : desktopView}</>;
+  return (
+    <Device>
+      {({ isMobile }) =>
+        isMobile || window.innerWidth <= 810 ? mobileView : desktopView
+      }
+    </Device>
+  );
 }

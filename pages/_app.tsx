@@ -10,6 +10,7 @@ import CloseSvg from '../components/svg/CloseSvg';
 
 let initMount = true;
 function MyApp({ Component, pageProps }: AppProps) {
+  const [, setWindowWidth] = useState(0);
   const [message, setMessage] = useState({
     active: false,
     selector: '',
@@ -130,6 +131,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     },
     []
   );
+
+  useEffect(() => {
+    function handleWindowResize() {
+      setWindowWidth(window.innerWidth);
+    }
+
+    window.addEventListener('resize', handleWindowResize);
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, []);
 
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>();
   useEffect(() => {

@@ -7,6 +7,11 @@ export type ProductThemes = typeof PRODUCT_THEMES[number];
 
 export type AgeGroup = typeof AGE_GROUPS[number];
 
+export type SortMethod =
+  | 'Popular'
+  | 'Price: High to Low'
+  | 'Price: Low to High';
+
 export type CheckoutFormTitles =
   | 'Personal Information'
   | 'Shipping Address'

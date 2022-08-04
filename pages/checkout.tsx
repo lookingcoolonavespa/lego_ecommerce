@@ -23,7 +23,7 @@ import { isCheckbox } from '../types/typeGuards';
 import Animate from '../components/Animate';
 import CartProductsCtn from '../components/CartProductsCtn';
 import CartPriceCtn from '../components/CartPriceCtn';
-import useMobile from '../utils/hooks/useMobile';
+import Device from '../components/Device/index';
 
 function TextInputField(
   type: string,
@@ -313,8 +313,6 @@ export default function Checkout() {
     if (i === inputFields[pageTitle].length - 1) valid = true;
   }
 
-  const { mobileCheck } = useMobile();
-
   return (
     <div className={styles.container}>
       <nav>
@@ -324,77 +322,39 @@ export default function Checkout() {
           </div>
         </Link>
       </nav>
-      <main className={mobileCheck ? `${styles.mobile}` : 'two_col_view'}>
-        <Animate
-          tag="form"
-          className={styles.form_ctn}
-          key={page}
-          animation={{
-            from: {
-              transform:
-                page - prevPage.current > 0
-                  ? 'translateX(10%)'
-                  : 'translateX(-10%)',
-              opacity: 0,
-            },
-            to: {
-              transform: 'translateY(0%)',
-              opacity: 1,
-            },
-          }}
-        >
-          <header>
-            <h3>{pageTitle}</h3>
-          </header>
-          <div className={styles.inputs_ctn}>
-            {springs.map((animationStyles, i) => {
-              if (
-                i >= billingAddyStartIdx &&
-                pageTitle === 'Billing Information'
-              )
-                return;
-
-              const field = inputFields[pageTitle][i];
-              const rootClass = [field.halfSize ? 'half-size' : 'full-size'];
-              return (
-                <animated.div
-                  key={field.label}
-                  style={animationStyles}
-                  className={rootClass.join(' ')}
-                >
-                  <InputWrapperWithError
-                    label={field.label}
-                    inputDetails={field.inputDetails}
-                    inputStatus={field.status}
-                    handleChange={handleInputChange}
-                    handleBlur={handleInputBlur}
-                    className={field.className}
-                  />
-                </animated.div>
-              );
-            })}
-            {pageTitle === 'Billing Information' && (
-              <animated.div style={checkboxSpring}>
-                <InputWrapperWithError
-                  label={billingCheckbox.label}
-                  inputDetails={{
-                    ...billingCheckbox.inputDetails,
-                    checked: billingAddySameAsShipping,
-                  }}
-                  inputStatus={billingCheckbox.status}
-                  handleChange={() =>
-                    setBillingAddySameAsShipping((prev) => !prev)
-                  }
-                  className={billingCheckbox.className}
-                />
-              </animated.div>
-            )}
-            {pageTitle === 'Billing Information' && !billingAddySameAsShipping && (
-              <animated.div style={billingSpring} className={styles.inputs_ctn}>
+      <Device>
+        {({ isMobile }) => (
+          <main className={isMobile ? `${styles.mobile}` : 'two_col_view'}>
+            <Animate
+              tag="form"
+              className={styles.form_ctn}
+              key={page}
+              animation={{
+                from: {
+                  transform:
+                    page - prevPage.current > 0
+                      ? 'translateX(10%)'
+                      : 'translateX(-10%)',
+                  opacity: 0,
+                },
+                to: {
+                  transform: 'translateY(0%)',
+                  opacity: 1,
+                },
+              }}
+            >
+              <header>
+                <h3>{pageTitle}</h3>
+              </header>
+              <div className={styles.inputs_ctn}>
                 {springs.map((animationStyles, i) => {
-                  if (i < billingAddyStartIdx) return;
-                  const field = inputFields[pageTitle][i];
+                  if (
+                    i >= billingAddyStartIdx &&
+                    pageTitle === 'Billing Information'
+                  )
+                    return;
 
+                  const field = inputFields[pageTitle][i];
                   const rootClass = [
                     field.halfSize ? 'half-size' : 'full-size',
                   ];
@@ -415,49 +375,97 @@ export default function Checkout() {
                     </animated.div>
                   );
                 })}
+                {pageTitle === 'Billing Information' && (
+                  <animated.div style={checkboxSpring}>
+                    <InputWrapperWithError
+                      label={billingCheckbox.label}
+                      inputDetails={{
+                        ...billingCheckbox.inputDetails,
+                        checked: billingAddySameAsShipping,
+                      }}
+                      inputStatus={billingCheckbox.status}
+                      handleChange={() =>
+                        setBillingAddySameAsShipping((prev) => !prev)
+                      }
+                      className={billingCheckbox.className}
+                    />
+                  </animated.div>
+                )}
+                {pageTitle === 'Billing Information' &&
+                  !billingAddySameAsShipping && (
+                    <animated.div
+                      style={billingSpring}
+                      className={styles.inputs_ctn}
+                    >
+                      {springs.map((animationStyles, i) => {
+                        if (i < billingAddyStartIdx) return;
+                        const field = inputFields[pageTitle][i];
+
+                        const rootClass = [
+                          field.halfSize ? 'half-size' : 'full-size',
+                        ];
+                        return (
+                          <animated.div
+                            key={field.label}
+                            style={animationStyles}
+                            className={rootClass.join(' ')}
+                          >
+                            <InputWrapperWithError
+                              label={field.label}
+                              inputDetails={field.inputDetails}
+                              inputStatus={field.status}
+                              handleChange={handleInputChange}
+                              handleBlur={handleInputBlur}
+                              className={field.className}
+                            />
+                          </animated.div>
+                        );
+                      })}
+                    </animated.div>
+                  )}
+              </div>
+              <animated.div className={styles.btn_ctn} style={btnSpring}>
+                {page !== 0 && (
+                  <button
+                    type="button"
+                    onClick={toPrevPage}
+                    className={`flat_btn ${styles.prev_btn}`}
+                    aria-label="previous"
+                  >
+                    Previous
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={toNextPage}
+                  className={`flat_btn ${styles.next_btn}`}
+                  disabled={!valid || page === maxPage}
+                  aria-label="next"
+                >
+                  {page === 2 ? 'Checkout' : 'Next'}
+                </button>
               </animated.div>
-            )}
-          </div>
-          <animated.div className={styles.btn_ctn} style={btnSpring}>
-            {page !== 0 && (
-              <button
-                type="button"
-                onClick={toPrevPage}
-                className={`flat_btn ${styles.prev_btn}`}
-                aria-label="previous"
-              >
-                Previous
-              </button>
-            )}
-            <button
-              type="button"
-              onClick={toNextPage}
-              className={`flat_btn ${styles.next_btn}`}
-              disabled={!valid || page === maxPage}
-              aria-label="next"
+            </Animate>
+            <Animate
+              tag="div"
+              animation={{
+                from: {
+                  transform: 'translateX(10%)',
+                  opacity: 0,
+                },
+                to: {
+                  transform: 'translateY(0%)',
+                  opacity: 1,
+                },
+              }}
+              className={styles.col_two}
             >
-              {page === 2 ? 'Checkout' : 'Next'}
-            </button>
-          </animated.div>
-        </Animate>
-        <Animate
-          tag="div"
-          animation={{
-            from: {
-              transform: 'translateX(10%)',
-              opacity: 0,
-            },
-            to: {
-              transform: 'translateY(0%)',
-              opacity: 1,
-            },
-          }}
-          className={styles.col_two}
-        >
-          <CartProductsCtn className={styles.products_ctn} />
-          <CartPriceCtn className={styles.price_ctn} />
-        </Animate>
-      </main>
+              <CartProductsCtn className={styles.products_ctn} />
+              <CartPriceCtn className={styles.price_ctn} />
+            </Animate>
+          </main>
+        )}
+      </Device>
     </div>
   );
 }
