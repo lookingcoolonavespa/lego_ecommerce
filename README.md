@@ -2,7 +2,7 @@
 
 live: https://lego-ecommerce-henna.vercel.app/
 
-## desktop view
+## view
 ![screenshot of home page](https://i.postimg.cc/7hQXT6GC/Screenshot-from-2022-08-04-18-47-00.png)
 
 ![screenshot of catalog](https://i.postimg.cc/RZJpKcTv/Screenshot-from-2022-08-04-18-47-05.png)
