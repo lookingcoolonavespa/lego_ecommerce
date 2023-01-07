@@ -1,4 +1,4 @@
-#lego ecommerce store
+# lego ecommerce store
 
 live: https://lego-ecommerce-henna.vercel.app/
 
